@@ -1,0 +1,25 @@
+teams:
+  red:
+    id: "red"
+    display_name: "Red"
+    prefix: "&c■"
+    color: "&c"
+    death_match_location: ""
+  blue:
+    id: "blue"
+    display_name: "Blue"
+    prefix: "&9■"
+    color: "&9"
+    death_match_location: ""
+  yellow:
+    id: "yellow"
+    display_name: "Yellow"
+    prefix: "&e■"
+    color: "&e"
+    death_match_location: ""
+  green:
+    id: "green"
+    display_name: "Green"
+    prefix: "&a■"
+    color: "&a"
+    death_match_location: ""

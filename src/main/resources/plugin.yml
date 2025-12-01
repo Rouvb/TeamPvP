@@ -1,0 +1,7 @@
+name: TailChasing
+version: '1.0.0'
+main: org.miraimc.tailChasing.TailChasing
+api-version: '1.21'
+authors: [ MiraiMC Development ]
+softdepend:
+  - PlaceholderAPI
