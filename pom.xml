@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.miraimc</groupId>
-    <artifactId>TailChasing</artifactId>
+    <artifactId>TeamPvP</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>TailChasing</name>
+    <name>TeamPvP</name>
 
     <properties>
         <java.version>21</java.version>
