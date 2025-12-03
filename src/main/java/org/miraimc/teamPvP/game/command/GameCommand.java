@@ -91,39 +91,4 @@ public class GameCommand extends BaseCommand {
         sender.teleport(world.getSpawnLocation());
         sender.sendMessage(TextUtil.translate("&aSuccessfully set world &e" + worldName + "&a!"));
     }
-
-    @Subcommand("debug")
-    public void onDebug(Player sender, @Optional OnlinePlayer target) {
-        Player targetPlayer;
-        if (target == null) {
-            targetPlayer = sender;
-        } else {
-            targetPlayer = target.getPlayer();
-        }
-
-        Team team = plugin.getTeamManager().getTeam(targetPlayer);
-        Profile profile = plugin.getProfileManager().getProfile(targetPlayer);
-
-        targetPlayer.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
-        targetPlayer.sendMessage(TextUtil.translate("&b&lLocations:"));
-        targetPlayer.sendMessage(TextUtil.translate("&fLobby: &b" + plugin.getConfigFile().getString("game.locations.lobby")));
-        targetPlayer.sendMessage(TextUtil.translate("&fGame: &b" + plugin.getConfigFile().getString("game.locations.game")));
-
-        if (profile != null) {
-            targetPlayer.sendMessage(TextUtil.translate("&b&lProfile Info:"));
-            targetPlayer.sendMessage(TextUtil.translate("&fStatus: &b" + profile.getStatus().name()));
-            targetPlayer.sendMessage(TextUtil.translate("&fBuild Mode: &b" + profile.isBuildMode()));
-        }
-
-        if (team != null) {
-            targetPlayer.sendMessage(TextUtil.translate("&b&lTeam Info:"));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam: &b" + team.getName()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam Display Name: &b" + team.getColor() + team.getDisplayName()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam Prefix: &b" + team.getPrefix()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam Leader: &b" + team.getLeader()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam Members: &b" + plugin.getTeamHandler().parseTeamMembers(team)));
-        }
-
-        targetPlayer.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
-    }
 }

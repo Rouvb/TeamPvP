@@ -9,7 +9,7 @@ import org.miraimc.teamPvP.game.GameHandler;
 import org.miraimc.teamPvP.game.GameManager;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.game.command.GameCommand;
-import org.miraimc.teamPvP.game.command.TeamPvPCommand;
+import org.miraimc.teamPvP.command.TeamPvPCommand;
 import org.miraimc.teamPvP.game.listener.GameListener;
 import org.miraimc.teamPvP.listener.ServerListener;
 import org.miraimc.teamPvP.profile.ProfileManager;
