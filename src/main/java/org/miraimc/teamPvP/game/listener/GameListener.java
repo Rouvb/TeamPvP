@@ -68,6 +68,7 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onInvincibleTimer(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
         Game game = plugin.getGame();
         if (game.getDuration() <= 300) {
             event.setCancelled(true);
