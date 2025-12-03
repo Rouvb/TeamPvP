@@ -30,7 +30,7 @@ public class CountdownTask extends BukkitRunnable {
                     .replace("{time}", String.valueOf(game.getCountdownTime()))
             ));
             Title title = Title.title(
-                    Component.text(TextUtil.translate("&b&lTeam Pvp")),
+                    Component.text(TextUtil.translate("&b&lTeam PvP")),
                     Component.text(TextUtil.translate("&f게임이 &b{time}&f초 후에 시작됩니다.")
                             .replace("{time}", String.valueOf(game.getCountdownTime()))
                     )
