@@ -47,17 +47,11 @@ public final class TeamPvP extends JavaPlugin {
     private final Map<UUID, FastBoard> boards = new HashMap<>();
 
     @Override
-    public void onLoad() {
-        getLogger().info("Loading TeamPvP...");
-        instance = this;
-        worldManager = new WorldManager(this);
-        worldManager.generateWorlds();
-    }
-
-    @Override
     public void onEnable() {
+        instance = this;
         getLogger().info("Enabling TeamPvP...");
         loadFiles();
+        importWorlds();
         loadManagers();
         setupWorlds();
         registerListeners();
@@ -68,6 +62,7 @@ public final class TeamPvP extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Disabling TeamPvP...");
+        worldManager.resetSurvivalWorlds();
     }
 
     private void loadFiles() {
@@ -77,6 +72,11 @@ public final class TeamPvP extends JavaPlugin {
         scoreboardFile = new BasicConfigFile(this, "scoreboard.yml", true);
     }
 
+    private void importWorlds() {
+        worldManager = new WorldManager(this);
+        worldManager.loadWorlds();
+        worldManager.generateWorlds();
+    }
     private void setupWorlds() {
         worldManager.setGameRules();
         worldManager.setBorder();

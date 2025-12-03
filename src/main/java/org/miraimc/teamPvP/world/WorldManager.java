@@ -3,6 +3,8 @@ package org.miraimc.teamPvP.world;
 import org.bukkit.*;
 import org.miraimc.teamPvP.TeamPvP;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class WorldManager {
@@ -11,6 +13,65 @@ public class WorldManager {
 
     public WorldManager(TeamPvP plugin) {
         this.plugin = plugin;
+    }
+
+    public void resetSurvivalWorlds() {
+        resetWorld("world");
+        resetWorld("world_nether");
+        resetWorld("world_the_end");
+    }
+
+    public void loadWorlds() {
+        loadWorldFromDataFolder("lobby");
+        loadWorldFromDataFolder("death_match");
+    }
+
+    private void resetWorld(String worldName) {
+        World world = Bukkit.getWorld(worldName);
+        if (world != null) {
+            Bukkit.unloadWorld(world, false);
+        }
+
+        File worldFolder = new File(plugin.getDataFolder(), worldName);
+        try {
+            if (worldFolder.exists()) {
+                org.apache.commons.io.FileUtils.deleteDirectory(worldFolder);
+                plugin.getLogger().info("Deleted world: " + worldName);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadWorldFromDataFolder(String folderName) {
+        File source = new File(plugin.getDataFolder(), "worlds/" + folderName);
+        File target = new File(Bukkit.getWorldContainer(), folderName);
+
+        if (!source.exists()) {
+            plugin.getLogger().warning("World directory does not exist: " + source.getPath());
+            return;
+        }
+
+        try {
+            // 기존 월드 삭제
+            if (target.exists()) {
+                plugin.getLogger().info("Deleting world: " + target.getPath());
+                org.apache.commons.io.FileUtils.deleteDirectory(target);
+            }
+
+            // 데이터폴더 → 서버 루트 복사
+            plugin.getLogger().info("Copying world: " + source.getPath() + " → " + target.getPath());
+            org.apache.commons.io.FileUtils.copyDirectory(source, target);
+
+            // WorldCreator로 로드
+            WorldCreator creator = new WorldCreator(folderName);
+            creator.environment(World.Environment.NORMAL);
+            creator.createWorld();
+
+            plugin.getLogger().info("Loaded world: " + folderName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void generateVoidWorld(String worldName) {
