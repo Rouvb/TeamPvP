@@ -86,7 +86,7 @@ public class GameManager {
 
     public void setSpectatorMode(Player player) {
         Team team = plugin.getTeamManager().getTeam(player);
-        team.getMembers().remove(player.getUniqueId());
+        team.getAliveMembers().remove(player.getUniqueId());
         Profile profile = plugin.getProfileManager().getProfile(player);
         profile.setStatus(ProfileStatus.SPECTATING);
         plugin.getGameHandler().setSpectatorMode(player);
