@@ -2,6 +2,8 @@ package org.miraimc.teamPvP.game.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +20,7 @@ import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class GameListener implements Listener {
 
@@ -30,21 +33,58 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        Bukkit.getScheduler().runTaskLater(plugin, () -> player.spigot().respawn(), 2L);
+        Player victim = event.getEntity();
 
-        Team team = plugin.getTeamManager().getTeam(player);
+        // Instant Respawn
+        Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 2L);
+
+        Team team = plugin.getTeamManager().getTeam(victim);
         if (team == null) return;
 
         Game game = plugin.getGame();
         if (game.getGameStatus().equals(GameStatus.DEATH_MATCH)) {
-            plugin.getGameManager().setSpectatorMode(player);
+            plugin.getGameManager().setSpectatorMode(victim);
             return;
         }
 
-        Player leader = Bukkit.getPlayer(team.getLeader());
-        if (leader != null) {
-            player.teleport(leader.getLocation());
+        Player killer = event.getEntity().getKiller();
+        if (killer != null
+                && killer != victim
+                && !team.getMembers().contains(killer.getUniqueId())) {
+
+            Team killerTeam = plugin.getTeamManager().getTeam(killer);
+            if (killerTeam == null) return;
+
+            // 리더 사망
+            if (team.getLeader() != null && team.getLeader().equals(victim.getUniqueId())) {
+                for (UUID uuid : team.getMembers()) {
+                    Player member = Bukkit.getPlayer(uuid);
+                    if (member != null && member.isOnline()) {
+                        plugin.getTeamHandler().handleTeam(killerTeam, member);
+                        setReducedHealth(member);
+                    }
+                }
+            } else {
+                plugin.getTeamHandler().handleTeam(killerTeam, victim);
+                setReducedHealth(victim);
+            }
+            return;
+        }
+
+        UUID leaderId = team.getLeader();
+        if (leaderId != null) {
+            Player leader = Bukkit.getPlayer(leaderId);
+            if (leader != null && leader.isOnline()) {
+                victim.teleport(leader.getLocation());
+            }
+        }
+    }
+
+    private void setReducedHealth(Player player) {
+        AttributeInstance maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
+        if (maxHealthAttr != null) {
+            maxHealthAttr.setBaseValue(5.0);
+            player.setHealth(5.0);
         }
     }
 
