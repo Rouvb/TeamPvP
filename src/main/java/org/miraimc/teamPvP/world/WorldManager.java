@@ -15,32 +15,9 @@ public class WorldManager {
         this.plugin = plugin;
     }
 
-    public void resetSurvivalWorlds() {
-        resetWorld("world");
-        resetWorld("world_nether");
-        resetWorld("world_the_end");
-    }
-
     public void loadWorlds() {
         loadWorldFromDataFolder("lobby");
         loadWorldFromDataFolder("death_match");
-    }
-
-    private void resetWorld(String worldName) {
-        World world = Bukkit.getWorld(worldName);
-        if (world != null) {
-            Bukkit.unloadWorld(world, false);
-        }
-
-        File worldFolder = new File(plugin.getDataFolder(), worldName);
-        try {
-            if (worldFolder.exists()) {
-                org.apache.commons.io.FileUtils.deleteDirectory(worldFolder);
-                plugin.getLogger().info("Deleted world: " + worldName);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void loadWorldFromDataFolder(String folderName) {
