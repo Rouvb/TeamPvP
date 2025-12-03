@@ -1,5 +1,6 @@
 package org.miraimc.teamPvP.game;
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,6 +14,7 @@ import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
+import org.miraimc.teamPvP.util.TextUtil;
 
 public class GameManager {
 
@@ -85,11 +87,18 @@ public class GameManager {
     }
 
     public void setSpectatorMode(Player player) {
+        player.spigot().respawn();
         Team team = plugin.getTeamManager().getTeam(player);
         team.getAliveMembers().remove(player.getUniqueId());
         Profile profile = plugin.getProfileManager().getProfile(player);
         profile.setStatus(ProfileStatus.SPECTATING);
         plugin.getGameHandler().setSpectatorMode(player);
+
+        Title title = Title.title(
+                Component.text("&c사망!"),
+                Component.text("&f이제 관전 모드 상태입니다!")
+        );
+        player.showTitle(title);
     }
 
     public void loadLocation(String locationType) {
