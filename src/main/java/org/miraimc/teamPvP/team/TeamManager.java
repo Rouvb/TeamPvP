@@ -8,6 +8,7 @@ import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +34,12 @@ public class TeamManager {
         return teams.stream()
                 .filter(team -> team.getMembers().contains(player.getUniqueId()))
                 .findFirst()
+                .orElse(null);
+    }
+
+    public Team getRandomTeam() {
+        return teams.stream()
+                .min(Comparator.comparing(team -> team.getMembers().size()))
                 .orElse(null);
     }
 

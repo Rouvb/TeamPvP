@@ -34,7 +34,7 @@ public class TeamCommand extends BaseCommand {
                 "&b&l팀 명령어 도움말:",
                 "&b/team info &7 - &f팀 정보를 확인합니다.",
                 "&b/team list &7 - &f팀 목록을 확인합니다.",
-                "&b/team join <team> &7 - &f팀에 참가합니다.",
+                "&b/team join &7 - &f팀에 참가합니다.",
                 "&b/team leave &7 - &f팀에서 탈퇴합니다.",
                 TextUtil.LONG_LINE
         };
@@ -60,7 +60,23 @@ public class TeamCommand extends BaseCommand {
     }
 
     @Subcommand("join|참가")
-    public void onJoin(Player sender, String teamName) {
+    public void onJoin(Player sender) {
+        if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
+            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 팀에 참가할 수 없습니다!"));
+            return;
+        }
+
+        Team team = plugin.getTeamManager().getRandomTeam();
+        if (team == null) {
+            sender.sendMessage(TextUtil.translate("&c해당 팀을 찾을 수 없습니다!"));
+            return;
+        }
+
+        plugin.getTeamHandler().handleTeam(team, sender);
+    }
+
+    @Subcommand("forcejoin|강제참가")
+    public void onForceJoin(Player sender, String teamName) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
             sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 팀에 참가할 수 없습니다!"));
             return;
