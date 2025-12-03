@@ -26,7 +26,7 @@ public class GameHandler {
         Team team = plugin.getTeamManager().getTeam(player);
         if (team == null) return;
 
-        PlayerUtil.resetInventory(player, team.getLeader().equals(player.getUniqueId()));
+        PlayerUtil.resetInventory(player);
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
         player.setFlying(false);
@@ -100,7 +100,7 @@ public class GameHandler {
     }
 
     public void setSpectatorMode(Player player) {
-        PlayerUtil.resetInventory(player, false);
+        PlayerUtil.resetInventory(player);
     }
 
 }

@@ -22,7 +22,7 @@ public class LobbyListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        PlayerUtil.resetInventory(player, false);
+        PlayerUtil.resetInventory(player);
         player.getInventory().setHeldItemSlot(4);
 
         Location lobbyLocation = LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations.lobby"));
