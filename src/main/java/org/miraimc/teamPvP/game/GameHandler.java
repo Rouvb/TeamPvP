@@ -10,13 +10,12 @@ import org.miraimc.teamPvP.util.LocationUtil;
 import org.miraimc.teamPvP.util.PlayerUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class GameHandler {
 
     private final TeamPvP plugin;
+    private final Map<Team, Location> randomTeleportLocations = new HashMap<>();
 
     public GameHandler(TeamPvP plugin) {
         this.plugin = plugin;
@@ -38,34 +37,36 @@ public class GameHandler {
         plugin.getGameManager().TitleAll(title);
     }
 
-    public void teleportTeamRandomWorld(Team team) {
-        if (team == null || team.getLeader() == null) return;
-
-        Player leader = Bukkit.getPlayer(team.getLeader());
+    public void getRandomTeleportLocations() {
         Location worldLocation = LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations.game"));
         World world = worldLocation.getWorld();
         int maxTries = plugin.getConfigFile().getInt("rtp.max_tries");
         int safeRange = Math.max(16, plugin.getConfigFile().getInt("rtp.range"));
 
-        plugin.getRtpManager().findSafeLocationAsync(world, safeRange, maxTries)
-                .thenAccept(location -> {
-                    if (location == null) {
-                        leader.sendMessage(TextUtil.translate("&c안전한 위치를 찾지 못했습니다!"));
-                        return;
-                    }
-
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        leader.teleport(location);
-                        team.getMembers().forEach(uuid -> {
-                            if (!uuid.equals(leader.getUniqueId())) {
-                                Player member = Bukkit.getPlayer(uuid);
-                                if (member != null && member.isOnline()) {
-                                    member.teleport(location);
-                                }
-                            }
-                        });
+        List<Team> teams = plugin.getTeamManager().getTeams();
+        for (Team team : teams) {
+            plugin.getRtpManager().findSafeLocationAsync(world, safeRange, maxTries)
+                    .thenAccept(location -> {
+                        if (location == null) {
+                            plugin.getLogger().warning("Can't find safe location for " + team);
+                            return;
+                        }
+                        randomTeleportLocations.put(team, location);
                     });
-                });
+        }
+    }
+
+    public void teleportAllToGameWorld() {
+        List<Team> teams = plugin.getTeamManager().getTeams();
+        for (Team team : teams) {
+            Set<UUID> membersId = team.getMembers();
+            for (UUID uuid : membersId) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null && player.isOnline()) {
+                    player.teleport(randomTeleportLocations.get(team));
+                }
+            }
+        }
     }
 
     public void teleportToLeader(Player member) {

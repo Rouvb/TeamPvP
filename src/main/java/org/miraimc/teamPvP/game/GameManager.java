@@ -31,6 +31,7 @@ public class GameManager {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) return;
 
         plugin.getGame().setGameStatus(GameStatus.STARTING);
+        plugin.getGameHandler().getRandomTeleportLocations();
 
         cancelCountdown();
         CountdownTask task = new CountdownTask(this, plugin.getGame());
@@ -58,8 +59,7 @@ public class GameManager {
             });
         });
 
-        // 무작위 위치로 텔레포트
-        plugin.getTeamManager().getTeams().forEach(team -> plugin.getGameHandler().teleportTeamRandomWorld(team));
+        plugin.getGameHandler().teleportAllToGameWorld();
 
         cancelGameTask();
         GameTask task = new GameTask(plugin.getGame(), this);
