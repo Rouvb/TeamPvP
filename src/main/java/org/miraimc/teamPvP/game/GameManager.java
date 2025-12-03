@@ -26,9 +26,9 @@ public class GameManager {
     }
 
     public void startCountdown() {
-        if (plugin.getGame().getGameStatus() != org.miraimc.teamPvP.game.GameStatus.LOBBY) return;
+        if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) return;
 
-        plugin.getGame().setGameStatus(org.miraimc.teamPvP.game.GameStatus.STARTING);
+        plugin.getGame().setGameStatus(GameStatus.STARTING);
 
         cancelCountdown();
         CountdownTask task = new CountdownTask(this, plugin.getGame());
@@ -43,16 +43,16 @@ public class GameManager {
     }
 
     public void startGame() {
-        if (plugin.getGame().getGameStatus() != org.miraimc.teamPvP.game.GameStatus.STARTING) return;
+        if (plugin.getGame().getGameStatus() != GameStatus.STARTING) return;
 
-        plugin.getGame().setGameStatus(org.miraimc.teamPvP.game.GameStatus.PLAYING);
+        plugin.getGame().setGameStatus(GameStatus.PLAYING);
 
         cancelCountdown();
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             Bukkit.getOnlinePlayers().forEach(player -> {
-                plugin.getGameHandler().preparePlayerForGame(player);
                 plugin.getProfileManager().getProfile(player).setStatus(ProfileStatus.PLAYING);
+                plugin.getGameHandler().preparePlayerForGame(player);
             });
         });
 
@@ -72,16 +72,16 @@ public class GameManager {
     }
 
     public void startDeathMatch() {
-        if (plugin.getGame().getGameStatus() != org.miraimc.teamPvP.game.GameStatus.PLAYING) return;
-        plugin.getGame().setGameStatus(org.miraimc.teamPvP.game.GameStatus.DEATH_MATCH);
+        if (plugin.getGame().getGameStatus() != GameStatus.PLAYING) return;
+        plugin.getGame().setGameStatus(GameStatus.DEATH_MATCH);
         plugin.getGameHandler().sendDeathMatchAlert();
         plugin.getGameHandler().teleportAllToDeathMatch();
     }
 
     public void endGame() {
         org.miraimc.teamPvP.game.GameStatus gameStatus = plugin.getGame().getGameStatus();
-        if (gameStatus != org.miraimc.teamPvP.game.GameStatus.PLAYING && gameStatus != org.miraimc.teamPvP.game.GameStatus.DEATH_MATCH) return;
-        plugin.getGame().setGameStatus(org.miraimc.teamPvP.game.GameStatus.ENDED);
+        if (gameStatus != GameStatus.PLAYING && gameStatus != GameStatus.DEATH_MATCH) return;
+        plugin.getGame().setGameStatus(GameStatus.ENDED);
     }
 
     public void setSpectatorMode(Player player) {
@@ -97,7 +97,7 @@ public class GameManager {
         if (location == null) return;
         switch (locationType) {
             case "lobby":
-                plugin.getGame().setGameStatus(org.miraimc.teamPvP.game.GameStatus.LOBBY);
+                plugin.getGame().setGameStatus(GameStatus.LOBBY);
                 return;
             case "game":
                 plugin.getGame().setLobbyLocation(location);
