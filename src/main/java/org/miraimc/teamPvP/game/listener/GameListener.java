@@ -40,7 +40,7 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player) && !(event.getEntity() instanceof Player)) {
+        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) {
             return;
         }
 
@@ -49,7 +49,8 @@ public class GameListener implements Listener {
 
         Team victimTeam = plugin.getTeamManager().getTeam(victim);
         Team damagerTeam = plugin.getTeamManager().getTeam(damager);
-        if (victimTeam.equals(damagerTeam)) {
+
+        if (victimTeam != null && damagerTeam != null && victimTeam.equals(damagerTeam)) {
             damager.sendMessage(TextUtil.translate("&c같은 팀원을 공격할 수 없습니다."));
             event.setCancelled(true);
         }

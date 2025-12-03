@@ -42,7 +42,7 @@ public class GameHandler {
         if (team == null || team.getLeader() == null) return;
 
         Player leader = Bukkit.getPlayer(team.getLeader());
-        Location worldLocation = LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations.lobby"));
+        Location worldLocation = LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations.game"));
         World world = worldLocation.getWorld();
         int maxTries = plugin.getConfigFile().getInt("rtp.max_tries");
         int safeRange = Math.max(16, plugin.getConfigFile().getInt("rtp.range"));
@@ -74,7 +74,6 @@ public class GameHandler {
 
         Player leader = Bukkit.getPlayer(team.getLeader());
         member.teleport(leader.getLocation());
-        member.sendMessage(TextUtil.translate("&a팀 리더에게 텔레포트 되었습니다."));
     }
 
     public void sendDeathMatchAlert() {
@@ -94,7 +93,7 @@ public class GameHandler {
             Set<UUID> membersId = team.getMembers();
             for (UUID uuid : membersId) {
                 Player player = Bukkit.getPlayer(uuid);
-                if (player != null || !player.isOnline()) continue;
+                if (player == null || !player.isOnline()) continue;
                 player.teleport(team.getDeathMatchLocation());
             }
         }
