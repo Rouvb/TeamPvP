@@ -61,7 +61,7 @@ public class GameListener implements Listener {
         Team damagerTeam = plugin.getTeamManager().getTeam(damager);
 
         Game game = plugin.getGame();
-        if (game.getDuration() <= 300) {
+        if (game.getDuration() <= game.getInvincibilityTime()) {
             damager.sendMessage(TextUtil.translate("&c무적 시간에는 상대방을 공격할 수 없습니다."));
             event.setCancelled(true);
         }
@@ -76,7 +76,7 @@ public class GameListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Game game = plugin.getGame();
-        if (game.getDuration() <= 300) {
+        if (game.getDuration() <= game.getInvincibilityTime()) {
             event.setCancelled(true);
         }
     }

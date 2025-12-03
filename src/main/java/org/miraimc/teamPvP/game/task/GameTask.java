@@ -42,14 +42,20 @@ public class GameTask extends BukkitRunnable {
     public void run() {
         game.setDuration(game.getDuration() + 1);
 
-        int remaining = game.getDeathMatchTime() - game.getDuration();
+        int remainingInvincibility = game.getInvincibilityTime() - game.getDuration();
+        int remainingDeathMatch = game.getDeathMatchTime() - game.getDuration();
 
-        if (ALERT_TIMES.contains(remaining)) {
-            manager.messageAll(TextUtil.translate("&f데스 매치가 &b" + formatTime(remaining) + "&f 후에 시작됩니다!"));
+        if (ALERT_TIMES.contains(remainingInvincibility)) {
+            manager.messageAll(TextUtil.translate("&f무적 시간이 &b" + formatTime(remainingInvincibility) + "&f 후에 해제됩니다!"));
             manager.soundAll(Sound.BLOCK_NOTE_BLOCK_BELL);
         }
 
-        if (remaining <= 0) {
+        if (ALERT_TIMES.contains(remainingDeathMatch)) {
+            manager.messageAll(TextUtil.translate("&f데스 매치가 &b" + formatTime(remainingDeathMatch) + "&f 후에 시작됩니다!"));
+            manager.soundAll(Sound.BLOCK_NOTE_BLOCK_BELL);
+        }
+
+        if (remainingDeathMatch <= 0) {
             manager.startDeathMatch();
         }
     }
