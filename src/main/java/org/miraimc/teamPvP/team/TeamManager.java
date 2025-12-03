@@ -7,10 +7,7 @@ import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.util.TextUtil;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 public class TeamManager {
@@ -38,9 +35,17 @@ public class TeamManager {
     }
 
     public Team getRandomTeam() {
-        return teams.stream()
-                .min(Comparator.comparing(team -> team.getMembers().size()))
-                .orElse(null);
+        int minSize = teams.stream()
+                .mapToInt(team -> team.getMembers().size())
+                .min()
+                .orElse(Integer.MAX_VALUE);
+
+        List<Team> candidates = teams.stream()
+                .filter(team -> team.getMembers().size() == minSize)
+                .toList();
+
+        return candidates.isEmpty() ? null :
+                candidates.get(new Random().nextInt(candidates.size()));
     }
 
     public void loadTeam(String teamId) {
