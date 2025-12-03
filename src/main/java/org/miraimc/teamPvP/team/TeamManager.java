@@ -74,6 +74,14 @@ public class TeamManager {
         return true;
     }
 
+    public Team getWinnerTeam() {
+        List<Team> aliveTeams = teams.stream()
+                .filter(team -> !team.getAliveMembers().isEmpty())
+                .toList();
+
+        return aliveTeams.size() == 1 ? aliveTeams.get(0) : null;
+    }
+
     public void removeTeam(String teamName) {
         teams.removeIf(team -> team.getName().equalsIgnoreCase(teamName));
     }

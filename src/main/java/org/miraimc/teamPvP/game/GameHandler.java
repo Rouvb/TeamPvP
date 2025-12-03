@@ -78,7 +78,7 @@ public class GameHandler {
     }
 
     public void sendDeathMatchAlert() {
-        org.miraimc.teamPvP.game.GameManager manager = plugin.getGameManager();
+        GameManager manager = plugin.getGameManager();
         manager.soundAll(Sound.ENTITY_ENDER_DRAGON_AMBIENT);
         manager.messageAll(TextUtil.translate("&a데스매치가 시작되었습니다!"));
         Title title = Title.title(
@@ -100,8 +100,32 @@ public class GameHandler {
         }
     }
 
+    public void handleEndGame(Team winnerTeam) {
+        if (winnerTeam == null) {
+            String[] messages = {
+              TextUtil.LONG_LINE,
+              "",
+              TextUtil.translate("&b&l게임 종료!"),
+              TextUtil.translate("&f 승리 팀: &b없음"),
+              "",
+              TextUtil.LONG_LINE,
+            };
+            Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(messages));
+        } else {
+            String[] messages = {
+                    TextUtil.LONG_LINE,
+                    "",
+                    TextUtil.translate("&b&l게임 종료!"),
+                    TextUtil.translate("&f 승리 팀: &b" + winnerTeam.getPrefix() + winnerTeam.getDisplayName()),
+                    TextUtil.translate("&f 플레이어: &b" + plugin.getTeamHandler().parseTeamMembers(winnerTeam)),
+                    "",
+                    TextUtil.LONG_LINE,
+            };
+            Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(messages));
+        }
+    }
+
     public void setSpectatorMode(Player player) {
         PlayerUtil.resetInventory(player);
     }
-
 }

@@ -80,6 +80,21 @@ public class GameListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onTeamMemberDeath(PlayerDeathEvent event) {
+        Game game = plugin.getGame();
+        GameStatus gameStatus = game.getGameStatus();
+        if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
+
+        Player victim = event.getEntity();
+        Team team = plugin.getTeamManager().getTeam(victim);
+        if (team == null) return;
+
+        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
+        if (winnerTeam == null) return;
+        plugin.getGameManager().endGame(winnerTeam);
+    }
+
     private void setReducedHealth(Player player) {
         AttributeInstance maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
         if (maxHealthAttr != null) {

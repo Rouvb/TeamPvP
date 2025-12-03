@@ -16,6 +16,8 @@ import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 
+import javax.annotation.Nullable;
+
 public class GameManager {
 
     private final TeamPvP plugin;
@@ -80,10 +82,15 @@ public class GameManager {
         plugin.getGameHandler().teleportAllToDeathMatch();
     }
 
-    public void endGame() {
-        org.miraimc.teamPvP.game.GameStatus gameStatus = plugin.getGame().getGameStatus();
+    public void endGame(@Nullable Team winnerTeam) {
+        GameStatus gameStatus = plugin.getGame().getGameStatus();
         if (gameStatus != GameStatus.PLAYING && gameStatus != GameStatus.DEATH_MATCH) return;
         plugin.getGame().setGameStatus(GameStatus.ENDED);
+        plugin.getGameHandler().handleEndGame(winnerTeam);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Bukkit.getOnlinePlayers().forEach(Player::kick);
+            Bukkit.dispatchCommand(plugin.getServer().getConsoleSender(), "stop");
+        }, 20L * 15);
     }
 
     public void setSpectatorMode(Player player) {
