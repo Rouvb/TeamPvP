@@ -98,7 +98,7 @@ public class GameManager {
         plugin.getGameHandler().setSpectatorMode(player);
 
         Title title = Title.title(
-                Component.text(TextUtil.translate("&c&l사망!")),
+                Component.text(TextUtil.translate("&c&l사망")),
                 Component.text(TextUtil.translate("&f이제 관전 모드 상태입니다!"))
         );
         player.showTitle(title);
