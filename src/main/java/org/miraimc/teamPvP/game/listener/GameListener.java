@@ -31,18 +31,18 @@ public class GameListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        Game game = plugin.getGame();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> player.spigot().respawn(), 2L);
 
         Team team = plugin.getTeamManager().getTeam(player);
         if (team == null) return;
 
-        Player leader = Bukkit.getPlayer(team.getLeader());
-
+        Game game = plugin.getGame();
         if (game.getGameStatus().equals(GameStatus.DEATH_MATCH)) {
             plugin.getGameManager().setSpectatorMode(player);
             return;
         }
 
+        Player leader = Bukkit.getPlayer(team.getLeader());
         if (leader != null) {
             player.teleport(leader.getLocation());
         }
@@ -60,6 +60,12 @@ public class GameListener implements Listener {
         Team victimTeam = plugin.getTeamManager().getTeam(victim);
         Team damagerTeam = plugin.getTeamManager().getTeam(damager);
 
+        Game game = plugin.getGame();
+        if (game.getDuration() <= 300) {
+            damager.sendMessage(TextUtil.translate("&c무적 시간에는 상대방을 공격할 수 없습니다."));
+            event.setCancelled(true);
+        }
+
         if (victimTeam != null && damagerTeam != null && victimTeam.equals(damagerTeam)) {
             damager.sendMessage(TextUtil.translate("&c같은 팀원을 공격할 수 없습니다."));
             event.setCancelled(true);
@@ -67,7 +73,7 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onInvincibleTimer(EntityDamageEvent event) {
+    public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Game game = plugin.getGame();
         if (game.getDuration() <= 300) {

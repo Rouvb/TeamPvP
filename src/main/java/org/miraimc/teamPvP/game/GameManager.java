@@ -87,8 +87,6 @@ public class GameManager {
     }
 
     public void setSpectatorMode(Player player) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> player.spigot().respawn(), 1L);
-
         Team team = plugin.getTeamManager().getTeam(player);
         if (team != null) {
             team.getAliveMembers().remove(player.getUniqueId());
@@ -100,8 +98,8 @@ public class GameManager {
         plugin.getGameHandler().setSpectatorMode(player);
 
         Title title = Title.title(
-                Component.text("&c&l사망!"),
-                Component.text("&f이제 관전 모드 상태입니다!")
+                Component.text(TextUtil.translate("&c&l사망!")),
+                Component.text(TextUtil.translate("&f이제 관전 모드 상태입니다!"))
         );
         player.showTitle(title);
     }
