@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.util.TextUtil;
 
-@CommandAlias("teampvp|Team Pvp")
+@CommandAlias("teampvp")
 public class TeamPvPCommand extends BaseCommand {
 
     private final TeamPvP plugin;
