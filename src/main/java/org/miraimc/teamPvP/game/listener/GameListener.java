@@ -1,9 +1,12 @@
 package org.miraimc.teamPvP.game.listener;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -13,9 +16,13 @@ import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.TextUtil;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class GameListener implements Listener {
 
     private final TeamPvP plugin;
+    private final Set<Location> placedBlocks = new HashSet<>();
 
     public GameListener(TeamPvP plugin) {
         this.plugin = plugin;
@@ -24,9 +31,12 @@ public class GameListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        Team team = plugin.getTeamManager().getTeam(player);
-        Player leader = Bukkit.getPlayer(team.getLeader());
         Game game = plugin.getGame();
+
+        Team team = plugin.getTeamManager().getTeam(player);
+        if (team == null) return;
+
+        Player leader = Bukkit.getPlayer(team.getLeader());
 
         if (game.getGameStatus().equals(GameStatus.DEATH_MATCH)) {
             plugin.getGameManager().setSpectatorMode(player);
@@ -61,6 +71,25 @@ public class GameListener implements Listener {
         Game game = plugin.getGame();
         if (game.getDuration() <= 300) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.getBlock().getWorld().getName().equalsIgnoreCase("death_match")) {
+            placedBlocks.add(event.getBlock().getLocation());
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (event.getBlock().getWorld().getName().equalsIgnoreCase("death_match")) {
+            Location location = event.getBlock().getLocation();
+            if (!placedBlocks.contains(location)) {
+                event.setCancelled(true);
+            } else {
+                placedBlocks.remove(location);
+            }
         }
     }
 }
