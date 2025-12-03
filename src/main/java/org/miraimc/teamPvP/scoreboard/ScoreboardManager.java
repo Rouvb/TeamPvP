@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameStatus;
+import org.miraimc.teamPvP.profile.Profile;
+import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.PlayerUtil;
 import org.miraimc.teamPvP.util.TextUtil;
@@ -24,28 +26,34 @@ public class ScoreboardManager {
 
     public void updateScoreboard(FastBoard board) {
         Player player = board.getPlayer();
-
-        if (player == null || !player.isOnline() || board.isDeleted()) {
-            return;
-        }
+        if (player == null || !player.isOnline() || board.isDeleted()) return;
 
         board.updateTitle(plugin.getScoreboardFile().getString("scoreboard.title"));
 
-        Team team = plugin.getTeamManager().getTeam(player);
         Game game = plugin.getGame();
+        Team team = plugin.getTeamManager().getTeam(player);
+        Profile profile = plugin.getProfileManager().getProfile(player);
 
-        if (game.getGameStatus().equals(GameStatus.LOBBY)) {
-            if (team == null) {
-                renderScoreboard(board, "lobby");
-            } else {
-                renderScoreboard(board, "lobby_team");
-            }
-        } else if (game.getGameStatus().equals(GameStatus.STARTING)) {
-            renderScoreboard(board, "starting");
-        } else if (game.getGameStatus().equals(GameStatus.PLAYING) || game.getGameStatus().equals(GameStatus.DEATH_MATCH)) {
-            renderScoreboard(board, "playing");
-        } else if (game.getGameStatus().equals(GameStatus.ENDED)) {
-            renderScoreboard(board, "ending");
+        String type = resolveScoreboardType(game.getGameStatus(), team, profile);
+        renderScoreboard(board, type);
+    }
+
+    private String resolveScoreboardType(GameStatus status, Team team, Profile profile) {
+        switch (status) {
+            case LOBBY:
+                return team == null ? "lobby" : "lobby_team";
+            case STARTING:
+                return "starting";
+            case PLAYING:
+            case DEATH_MATCH:
+                if (profile.getStatus() == ProfileStatus.SPECTATING) {
+                    return team != null ? "spectating_team" : "spectating";
+                }
+                return "playing";
+            case ENDED:
+                return "ending";
+            default:
+                return "default";
         }
     }
 
@@ -58,6 +66,7 @@ public class ScoreboardManager {
         String teamColor = team != null ? team.getColor() : "";
         String teamLeaderName = team != null ? PlayerUtil.getPlayerName(team.getLeader()) : "없음";
         String teamSize = team != null ? String.valueOf(team.getMembers().size()) : "0";
+        String teamAlive = team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
 
         Game game = plugin.getGame();
         String gameCountdown = String.valueOf(game.getCountdownTime());
@@ -75,6 +84,7 @@ public class ScoreboardManager {
                     .replace("{team_color}", teamColor)
                     .replace("{team_leader}", teamLeaderName)
                     .replace("{team_size}", teamSize)
+                    .replace("{team_alive}", teamAlive)
                     .replace("{game_countdown}", gameCountdown)
                     .replace("{game_duration}", gameDuration)
             );
