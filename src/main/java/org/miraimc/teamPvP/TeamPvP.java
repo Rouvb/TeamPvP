@@ -75,8 +75,8 @@ public final class TeamPvP extends JavaPlugin {
     private void importWorlds() {
         worldManager = new WorldManager(this);
         worldManager.loadWorlds();
-        worldManager.generateWorlds();
     }
+
     private void setupWorlds() {
         worldManager.setGameRules();
         worldManager.setBorder();

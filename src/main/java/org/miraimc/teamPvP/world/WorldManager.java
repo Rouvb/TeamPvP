@@ -49,6 +49,7 @@ public class WorldManager {
 
         if (!source.exists()) {
             plugin.getLogger().warning("World directory does not exist: " + source.getPath());
+            generateVoidWorld(folderName);
             return;
         }
 
@@ -82,11 +83,6 @@ public class WorldManager {
             worldCreator.generateStructures(false);
             Bukkit.createWorld(worldCreator);
         }
-    }
-
-    public void generateWorlds() {
-        generateVoidWorld("lobby");
-        generateVoidWorld("death_match");
     }
 
     public void setGameRules() {
