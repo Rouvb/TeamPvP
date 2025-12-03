@@ -82,7 +82,7 @@ public class TeamManager {
         team.getMembers().add(player.getUniqueId());
         team.getAliveMembers().add(player.getUniqueId());
         team.ensureLeader(player.getUniqueId());
-        sendMessage(team, TextUtil.translate("{team_prefix} {player} &f님이 팀에 합류했습니다!")
+        sendMessage(team, TextUtil.translate("{team_prefix}{player} &f님이 팀에 합류했습니다!")
                 .replace("{team_prefix}", team.getPrefix())
                 .replace("{player}", player.getName()));
     }
@@ -90,7 +90,7 @@ public class TeamManager {
     public void removeMember(Team team, Player player) {
         team.getMembers().remove(player.getUniqueId());
         team.getAliveMembers().remove(player.getUniqueId());
-        sendMessage(team, TextUtil.translate("{team_prefix} {player} &f님이 팀에서 떠났습니다!")
+        sendMessage(team, TextUtil.translate("{team_prefix}{player} &f님이 팀에서 떠났습니다!")
                 .replace("{team_prefix}", team.getPrefix())
                 .replace("{player}", player.getName()));
 

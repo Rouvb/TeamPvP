@@ -51,7 +51,7 @@ public class GameTask extends BukkitRunnable {
         }
 
         if (ALERT_TIMES.contains(remainingDeathMatch)) {
-            manager.messageAll(TextUtil.translate("&f데스 매치가 &b" + formatTime(remainingDeathMatch) + "&f 후에 시작됩니다!"));
+            manager.messageAll(TextUtil.translate("&f데스매치가 &b" + formatTime(remainingDeathMatch) + "&f 후에 시작됩니다!"));
             manager.soundAll(Sound.BLOCK_NOTE_BLOCK_BELL);
         }
 

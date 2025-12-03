@@ -80,10 +80,10 @@ public class GameHandler {
     public void sendDeathMatchAlert() {
         org.miraimc.teamPvP.game.GameManager manager = plugin.getGameManager();
         manager.soundAll(Sound.ENTITY_ENDER_DRAGON_AMBIENT);
-        manager.messageAll(TextUtil.translate("&a데스 매치가 시작되었습니다!"));
+        manager.messageAll(TextUtil.translate("&a데스매치가 시작되었습니다!"));
         Title title = Title.title(
-                Component.text(TextUtil.translate("&b&l데스 매치")),
-                Component.text(TextUtil.translate("&f데스 매치가 시작되었습니다!")));
+                Component.text(TextUtil.translate("&b&l데스매치")),
+                Component.text(TextUtil.translate("&f데스매치가 시작되었습니다!")));
         manager.TitleAll(title);
     }
 
