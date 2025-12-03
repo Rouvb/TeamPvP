@@ -50,7 +50,6 @@ public final class TeamPvP extends JavaPlugin {
     public void onLoad() {
         getLogger().info("Loading TeamPvP...");
         instance = this;
-
         worldManager = new WorldManager(this);
         worldManager.generateWorlds();
     }

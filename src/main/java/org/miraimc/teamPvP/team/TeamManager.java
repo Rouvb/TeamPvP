@@ -36,18 +36,22 @@ public class TeamManager {
                 .orElse(null);
     }
 
+    public void loadTeam(String teamId) {
+        String path = "teams." + teamId + ".";
+        String displayName = plugin.getTeamsFile().getString(path + "display_name");
+        String prefix = plugin.getTeamsFile().getString(path + "prefix");
+        String color = plugin.getTeamsFile().getString(path + "color");
+        createTeam(teamId, displayName, prefix, color);
+        plugin.getLogger().info("Team " + teamId + " loaded.");
+    }
+
     public void loadAllTeams() {
         teams.clear();
         ConfigurationSection section = plugin.getTeamsFile().getConfigurationSection("teams");
         if (section == null) return;
 
         for (String name : section.getKeys(false)) {
-            String key = "teams." + name + ".";
-            String id = plugin.getTeamsFile().getString(key + "id");
-            String displayName = plugin.getTeamsFile().getString(key + "display_name");
-            String prefix = plugin.getTeamsFile().getString(key + "prefix");
-            String color = plugin.getTeamsFile().getString(key + "color");
-            createTeam(id, displayName, prefix, color);
+            loadTeam(name);
         }
     }
 

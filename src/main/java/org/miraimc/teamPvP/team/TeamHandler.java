@@ -8,6 +8,7 @@ import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TeamHandler {
 
@@ -21,19 +22,21 @@ public class TeamHandler {
         TeamManager manager = plugin.getTeamManager();
         Team currentTeam = plugin.getTeamManager().getTeam(player);
 
-        if (!player.isOnline()) {
+        if (!player.isOnline() && currentTeam != null) {
             manager.removeMember(currentTeam, player);
+            return;
         }
 
         // 게임 상태 확인
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
             if (currentTeam != null) {
-                if (!currentTeam.getLeader().equals(player.getUniqueId())) {
+                UUID leaderId = currentTeam.getLeader();
+                if (leaderId == null || !leaderId.equals(player.getUniqueId())) {
                     manager.removeMember(currentTeam, player);
                     if (newTeam != null) {
                         manager.addMember(newTeam, player);
                     }
-                } else {
+                } else if (newTeam != null) {
                     manager.mergeTeams(currentTeam, newTeam);
                 }
             }
@@ -53,6 +56,10 @@ public class TeamHandler {
     }
 
     public String parseTeamMembers(Team team) {
+        if (team == null || team.getMembers() == null) {
+            return ChatColor.GRAY + "None";
+        }
+
         List<String> teamMembers = team.getMembers().stream()
                 .map(uuid -> {
                     Player player = Bukkit.getPlayer(uuid);
