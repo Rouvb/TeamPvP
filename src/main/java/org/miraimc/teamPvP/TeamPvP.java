@@ -12,6 +12,7 @@ import org.miraimc.teamPvP.game.command.GameCommand;
 import org.miraimc.teamPvP.command.TeamPvPCommand;
 import org.miraimc.teamPvP.game.listener.GameListener;
 import org.miraimc.teamPvP.listener.ServerListener;
+import org.miraimc.teamPvP.placeholder.TeamPvPExpansion;
 import org.miraimc.teamPvP.profile.ProfileManager;
 import org.miraimc.teamPvP.profile.command.ProfileCommand;
 import org.miraimc.teamPvP.profile.listener.LobbyListener;
@@ -56,6 +57,7 @@ public final class TeamPvP extends JavaPlugin {
         setupWorlds();
         registerListeners();
         registerCommands();
+        registerPlaceholder();
         loadScoreboardUpdater();
     }
 
@@ -110,6 +112,13 @@ public final class TeamPvP extends JavaPlugin {
         commandManager.registerCommand(new GameCommand(this));
         commandManager.registerCommand(new TeamPvPCommand(this));
         commandManager.registerCommand(new TeamCommand(this));
+    }
+
+    private void registerPlaceholder() {
+        getLogger().info("Registering Placeholder...");
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new TeamPvPExpansion(this).register();
+        }
     }
 
     private void loadScoreboardUpdater() {
