@@ -55,21 +55,22 @@ public class TeamPvPCommand extends BaseCommand {
         sender.sendMessage(TextUtil.translate("&b&lLocations:"));
         sender.sendMessage(TextUtil.translate(" &fLobby: &b" + plugin.getConfigFile().getString("game.locations.lobby")));
         sender.sendMessage(TextUtil.translate(" &fGame: &b" + plugin.getConfigFile().getString("game.locations.game")));
-        sender.sendMessage(" ");
 
         if (profile != null) {
+            sender.sendMessage(" ");
             sender.sendMessage(TextUtil.translate("&b&lProfile Info:"));
             sender.sendMessage(TextUtil.translate(" &fStatus: &b" + profile.getStatus().name()));
             sender.sendMessage(TextUtil.translate(" &fBuild Mode: &b" + profile.isBuildMode()));
-            sender.sendMessage(" ");
         }
 
         if (team != null) {
+            sender.sendMessage(" ");
             sender.sendMessage(TextUtil.translate("&b&lTeam Info:"));
             sender.sendMessage(TextUtil.translate(" &fTeam: &b" + team.getName()));
             sender.sendMessage(TextUtil.translate(" &fTeam Display Name: &b" + team.getColor() + team.getDisplayName()));
             sender.sendMessage(TextUtil.translate(" &fTeam Prefix: &b" + team.getPrefix()));
             sender.sendMessage(TextUtil.translate(" &fTeam Leader: &b" + team.getLeader()));
+            sender.sendMessage(TextUtil.translate(" &fTeam Weight: &b" + team.getWeight()));
             sender.sendMessage(TextUtil.translate(" &fTeam Members: &b" + plugin.getTeamHandler().parseTeamMembers(team)));
         }
 
