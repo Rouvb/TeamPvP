@@ -37,8 +37,8 @@ public class GameManager {
         plugin.getGameHandler().getRandomTeleportLocations();
 
         cancelCountdown();
-        CountdownTask task = new CountdownTask(this, plugin.getGame());
-        countdownTask = task.runTaskTimer(plugin, 0L, 20L);
+        countdownTask = new CountdownTask(this, plugin.getGame())
+                .runTaskTimer(plugin, 0L, 20L);
     }
 
     private void cancelCountdown() {
@@ -52,21 +52,23 @@ public class GameManager {
         if (plugin.getGame().getGameStatus() != GameStatus.STARTING) return;
 
         plugin.getGame().setGameStatus(GameStatus.PLAYING);
-
         cancelCountdown();
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             Bukkit.getOnlinePlayers().forEach(player -> {
-                plugin.getProfileManager().getProfile(player).setStatus(ProfileStatus.PLAYING);
-                plugin.getGameHandler().preparePlayerForGame(player);
+                Profile profile = plugin.getProfileManager().getProfile(player);
+                if (profile != null) {
+                    profile.setStatus(ProfileStatus.PLAYING);
+                    plugin.getGameHandler().preparePlayerForGame(player);
+                }
             });
         });
 
         plugin.getGameHandler().teleportAllToGameWorld();
 
         cancelGameTask();
-        GameTask task = new GameTask(plugin.getGame(), this);
-        task.runTaskTimer(plugin, 0L, 20L);
+        gameTask = new GameTask(plugin.getGame(), this)
+                .runTaskTimer(plugin, 0L, 20L);
     }
 
     private void cancelGameTask() {
@@ -86,8 +88,10 @@ public class GameManager {
     public void endGame(@Nullable Team winnerTeam) {
         GameStatus gameStatus = plugin.getGame().getGameStatus();
         if (gameStatus != GameStatus.PLAYING && gameStatus != GameStatus.DEATH_MATCH) return;
+
         plugin.getGame().setGameStatus(GameStatus.ENDING);
         plugin.getGameHandler().handleEndGame(winnerTeam);
+
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Bukkit.dispatchCommand(plugin.getServer().getConsoleSender(), "stop");
         }, 20L * 15);
@@ -95,14 +99,12 @@ public class GameManager {
 
     public void setSpectatorMode(Player player) {
         Team team = plugin.getTeamManager().getTeam(player);
-        if (team != null) {
-            team.getAliveMembers().remove(player.getUniqueId());
-        }
+        if (team != null) team.getAliveMembers().remove(player.getUniqueId());
 
         Profile profile = plugin.getProfileManager().getProfile(player);
-        profile.setStatus(ProfileStatus.SPECTATING);
+        if (profile != null) profile.setStatus(ProfileStatus.SPECTATING);
 
-        VisibilityUtil.updatePlayerVisibility(player, profile.getStatus());
+        VisibilityUtil.updatePlayerVisibility(player, ProfileStatus.SPECTATING);
         plugin.getProfileHandler().resetInventory(player);
 
         Title title = Title.title(
@@ -117,20 +119,16 @@ public class GameManager {
      * @param locationType
      */
     public void setLocation(String locationType) {
-        Location location = LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations." + locationType));
+        Location location = LocationUtil.deserializeLocation(
+                plugin.getConfigFile().getString("game.locations." + locationType)
+        );
         if (location == null) return;
+
         switch (locationType) {
-            case "lobby":
-                plugin.getGame().setLobbyLocation(location);
-                return;
-            case "game":
-                plugin.getGame().setGameLocation(location);
-                return;
-            case "death_match":
-                plugin.getGame().setDeathMatchLocation(location);
-                return;
-            default:
-                plugin.getLogger().warning("Unknown location type: " + locationType);
+            case "lobby" -> plugin.getGame().setLobbyLocation(location);
+            case "game" -> plugin.getGame().setGameLocation(location);
+            case "death_match" -> plugin.getGame().setDeathMatchLocation(location);
+            default -> plugin.getLogger().warning("Unknown location type: " + locationType);
         }
     }
 

@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.profile.Profile;
+import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.TextUtil;
 
@@ -46,9 +47,15 @@ public class TeamPvPExpansion extends PlaceholderExpansion {
             case "team_prefix"   -> team != null ? team.getPrefix() : "";
             case "team_size"     -> team != null ? String.valueOf(team.getMembers().size()) : "0";
             case "team_alive"    -> team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
-            case "player_color"  -> (team != null && team.getAliveMembers().contains(player.getUniqueId()))
-                    ? team.getColor()
-                    : TextUtil.translate("&7");
+            case "player_color"  -> {
+                if (profile.getStatus().equals(ProfileStatus.SPECTATING)) {
+                    yield TextUtil.translate("&7");
+                } else if (team != null) {
+                    yield team.getColor();
+                } else {
+                    yield "";
+                }
+            }
             default -> "";
         };
     }
