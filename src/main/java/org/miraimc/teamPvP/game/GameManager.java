@@ -85,7 +85,7 @@ public class GameManager {
     public void endGame(@Nullable Team winnerTeam) {
         GameStatus gameStatus = plugin.getGame().getGameStatus();
         if (gameStatus != GameStatus.PLAYING && gameStatus != GameStatus.DEATH_MATCH) return;
-        plugin.getGame().setGameStatus(GameStatus.ENDED);
+        plugin.getGame().setGameStatus(GameStatus.ENDING);
         plugin.getGameHandler().handleEndGame(winnerTeam);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Bukkit.getOnlinePlayers().forEach(Player::kick);

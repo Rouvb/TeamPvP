@@ -50,7 +50,7 @@ public class ScoreboardManager {
                     return team != null ? "spectating_team" : "spectating";
                 }
                 return "playing";
-            case ENDED:
+            case ENDING:
                 return "ending";
             default:
                 return "default";

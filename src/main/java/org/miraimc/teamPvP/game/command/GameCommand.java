@@ -49,8 +49,7 @@ public class GameCommand extends BaseCommand {
         String path = "game.locations." + locationType;
 
         switch (locationType.toLowerCase()) {
-            case "lobby" -> plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
-            case "world" -> plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
+            case "lobby", "game" -> plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
             default -> {
                 sender.sendMessage(TextUtil.translate("&cInvalid location type!"));
                 return;
