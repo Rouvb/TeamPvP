@@ -35,19 +35,20 @@ public class TeamPvPExpansion extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, @NotNull String params) {
         Profile profile = plugin.getProfileManager().getProfile(player);
         if (profile == null) return "";
-        if (params.equalsIgnoreCase("player_status")) return profile.getStatus().toString();
 
         Team team = plugin.getTeamManager().getTeam(player);
-        if (params.equalsIgnoreCase("team_weight")) return team != null ? String.valueOf(team.getWeight()) : "0";
-        if (team == null) return "";
 
-        return switch (params) {
-            case "team_name" -> team.getName();
-            case "team_color" -> team.getColor();
-            case "team_prefix" -> team.getPrefix();
-            case "team_size" -> String.valueOf(team.getMembers().size());
-            case "team_alive" -> String.valueOf(team.getAliveMembers().size());
-            case "player_color" -> team.getAliveMembers().contains(player.getUniqueId()) ? team.getColor() : TextUtil.translate("&7");
+        return switch (params.toLowerCase()) {
+            case "player_status" -> profile.getStatus().toString();
+            case "team_weight"   -> team != null ? String.valueOf(team.getWeight()) : "0";
+            case "team_name"     -> team != null ? team.getName() : "";
+            case "team_color"    -> team != null ? team.getColor() : "";
+            case "team_prefix"   -> team != null ? team.getPrefix() : "";
+            case "team_size"     -> team != null ? String.valueOf(team.getMembers().size()) : "0";
+            case "team_alive"    -> team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
+            case "player_color"  -> (team != null && team.getAliveMembers().contains(player.getUniqueId()))
+                    ? team.getColor()
+                    : TextUtil.translate("&7");
             default -> "";
         };
     }
