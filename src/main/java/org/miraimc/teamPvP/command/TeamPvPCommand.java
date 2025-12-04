@@ -39,6 +39,7 @@ public class TeamPvPCommand extends BaseCommand {
     }
 
     @Subcommand("debug")
+    @CommandPermission("teampvp.admin")
     public void onDebug(Player sender, @Optional OnlinePlayer target) {
         Player targetPlayer;
         if (target == null) {

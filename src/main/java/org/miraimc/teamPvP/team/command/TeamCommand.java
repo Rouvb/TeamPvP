@@ -128,8 +128,13 @@ public class TeamCommand extends BaseCommand {
 
     @Subcommand("leader|리더")
     public void onLeader(Player sender, OnlinePlayer target) {
+        if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
+            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 팀에 참가할 수 없습니다!"));
+            return;
+        }
+
         Team team = plugin.getTeamManager().getTeam(sender);
-        if (team == null) {
+        if (team == null || !team.getMembers().contains(target.getPlayer().getUniqueId())) {
             sender.sendMessage(TextUtil.translate("&c팀에 소속되어 있지 않습니다!"));
             return;
         }
