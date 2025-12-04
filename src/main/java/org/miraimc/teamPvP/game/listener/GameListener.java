@@ -14,9 +14,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameStatus;
-import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.team.Team;
 
 import java.util.HashSet;

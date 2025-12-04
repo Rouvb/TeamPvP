@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
-import org.miraimc.teamPvP.util.LocationUtil;
 
 public class ProfilePreventionListener implements Listener {
 
