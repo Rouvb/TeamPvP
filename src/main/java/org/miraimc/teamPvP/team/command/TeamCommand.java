@@ -2,17 +2,16 @@ package org.miraimc.teamPvP.team.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.GameStatus;
+import org.miraimc.teamPvP.profile.ChatChannel;
+import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
-import org.miraimc.teamPvP.util.LocationUtil;
 import org.miraimc.teamPvP.util.PlayerUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 
@@ -32,10 +31,12 @@ public class TeamCommand extends BaseCommand {
         String[] helpLines = {
                 TextUtil.LONG_LINE,
                 "&b&l팀 명령어 도움말:",
-                "&b/team info &7 - &f팀 정보를 확인합니다.",
-                "&b/team list &7 - &f팀 목록을 확인합니다.",
-                "&b/team join &7 - &f팀에 참가합니다.",
-                "&b/team leave &7 - &f팀에서 탈퇴합니다.",
+                "&b/team info &7- &f팀 정보를 확인합니다.",
+                "&b/team list &7- &f팀 목록을 확인합니다.",
+                "&b/team join &7- &f팀에 참가합니다.",
+                "&b/team leave &7- &f팀에서 탈퇴합니다.",
+                "&b/team leader &7- &f팀 리더를 변경합니다.",
+                "&b/team chat &7- &f채팅 채널을 변경합니다.",
                 TextUtil.LONG_LINE
         };
         for (String line : helpLines) {
@@ -50,10 +51,11 @@ public class TeamCommand extends BaseCommand {
         sender.sendMessage(TextUtil.LONG_LINE);
         sender.sendMessage(TextUtil.translate("&b&l팀 목록:"));
         for (Team team : teams) {
-            String message = String.format("%s %s &7(%d)",
+            String message = String.format("%s %s &7(%d): %s",
                     team.getPrefix(),
                     team.getDisplayName(),
-                    team.getMembers().size());
+                    team.getMembers().size(),
+                    plugin.getTeamHandler().parseTeamMembers(team));
             sender.sendMessage(TextUtil.translate(message));
         }
         sender.sendMessage(TextUtil.LONG_LINE);
@@ -167,12 +169,24 @@ public class TeamCommand extends BaseCommand {
         }
     }
 
-    @Subcommand("setdeathmatch")
-    @CommandPermission("teampvp.admin")
-    public void onDeathMatchAdd(Player sender, String teamName) {
-        Location location = sender.getLocation();
-        plugin.getTeamManager().getTeam(teamName).setDeathMatchLocation(location);
-        plugin.getTeamsFile().set("teams." + teamName + ".death_match_location", LocationUtil.serializeLocation(location));
-        sender.sendMessage(TextUtil.translate("&aSuccessfully added death match location for &e" + teamName + "&a."));
+    @Subcommand("chat|채팅")
+    public void onChat(Player sender) {
+        Team team = plugin.getTeamManager().getTeam(sender);
+        Profile profile = plugin.getProfileManager().getProfile(sender);
+        if (team == null) {
+            profile.setChatChannel(ChatChannel.GLOBAL);
+            sender.sendMessage(TextUtil.translate("&c팀에 소속되어 있지 않습니다!"));
+            return;
+        }
+
+        if (profile.getChatChannel() == ChatChannel.GLOBAL) {
+            profile.setChatChannel(ChatChannel.TEAM);
+            sender.sendMessage(TextUtil.translate("&f채팅 채널을 &b팀 채팅&f으로 변경했습니다."));
+            return;
+        }
+        if (profile.getChatChannel() == ChatChannel.TEAM) {
+            profile.setChatChannel(ChatChannel.GLOBAL);
+            sender.sendMessage(TextUtil.translate("&f채팅 채널을 &b전채 채팅&f으로 변경했습니다."));
+        }
     }
 }

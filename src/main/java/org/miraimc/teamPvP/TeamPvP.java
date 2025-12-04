@@ -23,7 +23,9 @@ import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.scoreboard.ScoreboardManager;
 import org.miraimc.teamPvP.team.TeamHandler;
 import org.miraimc.teamPvP.team.TeamManager;
+import org.miraimc.teamPvP.team.command.TeamAdminCommand;
 import org.miraimc.teamPvP.team.command.TeamCommand;
+import org.miraimc.teamPvP.team.listener.TeamChatListener;
 import org.miraimc.teamPvP.team.listener.TeamListener;
 import org.miraimc.teamPvP.util.BasicConfigFile;
 import org.miraimc.teamPvP.world.WorldManager;
@@ -104,6 +106,7 @@ public final class TeamPvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WorldPreventionListener(this), this);
         getServer().getPluginManager().registerEvents(new GameListener(this), this);
         getServer().getPluginManager().registerEvents(new TeamListener(this), this);
+        getServer().getPluginManager().registerEvents(new TeamChatListener(this), this);
         getServer().getPluginManager().registerEvents(new ServerListener(this), this);
     }
 
@@ -114,6 +117,7 @@ public final class TeamPvP extends JavaPlugin {
         commandManager.registerCommand(new GameCommand(this));
         commandManager.registerCommand(new TeamPvPCommand(this));
         commandManager.registerCommand(new TeamCommand(this));
+        commandManager.registerCommand(new TeamAdminCommand(this));
     }
 
     private void registerPlaceholder() {
