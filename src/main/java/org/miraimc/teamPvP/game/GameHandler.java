@@ -22,7 +22,10 @@ public class GameHandler {
 
     public void preparePlayerForGame(Player player) {
         Team team = plugin.getTeamManager().getTeam(player);
-        if (team == null) return;
+        if (team == null) {
+            plugin.getGameManager().setSpectatorMode(player);
+            return;
+        }
 
         plugin.getProfileHandler().resetInventory(player);
         player.setGameMode(GameMode.SURVIVAL);
@@ -120,7 +123,6 @@ public class GameHandler {
                     "",
                     TextUtil.translate("&b&l게임 종료!"),
                     TextUtil.translate("&f 승리 팀: &b" + winnerTeam.getPrefix() + winnerTeam.getDisplayName()),
-                    TextUtil.translate("&f 플레이어: &b" + plugin.getTeamHandler().parseTeamMembers(winnerTeam)),
                     "",
                     TextUtil.LONG_LINE,
             };

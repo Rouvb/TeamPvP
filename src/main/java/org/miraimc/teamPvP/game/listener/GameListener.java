@@ -1,5 +1,7 @@
 package org.miraimc.teamPvP.game.listener;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -18,6 +20,7 @@ import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.team.Team;
+import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,9 +45,20 @@ public class GameListener implements Listener {
         Game game = plugin.getGame();
         if (game.getGameStatus().equals(GameStatus.DEATH_MATCH)) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 4L);
+            Title title = Title.title(
+                    Component.text(TextUtil.translate("&c&l사망")),
+                    Component.text(TextUtil.translate("&f이제 관전 모드 상태입니다!"))
+            );
+            victim.showTitle(title);
             plugin.getGameManager().setSpectatorMode(victim);
             return;
         }
+
+        Title title = Title.title(
+                Component.text(TextUtil.translate("&c&l사망")),
+                Component.text(TextUtil.translate(""))
+        );
+        victim.showTitle(title);
 
         Player killer = event.getEntity().getKiller();
         if (killer != null
