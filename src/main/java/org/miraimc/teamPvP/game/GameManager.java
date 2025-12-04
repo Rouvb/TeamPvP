@@ -15,6 +15,7 @@ import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
 import org.miraimc.teamPvP.util.TextUtil;
+import org.miraimc.teamPvP.util.VisibilityUtil;
 
 import javax.annotation.Nullable;
 
@@ -88,7 +89,6 @@ public class GameManager {
         plugin.getGame().setGameStatus(GameStatus.ENDING);
         plugin.getGameHandler().handleEndGame(winnerTeam);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Bukkit.getOnlinePlayers().forEach(Player::kick);
             Bukkit.dispatchCommand(plugin.getServer().getConsoleSender(), "stop");
         }, 20L * 15);
     }
@@ -102,6 +102,7 @@ public class GameManager {
         Profile profile = plugin.getProfileManager().getProfile(player);
         profile.setStatus(ProfileStatus.SPECTATING);
 
+        VisibilityUtil.updatePlayerVisibility(player, profile.getStatus());
         plugin.getGameHandler().setSpectatorMode(player);
 
         Title title = Title.title(
@@ -111,15 +112,22 @@ public class GameManager {
         player.showTitle(title);
     }
 
-    public void loadLocation(String locationType) {
+    /**
+     * Game 클래스에 위치 정보를 저장하는 메서드
+     * @param locationType
+     */
+    public void setLocation(String locationType) {
         Location location = LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations." + locationType));
         if (location == null) return;
         switch (locationType) {
             case "lobby":
-                plugin.getGame().setGameStatus(GameStatus.LOBBY);
+                plugin.getGame().setLobbyLocation(location);
                 return;
             case "game":
-                plugin.getGame().setLobbyLocation(location);
+                plugin.getGame().setGameLocation(location);
+                return;
+            case "death_match":
+                plugin.getGame().setDeathMatchLocation(location);
                 return;
             default:
                 plugin.getLogger().warning("Unknown location type: " + locationType);

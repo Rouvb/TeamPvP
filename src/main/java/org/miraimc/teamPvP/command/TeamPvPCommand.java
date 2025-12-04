@@ -51,28 +51,28 @@ public class TeamPvPCommand extends BaseCommand {
         Team team = plugin.getTeamManager().getTeam(targetPlayer);
         Profile profile = plugin.getProfileManager().getProfile(targetPlayer);
 
-        targetPlayer.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
-        targetPlayer.sendMessage(TextUtil.translate("&b&lLocations:"));
-        targetPlayer.sendMessage(TextUtil.translate(" &fLobby: &b" + plugin.getConfigFile().getString("game.locations.lobby")));
-        targetPlayer.sendMessage(TextUtil.translate(" &fGame: &b" + plugin.getConfigFile().getString("game.locations.game")));
-        targetPlayer.sendMessage(" ");
+        sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
+        sender.sendMessage(TextUtil.translate("&b&lLocations:"));
+        sender.sendMessage(TextUtil.translate(" &fLobby: &b" + plugin.getConfigFile().getString("game.locations.lobby")));
+        sender.sendMessage(TextUtil.translate(" &fGame: &b" + plugin.getConfigFile().getString("game.locations.game")));
+        sender.sendMessage(" ");
 
         if (profile != null) {
-            targetPlayer.sendMessage(TextUtil.translate("&b&lProfile Info:"));
-            targetPlayer.sendMessage(TextUtil.translate(" &fStatus: &b" + profile.getStatus().name()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fBuild Mode: &b" + profile.isBuildMode()));
-            targetPlayer.sendMessage(" ");
+            sender.sendMessage(TextUtil.translate("&b&lProfile Info:"));
+            sender.sendMessage(TextUtil.translate(" &fStatus: &b" + profile.getStatus().name()));
+            sender.sendMessage(TextUtil.translate(" &fBuild Mode: &b" + profile.isBuildMode()));
+            sender.sendMessage(" ");
         }
 
         if (team != null) {
-            targetPlayer.sendMessage(TextUtil.translate("&b&lTeam Info:"));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam: &b" + team.getName()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam Display Name: &b" + team.getColor() + team.getDisplayName()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam Prefix: &b" + team.getPrefix()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam Leader: &b" + team.getLeader()));
-            targetPlayer.sendMessage(TextUtil.translate(" &fTeam Members: &b" + plugin.getTeamHandler().parseTeamMembers(team)));
+            sender.sendMessage(TextUtil.translate("&b&lTeam Info:"));
+            sender.sendMessage(TextUtil.translate(" &fTeam: &b" + team.getName()));
+            sender.sendMessage(TextUtil.translate(" &fTeam Display Name: &b" + team.getColor() + team.getDisplayName()));
+            sender.sendMessage(TextUtil.translate(" &fTeam Prefix: &b" + team.getPrefix()));
+            sender.sendMessage(TextUtil.translate(" &fTeam Leader: &b" + team.getLeader()));
+            sender.sendMessage(TextUtil.translate(" &fTeam Members: &b" + plugin.getTeamHandler().parseTeamMembers(team)));
         }
 
-        targetPlayer.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
+        sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
     }
 }

@@ -1,41 +1,31 @@
 package org.miraimc.teamPvP.profile.listener;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.*;
-import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.util.LocationUtil;
 
-public class LobbyPreventionListener implements Listener {
+public class ProfilePreventionListener implements Listener {
 
     private final TeamPvP plugin;
 
-    public LobbyPreventionListener(TeamPvP plugin) {
+    public ProfilePreventionListener(TeamPvP plugin) {
         this.plugin = plugin;
-    }
-
-    private World getLobbyWorld() {
-        return LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations.lobby")).getWorld();
-    }
-
-    private boolean isLobbyWorld(World world) {
-        return world != null && world.equals(getLobbyWorld());
     }
 
     private boolean canBypass(Player player) {
@@ -57,6 +47,13 @@ public class LobbyPreventionListener implements Listener {
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player player && !canBypass(player)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDamageEntity(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player player && !canBypass(player)) {
             event.setCancelled(true);
         }
     }
@@ -97,8 +94,8 @@ public class LobbyPreventionListener implements Listener {
                 }
             }
 
-            Location spawnLocation = LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations.lobby"));
-            player.teleport(spawnLocation);
+            Location lobbyLocation = plugin.getGame().getLobbyLocation();
+            player.teleport(lobbyLocation);
         }
 
     }
@@ -123,34 +120,6 @@ public class LobbyPreventionListener implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         Player player = (Player) event.getEntity();
         if (!canBypass(player)) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onBurn(BlockBurnEvent event) {
-        if (isLobbyWorld(event.getBlock().getWorld())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onWeatherChange(WeatherChangeEvent event) {
-        if (isLobbyWorld(event.getWorld())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onBlockExplode(BlockExplodeEvent event) {
-        if (isLobbyWorld(event.getBlock().getWorld())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onEntityExplode(EntityExplodeEvent event) {
-        if (isLobbyWorld(event.getLocation().getWorld())) {
             event.setCancelled(true);
         }
     }

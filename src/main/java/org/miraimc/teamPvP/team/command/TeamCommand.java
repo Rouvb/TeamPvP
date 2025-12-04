@@ -62,49 +62,67 @@ public class TeamCommand extends BaseCommand {
     @Subcommand("join|참가")
     public void onJoin(Player sender) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
-            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 팀에 참가할 수 없습니다!"));
+            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다!"));
             return;
         }
 
         Team team = plugin.getTeamManager().getRandomTeam();
         if (team == null) {
-            sender.sendMessage(TextUtil.translate("&c해당 팀을 찾을 수 없습니다!"));
+            sender.sendMessage(TextUtil.translate("&c팀을 찾을 수 없습니다!"));
             return;
         }
 
         plugin.getTeamHandler().handleTeam(team, sender);
+        plugin.getTeamManager().sendMessage(
+                team,
+                TextUtil.translate("{team_prefix}{player} &f님이 팀에 합류했습니다.")
+                        .replace("{team_prefix}", team.getPrefix())
+                        .replace("{player}", sender.getName())
+        );
     }
 
     @Subcommand("forcejoin|강제참가")
     public void onForceJoin(Player sender, String teamName) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
-            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 팀에 참가할 수 없습니다!"));
+            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다!"));
             return;
         }
 
         Team team = plugin.getTeamManager().getTeam(teamName);
         if (team == null) {
-            sender.sendMessage(TextUtil.translate("&c해당 팀을 찾을 수 없습니다!"));
+            sender.sendMessage(TextUtil.translate("&c팀을 찾을 수 없습니다!"));
             return;
         }
 
         plugin.getTeamHandler().handleTeam(team, sender);
+        plugin.getTeamManager().sendMessage(
+                team,
+                TextUtil.translate("{team_prefix}{player} &f님이 팀에 합류했습니다.")
+                        .replace("{team_prefix}", team.getPrefix())
+                        .replace("{player}", sender.getName())
+        );
     }
 
     @Subcommand("leave|탈퇴")
     public void onLeave(Player sender) {
+        if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
+            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다!"));
+            return;
+        }
+
         Team team = plugin.getTeamManager().getTeam(sender);
         if (team == null) {
             sender.sendMessage(TextUtil.translate("&c팀에 소속되어 있지 않습니다!"));
             return;
         }
 
-        if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
-            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 팀에서 나갈 수 없습니다!"));
-            return;
-        }
-
         team.getMembers().remove(sender.getUniqueId());
+        plugin.getTeamManager().sendMessage(
+                team,
+                TextUtil.translate("{team_prefix}{player} &f님이 팀에서 떠났습니다.")
+                        .replace("{team_prefix}", team.getPrefix())
+                        .replace("{player}", sender.getName())
+        );
         sender.sendMessage(TextUtil.translate("&c팀에서 성공적으로 탈퇴했습니다!"));
     }
 
@@ -129,7 +147,7 @@ public class TeamCommand extends BaseCommand {
     @Subcommand("leader|리더")
     public void onLeader(Player sender, OnlinePlayer target) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
-            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 팀에 참가할 수 없습니다!"));
+            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다!"));
             return;
         }
 
@@ -153,6 +171,7 @@ public class TeamCommand extends BaseCommand {
     @CommandPermission("teampvp.admin")
     public void onDeathMatchAdd(Player sender, String teamName) {
         Location location = sender.getLocation();
+        plugin.getTeamManager().getTeam(teamName).setDeathMatchLocation(location);
         plugin.getTeamsFile().set("teams." + teamName + ".death_match_location", LocationUtil.serializeLocation(location));
         sender.sendMessage(TextUtil.translate("&aSuccessfully added death match location for &e" + teamName + "&a."));
     }

@@ -90,17 +90,11 @@ public class TeamManager {
         team.getMembers().add(player.getUniqueId());
         team.getAliveMembers().add(player.getUniqueId());
         team.ensureLeader(player.getUniqueId());
-        sendMessage(team, TextUtil.translate("{team_prefix}{player} &f님이 팀에 합류했습니다!")
-                .replace("{team_prefix}", team.getPrefix())
-                .replace("{player}", player.getName()));
     }
 
     public void removeMember(Team team, Player player) {
         team.getMembers().remove(player.getUniqueId());
         team.getAliveMembers().remove(player.getUniqueId());
-        sendMessage(team, TextUtil.translate("{team_prefix}{player} &f님이 팀에서 떠났습니다!")
-                .replace("{team_prefix}", team.getPrefix())
-                .replace("{player}", player.getName()));
 
         // 리더였을 경우 자동 교체
         if (team.getLeader() != null && team.getLeader().equals(player.getUniqueId())) {
@@ -111,10 +105,12 @@ public class TeamManager {
 
     public void mergeTeams(Team source, Team target) {
         target.getMembers().addAll(source.getMembers());
+        target.getAliveMembers().addAll(source.getAliveMembers());
         source.getMembers().clear();
+        source.getAliveMembers().clear();
         source.setLeader(null);
 
-        Bukkit.broadcastMessage(TextUtil.translate("{team_prefix}{team_display_name} &f팀이 {new_team_prefix} {new_team_display_name} &f팀으로 흡수되었습니다!")
+        Bukkit.broadcastMessage(TextUtil.translate("{team_prefix}{team_display_name} &f팀이 {new_team_prefix}{new_team_display_name} &f팀으로 흡수되었습니다!")
                 .replace("{team_prefix}", source.getPrefix())
                 .replace("{team_display_name}", source.getDisplayName())
                 .replace("{new_team_prefix}", target.getPrefix())

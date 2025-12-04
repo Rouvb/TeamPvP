@@ -16,7 +16,8 @@ import org.miraimc.teamPvP.placeholder.TeamPvPExpansion;
 import org.miraimc.teamPvP.profile.ProfileManager;
 import org.miraimc.teamPvP.profile.command.ProfileCommand;
 import org.miraimc.teamPvP.profile.listener.LobbyListener;
-import org.miraimc.teamPvP.profile.listener.LobbyPreventionListener;
+import org.miraimc.teamPvP.profile.listener.ProfilePreventionListener;
+import org.miraimc.teamPvP.profile.listener.WorldPreventionListener;
 import org.miraimc.teamPvP.profile.listener.ProfileListener;
 import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.scoreboard.ScoreboardManager;
@@ -98,8 +99,9 @@ public final class TeamPvP extends JavaPlugin {
     private void registerListeners() {
         getLogger().info("Registering Listeners...");
         getServer().getPluginManager().registerEvents(new ProfileListener(this), this);
+        getServer().getPluginManager().registerEvents(new ProfilePreventionListener(this), this);
         getServer().getPluginManager().registerEvents(new LobbyListener(this), this);
-        getServer().getPluginManager().registerEvents(new LobbyPreventionListener(this), this);
+        getServer().getPluginManager().registerEvents(new WorldPreventionListener(this), this);
         getServer().getPluginManager().registerEvents(new GameListener(this), this);
         getServer().getPluginManager().registerEvents(new TeamListener(this), this);
         getServer().getPluginManager().registerEvents(new ServerListener(this), this);

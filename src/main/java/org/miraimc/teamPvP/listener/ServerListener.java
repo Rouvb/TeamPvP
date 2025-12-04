@@ -19,8 +19,9 @@ public class ServerListener implements Listener {
 
     @EventHandler
     public void onServerLoaded(ServerLoadEvent event) {
-        plugin.getGameManager().loadLocation("lobby");
-        plugin.getGameManager().loadLocation("game");
+        plugin.getGameManager().setLocation("lobby");
+        plugin.getGameManager().setLocation("game");
+        plugin.getGameManager().setLocation("death_match");
         plugin.getTeamManager().loadAllTeams();
         serverLoaded = true;
     }

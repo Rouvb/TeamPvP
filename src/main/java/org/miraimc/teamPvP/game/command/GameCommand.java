@@ -2,15 +2,13 @@ package org.miraimc.teamPvP.game.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
-import org.miraimc.teamPvP.profile.Profile;
-import org.miraimc.teamPvP.team.Team;
+import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.util.LocationUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 
@@ -47,9 +45,21 @@ public class GameCommand extends BaseCommand {
     public void onSetLocation(Player sender, String locationType) {
         Location location = sender.getLocation();
         String path = "game.locations." + locationType;
+        Game game = plugin.getGame();
 
         switch (locationType.toLowerCase()) {
-            case "lobby", "game" -> plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
+            case "lobby" -> {
+                plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
+                game.setLobbyLocation(location);
+            }
+            case "game" -> {
+                plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
+                game.setGameLocation(location);
+            }
+            case "death_match" -> {
+                plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
+                game.setDeathMatchLocation(location);
+            }
             default -> {
                 sender.sendMessage(TextUtil.translate("&cInvalid location type!"));
                 return;

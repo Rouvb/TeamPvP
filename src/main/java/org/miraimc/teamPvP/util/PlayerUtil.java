@@ -45,8 +45,8 @@ public class PlayerUtil {
             }
             case ProfileStatus.SPECTATING -> {
                 player.setGameMode(GameMode.CREATIVE);
-                player.setAllowFlight(false);
-                player.setFlying(false);
+                player.setAllowFlight(true);
+                player.setFlying(true);
                 player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(20.0);
             }
         }

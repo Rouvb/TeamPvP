@@ -18,6 +18,7 @@ public class Game {
     private int borderSize;
     private Location lobbyLocation;
     private Location gameLocation;
+    private Location deathMatchLocation;
 
     public Game(TeamPvP plugin, org.miraimc.teamPvP.game.GameStatus gameStatus) {
         this.plugin = plugin;

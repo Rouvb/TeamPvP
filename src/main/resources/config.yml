@@ -6,6 +6,7 @@ game:
   locations:
     lobby: ""
     game: ""
+    death_match: ""
 rtp:
   max_tries: 500
   range: 500

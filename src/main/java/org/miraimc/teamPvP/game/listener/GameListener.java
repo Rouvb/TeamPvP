@@ -6,17 +6,18 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.team.Team;
-import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,14 +36,12 @@ public class GameListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getEntity();
 
-        // Instant Respawn
-        Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 2L);
-
         Team team = plugin.getTeamManager().getTeam(victim);
         if (team == null) return;
 
         Game game = plugin.getGame();
         if (game.getGameStatus().equals(GameStatus.DEATH_MATCH)) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 4L);
             plugin.getGameManager().setSpectatorMode(victim);
             return;
         }
@@ -55,20 +54,8 @@ public class GameListener implements Listener {
             Team killerTeam = plugin.getTeamManager().getTeam(killer);
             if (killerTeam == null) return;
 
-            // 리더 사망
-            if (team.getLeader() != null && team.getLeader().equals(victim.getUniqueId())) {
-                for (UUID uuid : team.getMembers()) {
-                    Player member = Bukkit.getPlayer(uuid);
-                    if (member != null && member.isOnline()) {
-                        plugin.getTeamHandler().handleTeam(killerTeam, member);
-                        setReducedHealth(member);
-                    }
-                }
-            } else {
-                plugin.getTeamHandler().handleTeam(killerTeam, victim);
-                setReducedHealth(victim);
-            }
-            return;
+            plugin.getTeamHandler().handleTeam(killerTeam, victim);
+            setReducedHealth(victim);
         }
 
         UUID leaderId = team.getLeader();
@@ -81,14 +68,20 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Team team = plugin.getTeamManager().getTeam(event.getPlayer());
+        if (team == null) return;
+        Player leader = Bukkit.getPlayer(team.getLeader());
+        if (leader != null && leader.isOnline()) {
+            event.setRespawnLocation(leader.getLocation());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeamMemberDeath(PlayerDeathEvent event) {
         Game game = plugin.getGame();
         GameStatus gameStatus = game.getGameStatus();
         if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
-
-        Player victim = event.getEntity();
-        Team team = plugin.getTeamManager().getTeam(victim);
-        if (team == null) return;
 
         Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
         if (winnerTeam == null) return;
@@ -98,8 +91,8 @@ public class GameListener implements Listener {
     private void setReducedHealth(Player player) {
         AttributeInstance maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
         if (maxHealthAttr != null) {
-            maxHealthAttr.setBaseValue(5.0);
-            player.setHealth(5.0);
+            maxHealthAttr.setBaseValue(10.0);
+            player.setHealth(10.0);
         }
     }
 
@@ -117,12 +110,10 @@ public class GameListener implements Listener {
 
         Game game = plugin.getGame();
         if (game.getDuration() <= game.getInvincibilityTime()) {
-            damager.sendMessage(TextUtil.translate("&c무적 시간에는 상대방을 공격할 수 없습니다."));
             event.setCancelled(true);
         }
 
-        if (victimTeam != null && damagerTeam != null && victimTeam.equals(damagerTeam)) {
-            damager.sendMessage(TextUtil.translate("&c같은 팀원을 공격할 수 없습니다."));
+        if (victimTeam != null && victimTeam.equals(damagerTeam)) {
             event.setCancelled(true);
         }
     }
