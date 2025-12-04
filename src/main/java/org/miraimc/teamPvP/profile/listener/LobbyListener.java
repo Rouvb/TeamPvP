@@ -7,7 +7,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.miraimc.teamPvP.TeamPvP;
-import org.miraimc.teamPvP.util.PlayerUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 
 public class LobbyListener implements Listener {
@@ -21,7 +20,7 @@ public class LobbyListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        PlayerUtil.resetInventory(player);
+        plugin.getProfileHandler().resetInventory(player);
         player.getInventory().setHeldItemSlot(4);
 
         Location location = plugin.getGame().getLobbyLocation();

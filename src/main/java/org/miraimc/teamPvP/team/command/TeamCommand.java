@@ -12,7 +12,6 @@ import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.profile.ChatChannel;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
-import org.miraimc.teamPvP.util.PlayerUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.List;
@@ -136,7 +135,7 @@ public class TeamCommand extends BaseCommand {
             return;
         }
 
-        String leaderName = PlayerUtil.getPlayerName(team.getLeader());
+        String leaderName = plugin.getProfileHandler().getPlayerName(team.getLeader());
 
         sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
         sender.sendMessage(TextUtil.translate(TextUtil.translate("&b&l팀 정보:")));

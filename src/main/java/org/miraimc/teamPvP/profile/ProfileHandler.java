@@ -1,21 +1,23 @@
-package org.miraimc.teamPvP.util;
+package org.miraimc.teamPvP.profile;
 
-import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
-import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
 
 import java.util.UUID;
 
-@UtilityClass
-public class PlayerUtil {
+public class ProfileHandler {
 
-    public static void resetInventory(Player player) {
-        TeamPvP plugin = TeamPvP.getInstance();
+    private final TeamPvP plugin;
+
+    public ProfileHandler(TeamPvP plugin) {
+        this.plugin = plugin;
+    }
+
+    public void resetInventory(Player player) {
         ProfileStatus profileStatus = plugin.getProfileManager().getProfile(player).getStatus();
         Team team = plugin.getTeamManager().getTeam(player);
 
@@ -53,7 +55,7 @@ public class PlayerUtil {
         player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getBaseValue());
     }
 
-    public static String getPlayerName(UUID uuid) {
+    public String getPlayerName(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
         return (player != null) ? player.getName() : "Unknown Player";
     }

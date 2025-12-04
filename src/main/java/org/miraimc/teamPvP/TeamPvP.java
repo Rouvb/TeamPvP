@@ -13,6 +13,7 @@ import org.miraimc.teamPvP.game.command.GameCommand;
 import org.miraimc.teamPvP.game.listener.GameListener;
 import org.miraimc.teamPvP.listener.ServerListener;
 import org.miraimc.teamPvP.placeholder.TeamPvPExpansion;
+import org.miraimc.teamPvP.profile.ProfileHandler;
 import org.miraimc.teamPvP.profile.ProfileManager;
 import org.miraimc.teamPvP.profile.command.ProfileCommand;
 import org.miraimc.teamPvP.profile.listener.LobbyListener;
@@ -42,6 +43,7 @@ public final class TeamPvP extends JavaPlugin {
     private WorldManager worldManager;
     private Game game;
     private ProfileManager profileManager;
+    private ProfileHandler profileHandler;
     private TeamManager teamManager;
     private TeamHandler teamHandler;
     private GameManager gameManager;
@@ -90,6 +92,7 @@ public final class TeamPvP extends JavaPlugin {
         getLogger().info("Loading Managers...");
         game = new Game(this, GameStatus.LOBBY);
         profileManager = new ProfileManager();
+        profileHandler = new ProfileHandler(this);
         teamManager = new TeamManager(this);
         teamHandler = new TeamHandler(this);
         gameManager = new GameManager(this);

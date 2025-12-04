@@ -103,7 +103,7 @@ public class GameManager {
         profile.setStatus(ProfileStatus.SPECTATING);
 
         VisibilityUtil.updatePlayerVisibility(player, profile.getStatus());
-        plugin.getGameHandler().setSpectatorMode(player);
+        plugin.getProfileHandler().resetInventory(player);
 
         Title title = Title.title(
                 Component.text(TextUtil.translate("&c&l사망")),

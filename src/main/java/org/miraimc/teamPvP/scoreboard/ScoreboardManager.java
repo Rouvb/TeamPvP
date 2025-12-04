@@ -9,7 +9,6 @@ import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
-import org.miraimc.teamPvP.util.PlayerUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 import org.miraimc.teamPvP.util.TimeFormatUtil;
 
@@ -64,7 +63,7 @@ public class ScoreboardManager {
         String teamDisplayName = team != null ? team.getDisplayName() : "없음";
         String teamPrefix = team != null ? team.getPrefix() : "";
         String teamColor = team != null ? team.getColor() : "";
-        String teamLeaderName = team != null ? PlayerUtil.getPlayerName(team.getLeader()) : "없음";
+        String teamLeaderName = team != null ? plugin.getProfileHandler().getPlayerName(team.getLeader()) : "없음";
         String teamSize = team != null ? String.valueOf(team.getMembers().size()) : "0";
         String teamAlive = team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
 

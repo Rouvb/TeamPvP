@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
-import org.miraimc.teamPvP.util.PlayerUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.*;
@@ -25,7 +24,7 @@ public class GameHandler {
         Team team = plugin.getTeamManager().getTeam(player);
         if (team == null) return;
 
-        PlayerUtil.resetInventory(player);
+        plugin.getProfileHandler().resetInventory(player);
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
         player.setFlying(false);
@@ -123,9 +122,5 @@ public class GameHandler {
             };
             Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(messages));
         }
-    }
-
-    public void setSpectatorMode(Player player) {
-        PlayerUtil.resetInventory(player);
     }
 }
