@@ -100,6 +100,7 @@ public class GameHandler {
     }
 
     public void handleEndGame(Team winnerTeam) {
+        Title title = Title.title(Component.text(TextUtil.translate("&b&l게임 종료")), Component.text(""));
         if (winnerTeam == null) {
             String[] messages = {
               TextUtil.LONG_LINE,
@@ -109,7 +110,10 @@ public class GameHandler {
               "",
               TextUtil.LONG_LINE,
             };
-            Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(messages));
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                player.sendMessage(messages);
+                player.showTitle(title);
+            });
         } else {
             String[] messages = {
                     TextUtil.LONG_LINE,
@@ -120,7 +124,10 @@ public class GameHandler {
                     "",
                     TextUtil.LONG_LINE,
             };
-            Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(messages));
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                player.sendMessage(messages);
+                player.showTitle(title);
+            });
         }
     }
 }
