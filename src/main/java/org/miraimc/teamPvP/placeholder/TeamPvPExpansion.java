@@ -46,6 +46,7 @@ public class TeamPvPExpansion extends PlaceholderExpansion {
             case "team_prefix" -> team.getPrefix();
             case "team_size" -> String.valueOf(team.getMembers().size());
             case "team_alive" -> String.valueOf(team.getAliveMembers().size());
+            case "team_weight" -> String.valueOf(team.getWeight());
             case "player_color" -> team.getAliveMembers().contains(player.getUniqueId()) ? team.getColor() : TextUtil.translate("&7");
             default -> "";
         };

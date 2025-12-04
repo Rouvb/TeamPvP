@@ -53,7 +53,8 @@ public class TeamManager {
         String displayName = plugin.getTeamsFile().getString(path + "display_name");
         String prefix = plugin.getTeamsFile().getString(path + "prefix");
         String color = plugin.getTeamsFile().getString(path + "color");
-        createTeam(teamId, displayName, prefix, color);
+        int weight = plugin.getTeamsFile().getInt(path + "weight");
+        createTeam(teamId, displayName, prefix, color, weight);
         plugin.getLogger().info("Team " + teamId + " loaded.");
     }
 
@@ -67,9 +68,9 @@ public class TeamManager {
         }
     }
 
-    public boolean createTeam(String teamName, String teamDisplayName, String teamPrefix, String teamColor) {
+    public boolean createTeam(String teamName, String teamDisplayName, String teamPrefix, String teamColor, int weight) {
         if (getTeam(teamName) != null) return false;
-        Team newTeam = new Team(plugin, teamName, teamDisplayName, teamPrefix, teamColor);
+        Team newTeam = new Team(plugin, teamName, teamDisplayName, teamPrefix, teamColor, weight);
         teams.add(newTeam);
         return true;
     }

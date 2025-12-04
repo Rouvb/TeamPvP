@@ -4,22 +4,26 @@ teams:
     display_name: "Red"
     prefix: "&c■ "
     color: "&c"
+    weight: 4
     death_match_location: ""
   blue:
     id: "blue"
     display_name: "Blue"
     prefix: "&9■ "
     color: "&9"
+    weight: 3
     death_match_location: ""
   yellow:
     id: "yellow"
     display_name: "Yellow"
     prefix: "&e■ "
     color: "&e"
+    weight: 2
     death_match_location: ""
   green:
     id: "green"
     display_name: "Green"
     prefix: "&a■ "
     color: "&a"
+    weight: 1
     death_match_location: ""

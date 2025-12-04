@@ -22,17 +22,19 @@ public class Team {
     private String prefix;
     private String color;
     private UUID leader;
+    private int weight;
     private Location deathMatchLocation;
     private Set<UUID> members = new HashSet<>();
     private Set<UUID> aliveMembers = new HashSet<>();
 
-    public Team(TeamPvP plugin, String name, String displayName, String prefix, String color) {
+    public Team(TeamPvP plugin, String name, String displayName, String prefix, String color, int weight) {
         this.plugin = plugin;
         this.name = name;
         this.displayName = displayName;
         this.prefix = TextUtil.translate(prefix);
         this.color = TextUtil.translate(color);
         this.leader = null;
+        this.weight = weight;
         this.deathMatchLocation = LocationUtil.deserializeLocation(plugin.getTeamsFile().getString("teams." + name + ".death_match_location"));
     }
 
