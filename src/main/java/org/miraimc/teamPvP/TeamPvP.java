@@ -39,7 +39,7 @@ import java.util.UUID;
 public final class TeamPvP extends JavaPlugin {
 
     @Getter private static TeamPvP instance;
-    private BasicConfigFile configFile, teamsFile, scoreboardFile;
+    private BasicConfigFile configFile, teamsFile, scoreboardFile, langFile;
     private WorldManager worldManager;
     private Game game;
     private ProfileManager profileManager;
@@ -74,8 +74,9 @@ public final class TeamPvP extends JavaPlugin {
     private void loadFiles() {
         getLogger().info("Loading Files...");
         configFile = new BasicConfigFile(this, "config.yml", true);
-        teamsFile = new BasicConfigFile(this, "teams.yml", true);
+        teamsFile = new BasicConfigFile(this, "teams.yml", false);
         scoreboardFile = new BasicConfigFile(this, "scoreboard.yml", true);
+        langFile = new BasicConfigFile(this, "lang.yml", true);
     }
 
     private void importWorlds() {

@@ -2,9 +2,9 @@ package org.miraimc.teamPvP.game.task;
 
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameManager;
-import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.Set;
 
@@ -46,12 +46,14 @@ public class GameTask extends BukkitRunnable {
         int remainingDeathMatch = game.getDeathMatchTime() - game.getDuration();
 
         if (ALERT_TIMES.contains(remainingInvincibility)) {
-            manager.messageAll(TextUtil.translate("&f무적 시간이 &b" + formatTime(remainingInvincibility) + "&f 후에 해제됩니다!"));
+            manager.messageAll(Lang.GAME_INVINCIBILITY.getMessage()
+                    .replace("{time}", formatTime(remainingInvincibility)));
             manager.soundAll(Sound.BLOCK_NOTE_BLOCK_BELL);
         }
 
         if (ALERT_TIMES.contains(remainingDeathMatch)) {
-            manager.messageAll(TextUtil.translate("&f데스매치가 &b" + formatTime(remainingDeathMatch) + "&f 후에 시작됩니다!"));
+            manager.messageAll(Lang.GAME_STATUS_DEATHMATCH_ALERT.getMessage()
+                    .replace("{time}", formatTime(remainingDeathMatch)));
             manager.soundAll(Sound.BLOCK_NOTE_BLOCK_BELL);
         }
 
@@ -63,9 +65,9 @@ public class GameTask extends BukkitRunnable {
     private String formatTime(int seconds) {
         if (seconds >= 60) {
             int minutes = seconds / 60;
-            return minutes + TextUtil.translate("&f분");
+            return minutes + Lang.UNIT_MINUTE.getMessage();
         } else {
-            return seconds + TextUtil.translate("&f초");
+            return seconds + Lang.UNIT_SECOND.getMessage();
         }
     }
 }

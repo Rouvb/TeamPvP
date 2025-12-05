@@ -8,6 +8,7 @@ import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.TextUtil;
@@ -26,10 +27,9 @@ public class TeamPvPCommand extends BaseCommand {
     public void onStart(Player sender) {
         Team team = plugin.getTeamManager().getWinnerTeam();
         if (team != null) {
-            sender.sendMessage(TextUtil.translate("&c게임을 시작하려면 적어도 2팀이 필요합니다."));
+            sender.sendMessage(Lang.GAME_ERROR_START_CONDITION.getMessage());
             return;
         }
-        sender.sendMessage(TextUtil.translate("&a게임이 곧 시작됩니다."));
         plugin.getGameManager().startCountdown();
     }
 

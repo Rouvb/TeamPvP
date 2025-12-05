@@ -5,10 +5,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.team.event.TeamAddMemberEvent;
 import org.miraimc.teamPvP.team.event.TeamRemoveMemberEvent;
-import org.miraimc.teamPvP.util.TextUtil;
 
 public class TeamListener implements Listener {
 
@@ -34,8 +34,10 @@ public class TeamListener implements Listener {
 
         plugin.getTeamManager().sendMessage(
                 team,
-                TextUtil.translate("{team_prefix}{player} &f님이 팀에 합류했습니다.")
+                Lang.TEAM_STATUS_MEMBER_JOINED.getMessage()
+                        .replace("{team_display_name}", team.getDisplayName())
                         .replace("{team_prefix}", team.getPrefix())
+                        .replace("{team_color}", team.getColor())
                         .replace("{player}", player.getName())
         );
     }
@@ -45,11 +47,13 @@ public class TeamListener implements Listener {
         Team team = event.getTeam();
         Player player = event.getPlayer();
 
-        player.sendMessage(TextUtil.translate("&c팀에서 떠났습니다."));
+        player.sendMessage(Lang.TEAM_STATUS_LEAVE.getMessage());
         plugin.getTeamManager().sendMessage(
                 team,
-                TextUtil.translate("{team_prefix}{player} &f님이 팀에서 떠났습니다.")
+                Lang.TEAM_STATUS_MEMBER_LEFT.getMessage()
+                        .replace("{team_display_name}", team.getDisplayName())
                         .replace("{team_prefix}", team.getPrefix())
+                        .replace("{team_color}", team.getColor())
                         .replace("{player}", player.getName())
         );
     }

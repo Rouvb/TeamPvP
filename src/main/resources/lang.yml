@@ -1,0 +1,68 @@
+unit:
+  hour: "&f시간"
+  minute: "&f분"
+  second: "&f초"
+none: "없음"
+game:
+  error:
+    start_condition: "&c게임을 시작하려면 최소 2개 이상의 팀에 플레이어가 있어야 합니다."
+  status:
+    countdown:
+      message: "&f게임이 &b{time}&f 후 시작됩니다..."
+      title: "&b&lTeam PvP"
+      subtitle: "&f게임이 &b{time}&f 후 시작됩니다..."
+    started:
+      message: "&a게임이 시작되었습니다!"
+      title: "&b&lTeam PvP"
+      subtitle: "&f게임이 시작되었습니다!"
+    death_match:
+      alert: "&f데스매치가 &b{time} &f후에 시작됩니다!"
+      message: "&a데스매치가 시작되었습니다!"
+      title: "&b&l데스매치"
+      subtitle: "&f데스매치가 시작되었습니다!"
+  end:
+    message:
+      - "&7&m----------------------------------------"
+      - ""
+      - "&b&l게임 종료!"
+      - "&f 우승 팀: &b{team_color}{team_display_name}"
+      - ""
+      - "&7&m----------------------------------------"
+    title: "&b&l게임 종료"
+    subtitle: "&f우승 팀: &b{team_color}{team_display_name}"
+  invincibility: "&f무적 시간이 &b{time}&f{time_format} &f후에 해제됩니다!"
+  death:
+    player:
+      title: "&c&l사망"
+      subtitle: ""
+    spectator_mode:
+      title: "&c&l사망"
+      subtitle: "&f이제 관전 모드가 되었습니다!"
+team:
+  command:
+    help:
+      - "&7&m----------------------------------------"
+      - "&b&l팀 명령어 도움말:"
+      - "&b/team info &7- &f팀 정보를 확인합니다."
+      - "&b/team list &7- &f팀 목록을 확인합니다."
+      - "&b/team join &7- &f팀에 참가합니다."
+      - "&b/team leave &7- &f팀에서 나갑니다."
+      - "&b/team leader &7- &f팀의 리더를 위임합니다."
+      - "&b/team chat &7- &f채팅 채널을 변경합니다."
+      - "&7&m----------------------------------------"
+  error:
+    no_team: "&c팀에 소속되어 있지 않습니다."
+    unable_access: "&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다."
+    not_found: "&c팀을 찾을 수 없습니다."
+    only_leader: "&c팀의 리더만 해당 명령어를 수행할 수 있습니다."
+  status:
+    new_leader: "&f팀의 리더가 {team_color}{player} &f님으로 변경되었습니다."
+    leave: "&c팀에서 나갔습니다."
+    member_joined: "{team_prefix}{player} &f님이 팀에 참가했습니다."
+    member_left: "{team_prefix}{player} &f님이 팀에서 나갔습니다."
+  chat:
+    channel:
+      global: "전체 채널"
+      team: "팀 채널"
+    toggle_channel: "&f채팅 채널이 &b{channel} &f으로 변경했습니다."
+    message_format: "&b&l[Team] {team_color}{player}&7: &f{message}"

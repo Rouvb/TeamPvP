@@ -8,6 +8,7 @@ import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.profile.ChatChannel;
 import org.miraimc.teamPvP.profile.Profile;
@@ -27,20 +28,8 @@ public class TeamCommand extends BaseCommand {
 
     @Default
     public void onCommand(CommandSender sender) {
-        String[] helpLines = {
-                TextUtil.LONG_LINE,
-                "&b&l팀 명령어 도움말:",
-                "&b/team info &7- &f팀 정보를 확인합니다.",
-                "&b/team list &7- &f팀 목록을 확인합니다.",
-                "&b/team join &7- &f팀에 참가합니다.",
-                "&b/team leave &7- &f팀에서 탈퇴합니다.",
-                "&b/team leader &7- &f팀 리더를 변경합니다.",
-                "&b/team chat &7- &f채팅 채널을 변경합니다.",
-                TextUtil.LONG_LINE
-        };
-        for (String line : helpLines) {
-            sender.sendMessage(TextUtil.translate(line));
-        }
+        List<String> messages = Lang.TEAM_COMMAND_HELP.getMessageList();
+        messages.forEach(sender::sendMessage);
     }
 
     @Subcommand("list|목록")
@@ -63,13 +52,13 @@ public class TeamCommand extends BaseCommand {
     @Subcommand("join|참가")
     public void onJoin(Player sender) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
-            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_UNABLE_ACCESS.getMessage());
             return;
         }
 
         Team team = plugin.getTeamManager().getRandomTeam();
         if (team == null) {
-            sender.sendMessage(TextUtil.translate("&c팀을 찾을 수 없습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_NOT_FOUND.getMessage());
             return;
         }
 
@@ -79,13 +68,13 @@ public class TeamCommand extends BaseCommand {
     @Subcommand("forcejoin|강제참가")
     public void onForceJoin(Player sender, String teamName) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
-            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_UNABLE_ACCESS.getMessage());
             return;
         }
 
         Team team = plugin.getTeamManager().getTeam(teamName);
         if (team == null) {
-            sender.sendMessage(TextUtil.translate("&c팀을 찾을 수 없습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_NOT_FOUND.getMessage());
             return;
         }
 
@@ -95,13 +84,13 @@ public class TeamCommand extends BaseCommand {
     @Subcommand("leave|탈퇴")
     public void onLeave(Player sender) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
-            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_UNABLE_ACCESS.getMessage());
             return;
         }
 
         Team team = plugin.getTeamManager().getTeam(sender);
         if (team == null) {
-            sender.sendMessage(TextUtil.translate("&c팀에 소속되어 있지 않습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_NO_TEAM.getMessage());
             return;
         }
 
@@ -112,7 +101,7 @@ public class TeamCommand extends BaseCommand {
     public void onInfo(Player sender) {
         Team team = plugin.getTeamManager().getTeam(sender);
         if (team == null) {
-            sender.sendMessage(TextUtil.translate("&c팀에 소속되어 있지 않습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_NO_TEAM.getMessage());
             return;
         }
 
@@ -129,22 +118,23 @@ public class TeamCommand extends BaseCommand {
     @Subcommand("leader|리더")
     public void onLeader(Player sender, OnlinePlayer target) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
-            sender.sendMessage(TextUtil.translate("&c게임이 진행 중일 때는 해당 명령어를 사용할 수 없습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_UNABLE_ACCESS.getMessage());
             return;
         }
 
         Team team = plugin.getTeamManager().getTeam(sender);
         if (team == null || !team.getMembers().contains(target.getPlayer().getUniqueId())) {
-            sender.sendMessage(TextUtil.translate("&c팀에 소속되어 있지 않습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_NO_TEAM.getMessage());
             return;
         }
 
         if (!team.getLeader().equals(sender.getUniqueId())) {
-            sender.sendMessage(TextUtil.translate("&c팀의 리더만 새로운 리더를 결정할 수 있습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_ONLY_LEADER.getMessage());
         } else {
             team.setLeader(target.getPlayer().getUniqueId());
-            sender.sendMessage(TextUtil.translate("&f팀의 리더가 &6{leader} &f님으로 결정되었습니다!")
-                    .replace("{leader}", target.getPlayer().getName())
+            sender.sendMessage(Lang.TEAM_STATUS_NEW_LEADER.getMessage()
+                    .replace("{team_color}", team.getColor())
+                    .replace("{player}", target.getPlayer().getName())
             );
         }
     }
@@ -155,18 +145,20 @@ public class TeamCommand extends BaseCommand {
         Profile profile = plugin.getProfileManager().getProfile(sender);
         if (team == null) {
             profile.setChatChannel(ChatChannel.GLOBAL);
-            sender.sendMessage(TextUtil.translate("&c팀에 소속되어 있지 않습니다!"));
+            sender.sendMessage(Lang.TEAM_ERROR_NO_TEAM.getMessage());
             return;
         }
 
         if (profile.getChatChannel() == ChatChannel.GLOBAL) {
             profile.setChatChannel(ChatChannel.TEAM);
-            sender.sendMessage(TextUtil.translate("&f채팅 채널을 &b팀 채팅&f으로 변경했습니다."));
+            sender.sendMessage(Lang.TEAM_CHAT_TOGGLE_CHANNEL.getMessage()
+                    .replace("{channel}", Lang.TEAM_CHAT_CHANNEL_TEAM.getMessage()));
             return;
         }
         if (profile.getChatChannel() == ChatChannel.TEAM) {
             profile.setChatChannel(ChatChannel.GLOBAL);
-            sender.sendMessage(TextUtil.translate("&f채팅 채널을 &b전채 채팅&f으로 변경했습니다."));
+            sender.sendMessage(Lang.TEAM_CHAT_TOGGLE_CHANNEL.getMessage()
+                    .replace("{channel}", Lang.TEAM_CHAT_CHANNEL_GLOBAL.getMessage()));
         }
     }
 }

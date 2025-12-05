@@ -17,11 +17,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.team.event.TeamRemoveMemberEvent;
-import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,8 +47,8 @@ public class GameListener implements Listener {
         if (game.getGameStatus().equals(GameStatus.DEATH_MATCH)) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 4L);
             Title title = Title.title(
-                    Component.text(TextUtil.translate("&c&l사망")),
-                    Component.text(TextUtil.translate("&f이제 관전 모드 상태입니다!"))
+                    Component.text(Lang.GAME_DEATH_SPECTATOR_TITLE.getMessage()),
+                    Component.text(Lang.GAME_DEATH_SPECTATOR_SUBTITLE.getMessage())
             );
             victim.showTitle(title);
             plugin.getGameManager().setSpectatorMode(victim);
@@ -56,8 +56,8 @@ public class GameListener implements Listener {
         }
 
         Title title = Title.title(
-                Component.text(TextUtil.translate("&c&l사망")),
-                Component.text(TextUtil.translate(""))
+                Component.text(Lang.GAME_DEATH_PLAYER_TITLE.getMessage()),
+                Component.text(Lang.GAME_DEATH_PLAYER_SUBTITLE.getMessage())
         );
         victim.showTitle(title);
 

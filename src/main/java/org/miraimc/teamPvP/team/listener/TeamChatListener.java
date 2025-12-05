@@ -6,10 +6,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.profile.ChatChannel;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
-import org.miraimc.teamPvP.util.TextUtil;
 
 public class TeamChatListener implements Listener {
 
@@ -28,12 +28,13 @@ public class TeamChatListener implements Listener {
             Team team = plugin.getTeamManager().getTeam(player);
             if (team == null) {
                 profile.setChatChannel(ChatChannel.GLOBAL);
-                player.sendMessage(TextUtil.translate("&f채팅 채널을 &b전채 채팅&f으로 변경했습니다."));
+                player.sendMessage(Lang.TEAM_CHAT_TOGGLE_CHANNEL.getMessage()
+                        .replace("{channel}", "전체 채널"));
                 event.setCancelled(true);
             } else {
                 plugin.getTeamManager().sendMessage(
                         team,
-                        TextUtil.translate("&b&l[팀 채팅] {team_color}{player}&7: &f{message}")
+                        Lang.TEAM_CHAT_MESSAGE_FORMAT.getMessage()
                                 .replace("{team_color}", team.getColor())
                                 .replace("{player}", player.getName())
                                 .replace("{message}", event.getMessage())

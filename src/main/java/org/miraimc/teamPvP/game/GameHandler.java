@@ -5,9 +5,9 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
-import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.*;
 
@@ -31,10 +31,10 @@ public class GameHandler {
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
         player.setFlying(false);
-        player.sendMessage(TextUtil.translate("&a게임이 시작되었습니다!"));
+        player.sendMessage(Lang.GAME_STATUS_STARTED_MESSAGE.getMessage());
         Title title = Title.title(
-                Component.text(TextUtil.translate("&b&lTeam PvP")),
-                Component.text(TextUtil.translate("&f게임이 시작되었습니다."))
+                Component.text(Lang.GAME_STATUS_STARTED_TITLE.getMessage()),
+                Component.text(Lang.GAME_STATUS_STARTED_SUBTITLE.getMessage())
         );
         plugin.getGameManager().TitleAll(title);
     }
@@ -82,10 +82,10 @@ public class GameHandler {
     public void sendDeathMatchAlert() {
         GameManager manager = plugin.getGameManager();
         manager.soundAll(Sound.ENTITY_ENDER_DRAGON_AMBIENT);
-        manager.messageAll(TextUtil.translate("&a데스매치가 시작되었습니다!"));
+        manager.messageAll(Lang.GAME_STATUS_DEATHMATCH_MESSAGE.getMessage());
         Title title = Title.title(
-                Component.text(TextUtil.translate("&b&l데스매치")),
-                Component.text(TextUtil.translate("&f데스매치가 시작되었습니다!")));
+                Component.text(Lang.GAME_STATUS_DEATHMATCH_TITLE.getMessage()),
+                Component.text(Lang.GAME_STATUS_DEATHMATCH_SUBTITLE.getMessage()));
         manager.TitleAll(title);
     }
 
@@ -103,33 +103,27 @@ public class GameHandler {
     }
 
     public void handleEndGame(Team winnerTeam) {
-        Title title = Title.title(Component.text(TextUtil.translate("&b&l게임 종료")), Component.text(""));
-        if (winnerTeam == null) {
-            String[] messages = {
-              TextUtil.LONG_LINE,
-              "",
-              TextUtil.translate("&b&l게임 종료!"),
-              TextUtil.translate("&f 승리 팀: &b없음"),
-              "",
-              TextUtil.LONG_LINE,
-            };
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                player.sendMessage(messages);
-                player.showTitle(title);
-            });
-        } else {
-            String[] messages = {
-                    TextUtil.LONG_LINE,
-                    "",
-                    TextUtil.translate("&b&l게임 종료!"),
-                    TextUtil.translate("&f 승리 팀: &b" + winnerTeam.getPrefix() + winnerTeam.getDisplayName()),
-                    "",
-                    TextUtil.LONG_LINE,
-            };
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                player.sendMessage(messages);
-                player.showTitle(title);
-            });
-        }
+        String teamColor = winnerTeam != null ? winnerTeam.getColor() : "";
+        String teamDisplayName = winnerTeam != null ? winnerTeam.getDisplayName() : Lang.NONE.getMessage();
+
+        Title title = Title.title(
+                Component.text(Lang.GAME_END_TITLE.getMessage()
+                        .replace("{team_color}", teamColor)
+                        .replace("{team_display_name}", teamDisplayName)
+                ),
+                Component.text(Lang.GAME_END_SUBTITLE.getMessage()
+                        .replace("{team_color}", teamColor)
+                        .replace("{team_display_name}", teamDisplayName)
+                )
+        );
+
+        String message = Lang.GAME_END_MESSAGE.getMessage()
+                .replace("{team_color}", teamColor)
+                .replace("{team_display_name}", teamDisplayName);
+
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.sendMessage(message);
+            player.showTitle(title);
+        });
     }
 }
