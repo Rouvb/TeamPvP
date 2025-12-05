@@ -24,6 +24,11 @@ public class TeamPvPCommand extends BaseCommand {
     @Subcommand("start|시작")
     @CommandPermission("teampvp.start")
     public void onStart(Player sender) {
+        Team team = plugin.getTeamManager().getWinnerTeam();
+        if (team != null) {
+            sender.sendMessage(TextUtil.translate("&c게임을 시작하려면 적어도 2팀이 필요합니다."));
+            return;
+        }
         sender.sendMessage(TextUtil.translate("&a게임이 곧 시작됩니다."));
         plugin.getGameManager().startCountdown();
     }

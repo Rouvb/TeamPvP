@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.GameStatus;
-import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.List;
 import java.util.UUID;
@@ -49,8 +48,6 @@ public class TeamHandler {
 
         if (newTeam != null) {
             manager.addMember(newTeam, player);
-        } else {
-            player.sendMessage(TextUtil.translate("&a팀에서 떠났습니다!"));
         }
     }
 

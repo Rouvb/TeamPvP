@@ -74,12 +74,6 @@ public class TeamCommand extends BaseCommand {
         }
 
         plugin.getTeamHandler().handleTeam(team, sender);
-        plugin.getTeamManager().sendMessage(
-                team,
-                TextUtil.translate("{team_prefix}{player} &f님이 팀에 합류했습니다.")
-                        .replace("{team_prefix}", team.getPrefix())
-                        .replace("{player}", sender.getName())
-        );
     }
 
     @Subcommand("forcejoin|강제참가")
@@ -96,12 +90,6 @@ public class TeamCommand extends BaseCommand {
         }
 
         plugin.getTeamHandler().handleTeam(team, sender);
-        plugin.getTeamManager().sendMessage(
-                team,
-                TextUtil.translate("{team_prefix}{player} &f님이 팀에 합류했습니다.")
-                        .replace("{team_prefix}", team.getPrefix())
-                        .replace("{player}", sender.getName())
-        );
     }
 
     @Subcommand("leave|탈퇴")
@@ -118,13 +106,6 @@ public class TeamCommand extends BaseCommand {
         }
 
         team.getMembers().remove(sender.getUniqueId());
-        plugin.getTeamManager().sendMessage(
-                team,
-                TextUtil.translate("{team_prefix}{player} &f님이 팀에서 떠났습니다.")
-                        .replace("{team_prefix}", team.getPrefix())
-                        .replace("{player}", sender.getName())
-        );
-        sender.sendMessage(TextUtil.translate("&c팀에서 성공적으로 탈퇴했습니다!"));
     }
 
     @Subcommand("info|정보")

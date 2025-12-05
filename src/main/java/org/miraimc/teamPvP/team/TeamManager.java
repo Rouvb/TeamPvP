@@ -5,6 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.team.event.TeamAddMemberEvent;
+import org.miraimc.teamPvP.team.event.TeamMergeEvent;
+import org.miraimc.teamPvP.team.event.TeamRemoveMemberEvent;
 import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.ArrayList;
@@ -91,10 +94,10 @@ public class TeamManager {
     }
 
     public void addMember(Team team, Player player) {
-        plugin.getLogger().info("Adding member " + player.getName() + " from " + team.getName());
         team.getMembers().add(player.getUniqueId());
         team.getAliveMembers().add(player.getUniqueId());
         team.ensureLeader(player.getUniqueId());
+        Bukkit.getPluginManager().callEvent(new TeamAddMemberEvent(player, team));
     }
 
     public void removeMember(Team team, Player player) {
@@ -107,20 +110,22 @@ public class TeamManager {
             UUID newLeader = team.getMembers().stream().findAny().orElse(null);
             team.setLeader(newLeader);
         }
+        Bukkit.getPluginManager().callEvent(new TeamRemoveMemberEvent(player, team));
     }
 
-    public void mergeTeams(Team source, Team target) {
-        target.getMembers().addAll(source.getMembers());
-        target.getAliveMembers().addAll(source.getAliveMembers());
-        source.getMembers().clear();
-        source.getAliveMembers().clear();
-        source.setLeader(null);
+    public void mergeTeams(Team sourceTeam, Team targetTeam) {
+        targetTeam.getMembers().addAll(sourceTeam.getMembers());
+        targetTeam.getAliveMembers().addAll(sourceTeam.getAliveMembers());
+        sourceTeam.getMembers().clear();
+        sourceTeam.getAliveMembers().clear();
+        sourceTeam.setLeader(null);
 
         Bukkit.broadcastMessage(TextUtil.translate("{team_prefix}{team_display_name} &f팀이 {new_team_prefix}{new_team_display_name} &f팀으로 흡수되었습니다!")
-                .replace("{team_prefix}", source.getPrefix())
-                .replace("{team_display_name}", source.getDisplayName())
-                .replace("{new_team_prefix}", target.getPrefix())
-                .replace("{new_team_display_name}", target.getDisplayName()));
+                .replace("{team_prefix}", sourceTeam.getPrefix())
+                .replace("{team_display_name}", sourceTeam.getDisplayName())
+                .replace("{new_team_prefix}", targetTeam.getPrefix())
+                .replace("{new_team_display_name}", targetTeam.getDisplayName()));
+        Bukkit.getPluginManager().callEvent(new TeamMergeEvent(sourceTeam, targetTeam));
     }
 
     public void sendMessage(Team team, String message) {
