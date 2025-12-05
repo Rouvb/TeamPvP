@@ -66,6 +66,12 @@ public class GameManager {
 
         plugin.getGameHandler().teleportAllToGameWorld();
 
+        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
+        if (winnerTeam != null) {
+            endGame(winnerTeam);
+            return;
+        }
+
         cancelGameTask();
         gameTask = new GameTask(plugin.getGame(), this)
                 .runTaskTimer(plugin, 0L, 20L);

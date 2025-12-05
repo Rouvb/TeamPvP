@@ -50,7 +50,7 @@ public class TeamCommand extends BaseCommand {
         sender.sendMessage(TextUtil.LONG_LINE);
         sender.sendMessage(TextUtil.translate("&b&l팀 목록:"));
         for (Team team : teams) {
-            String message = String.format("%s %s &7(%d): %s",
+            String message = String.format(" %s%s &7(%d): %s",
                     team.getPrefix(),
                     team.getDisplayName(),
                     team.getMembers().size(),
