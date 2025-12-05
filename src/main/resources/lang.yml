@@ -8,9 +8,9 @@ game:
     start_condition: "&c게임을 시작하려면 최소 2개 이상의 팀에 플레이어가 있어야 합니다."
   status:
     countdown:
-      message: "&f게임이 &b{time}&f 후 시작됩니다..."
+      message: "&f게임이 &b{time}&f초 후 시작됩니다..."
       title: "&b&lTeam PvP"
-      subtitle: "&f게임이 &b{time}&f 후 시작됩니다..."
+      subtitle: "&f게임이 &b{time}&f초 후 시작됩니다..."
     started:
       message: "&a게임이 시작되었습니다!"
       title: "&b&lTeam PvP"
@@ -30,7 +30,7 @@ game:
       - "&7&m----------------------------------------"
     title: "&b&l게임 종료"
     subtitle: "&f우승 팀: &b{team_color}{team_display_name}"
-  invincibility: "&f무적 시간이 &b{time}&f{time_format} &f후에 해제됩니다!"
+  invincibility: "&f무적 시간이 &b{time} &f후에 해제됩니다!"
   death:
     player:
       title: "&c&l사망"

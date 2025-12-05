@@ -1,10 +1,14 @@
 package org.miraimc.teamPvP.rtp;
 
+import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import org.miraimc.teamPvP.TeamPvP;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,9 +17,13 @@ import java.util.logging.Level;
 public class RTPManager {
 
     private final TeamPvP plugin;
+    @Getter private final List<Location> locations = Collections.synchronizedList(new ArrayList<>());
+    @Getter private final RTPTask rtpTask;
 
     public RTPManager(TeamPvP plugin) {
         this.plugin = plugin;
+        this.rtpTask = new RTPTask(plugin);
+        rtpTask.runTaskTimerAsynchronously(plugin, 20L, 20L * 60 * 5);
     }
 
     private int getRandomRange(int range) {

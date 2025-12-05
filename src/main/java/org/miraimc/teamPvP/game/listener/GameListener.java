@@ -62,10 +62,22 @@ public class GameListener implements Listener {
         victim.showTitle(title);
 
         Player killer = event.getEntity().getKiller();
-        if (killer != null
-                && killer != victim
-                && !team.getMembers().contains(killer.getUniqueId())) {
+        if (killer == null || killer.equals(victim)) {
+            UUID leaderId = team.getLeader();
+            if (leaderId != null && leaderId.equals(victim.getUniqueId())) {
+                plugin.getRtpManager().randomTeleportAsync(victim,
+                        () -> plugin.getLogger().info("Leader " + victim.getName() + " teleported to random location."),
+                        () -> plugin.getLogger().warning("Failed to teleport leader " + victim.getName()));
+            } else {
+                Player leader = Bukkit.getPlayer(leaderId);
+                if (leader != null && leader.isOnline()) {
+                    victim.teleport(leader.getLocation());
+                }
+            }
+            return;
+        }
 
+        if (!team.getMembers().contains(killer.getUniqueId())) {
             Team killerTeam = plugin.getTeamManager().getTeam(killer);
             if (killerTeam == null) return;
 

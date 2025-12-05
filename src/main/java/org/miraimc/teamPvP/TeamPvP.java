@@ -68,6 +68,7 @@ public final class TeamPvP extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Disabling TeamPvP...");
+        rtpManager.getRtpTask().cancel();
     }
 
     private void loadFiles() {

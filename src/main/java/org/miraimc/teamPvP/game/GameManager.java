@@ -37,7 +37,6 @@ public class GameManager {
         if (game.getGameStatus() != GameStatus.LOBBY) return;
 
         game.setGameStatus(GameStatus.STARTING);
-        plugin.getGameHandler().getRandomTeleportLocations();
 
         cancelCountdown();
         countdownTask = new CountdownTask(this, plugin.getGame())

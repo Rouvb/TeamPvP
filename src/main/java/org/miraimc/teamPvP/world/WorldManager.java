@@ -66,6 +66,7 @@ public class WorldManager {
         List<World> worlds = Bukkit.getWorlds();
         for (World world : worlds) {
             world.setGameRule(GameRule.LOCATOR_BAR, false);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
 
             if (world.getName().equalsIgnoreCase("lobby") || world.getName().equalsIgnoreCase("death_match")) {
                 world.setTime(6000L);
