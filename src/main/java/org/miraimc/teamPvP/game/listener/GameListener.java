@@ -21,6 +21,7 @@ import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.team.Team;
+import org.miraimc.teamPvP.team.event.TeamRemoveMemberEvent;
 import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.HashSet;
@@ -104,7 +105,7 @@ public class GameListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onTeamMemberLeave(TeamRemoveMemberEvent event) {
         Game game = plugin.getGame();
         GameStatus gameStatus = game.getGameStatus();
         if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;

@@ -9,7 +9,7 @@ import org.miraimc.teamPvP.team.Team;
 
 public class TeamRemoveMemberEvent extends Event {
 
-    private static HandlerList HANDLERS = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     @Getter private final Player player;
     @Getter private final Team team;
 
@@ -20,10 +20,10 @@ public class TeamRemoveMemberEvent extends Event {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return HANDLERS;
+        return handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return HANDLERS;
+        return handlers;
     }
 }

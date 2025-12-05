@@ -8,7 +8,7 @@ import org.miraimc.teamPvP.team.Team;
 
 public class TeamMergeEvent extends Event {
 
-    private static final HandlerList HANDLERS = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     @Getter private final Team sourceTeam;
     @Getter private final Team targetTeam;
 
@@ -19,10 +19,10 @@ public class TeamMergeEvent extends Event {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return HANDLERS;
+        return handlers;
     }
 
     public static HandlerList getHandlerList() {
-        return HANDLERS;
+        return handlers;
     }
 }

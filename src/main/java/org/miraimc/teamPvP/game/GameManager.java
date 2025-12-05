@@ -1,6 +1,5 @@
 package org.miraimc.teamPvP.game;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,13 +7,16 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.game.event.GameCountdownEvent;
+import org.miraimc.teamPvP.game.event.GameDeathMatchEvent;
+import org.miraimc.teamPvP.game.event.GameEndEvent;
+import org.miraimc.teamPvP.game.event.GameStartEvent;
 import org.miraimc.teamPvP.game.task.CountdownTask;
 import org.miraimc.teamPvP.game.task.GameTask;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
-import org.miraimc.teamPvP.util.TextUtil;
 import org.miraimc.teamPvP.util.VisibilityUtil;
 
 import javax.annotation.Nullable;
@@ -31,14 +33,16 @@ public class GameManager {
     }
 
     public void startCountdown() {
-        if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) return;
+        Game game = plugin.getGame();
+        if (game.getGameStatus() != GameStatus.LOBBY) return;
 
-        plugin.getGame().setGameStatus(GameStatus.STARTING);
+        game.setGameStatus(GameStatus.STARTING);
         plugin.getGameHandler().getRandomTeleportLocations();
 
         cancelCountdown();
         countdownTask = new CountdownTask(this, plugin.getGame())
                 .runTaskTimer(plugin, 0L, 20L);
+        Bukkit.getPluginManager().callEvent(new GameCountdownEvent(plugin.getGame()));
     }
 
     private void cancelCountdown() {
@@ -49,9 +53,10 @@ public class GameManager {
     }
 
     public void startGame() {
-        if (plugin.getGame().getGameStatus() != GameStatus.STARTING) return;
+        Game game = plugin.getGame();
+        if (game.getGameStatus() != GameStatus.STARTING) return;
 
-        plugin.getGame().setGameStatus(GameStatus.PLAYING);
+        game.setGameStatus(GameStatus.PLAYING);
         cancelCountdown();
 
         Bukkit.getScheduler().runTask(plugin, () -> {
@@ -75,6 +80,7 @@ public class GameManager {
         cancelGameTask();
         gameTask = new GameTask(plugin.getGame(), this)
                 .runTaskTimer(plugin, 0L, 20L);
+        Bukkit.getPluginManager().callEvent(new GameStartEvent(game));
     }
 
     private void cancelGameTask() {
@@ -85,18 +91,23 @@ public class GameManager {
     }
 
     public void startDeathMatch() {
-        if (plugin.getGame().getGameStatus() != GameStatus.PLAYING) return;
-        plugin.getGame().setGameStatus(GameStatus.DEATH_MATCH);
+        Game game = plugin.getGame();
+        if (game.getGameStatus() != GameStatus.PLAYING) return;
+        game.setGameStatus(GameStatus.DEATH_MATCH);
         plugin.getGameHandler().sendDeathMatchAlert();
         plugin.getGameHandler().teleportAllToDeathMatch();
+        Bukkit.getPluginManager().callEvent(new GameDeathMatchEvent(game));
     }
 
     public void endGame(@Nullable Team winnerTeam) {
+        Game game = plugin.getGame();
         GameStatus gameStatus = plugin.getGame().getGameStatus();
         if (gameStatus != GameStatus.PLAYING && gameStatus != GameStatus.DEATH_MATCH) return;
 
-        plugin.getGame().setGameStatus(GameStatus.ENDING);
+        game.setGameStatus(GameStatus.ENDING);
         plugin.getGameHandler().handleEndGame(winnerTeam);
+
+        Bukkit.getPluginManager().callEvent(new GameEndEvent(game));
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Bukkit.dispatchCommand(plugin.getServer().getConsoleSender(), "stop");
