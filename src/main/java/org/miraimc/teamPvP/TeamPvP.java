@@ -15,7 +15,6 @@ import org.miraimc.teamPvP.listener.ServerListener;
 import org.miraimc.teamPvP.placeholder.TeamPvPExpansion;
 import org.miraimc.teamPvP.profile.ProfileHandler;
 import org.miraimc.teamPvP.profile.ProfileManager;
-import org.miraimc.teamPvP.profile.command.ProfileCommand;
 import org.miraimc.teamPvP.profile.listener.LobbyListener;
 import org.miraimc.teamPvP.profile.listener.ProfileListener;
 import org.miraimc.teamPvP.profile.listener.ProfilePreventionListener;
@@ -117,7 +116,6 @@ public final class TeamPvP extends JavaPlugin {
     private void registerCommands() {
         getLogger().info("Registering Commands...");
         PaperCommandManager commandManager = new PaperCommandManager(this);
-        commandManager.registerCommand(new ProfileCommand(this));
         commandManager.registerCommand(new GameCommand(this));
         commandManager.registerCommand(new TeamPvPCommand(this));
         commandManager.registerCommand(new TeamCommand(this));

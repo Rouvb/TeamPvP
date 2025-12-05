@@ -43,6 +43,19 @@ public class TeamPvPCommand extends BaseCommand {
         sender.sendMessage(TextUtil.translate("&aPlugin has been reloaded."));
     }
 
+    @Subcommand("build")
+    @CommandPermission("teampvp.admin")
+    public void onBuild(Player sender) {
+        Profile profile = plugin.getProfileManager().getProfile(sender);
+        if (profile == null) {
+            sender.sendMessage(TextUtil.translate("&cYou do not have a profile!"));
+            return;
+        }
+
+        profile.setBuildMode(!profile.isBuildMode());
+        sender.sendMessage(TextUtil.translate("&aBuild mode set to &e" + profile.isBuildMode() + "&a."));
+    }
+
     @Subcommand("debug")
     @CommandPermission("teampvp.admin")
     public void onDebug(Player sender, @Optional OnlinePlayer target) {
