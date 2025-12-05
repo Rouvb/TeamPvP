@@ -117,12 +117,17 @@ public class GameHandler {
                 )
         );
 
-        String message = Lang.GAME_END_MESSAGE.getMessage()
-                .replace("{team_color}", teamColor)
-                .replace("{team_display_name}", teamDisplayName);
+        List<String> messages = Lang.GAME_END_MESSAGE.getMessageList();
+        List<String> formattedMessages = new ArrayList<>();
+        for (String message : messages) {
+            formattedMessages.add(message
+                    .replace("{team_color}", teamColor)
+                    .replace("{team_display_name}", teamDisplayName)
+            );
+        }
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            player.sendMessage(message);
+            formattedMessages.forEach(player::sendMessage);
             player.showTitle(title);
         });
     }
