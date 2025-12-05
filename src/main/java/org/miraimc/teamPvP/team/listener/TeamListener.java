@@ -1,5 +1,6 @@
 package org.miraimc.teamPvP.team.listener;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,6 +33,7 @@ public class TeamListener implements Listener {
         Team team = event.getTeam();
         Player player = event.getPlayer();
 
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
         plugin.getTeamManager().sendMessage(
                 team,
                 Lang.TEAM_STATUS_MEMBER_JOINED.getMessage()
