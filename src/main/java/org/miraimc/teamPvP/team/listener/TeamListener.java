@@ -19,9 +19,6 @@ public class TeamListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Team team = plugin.getTeamManager().getTeam(player);
-
-        if (team != null) {
-            plugin.getTeamHandler().handleTeam(null, player);
-        }
+        plugin.getTeamManager().removeMember(team, player);
     }
 }

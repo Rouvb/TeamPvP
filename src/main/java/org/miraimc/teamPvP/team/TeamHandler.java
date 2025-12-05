@@ -43,7 +43,6 @@ public class TeamHandler {
             return;
         }
 
-        // 로비 상태일 때
         if (currentTeam != null) {
             manager.removeMember(currentTeam, player);
         }

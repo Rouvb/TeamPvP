@@ -91,12 +91,14 @@ public class TeamManager {
     }
 
     public void addMember(Team team, Player player) {
+        plugin.getLogger().info("Adding member " + player.getName() + " from " + team.getName());
         team.getMembers().add(player.getUniqueId());
         team.getAliveMembers().add(player.getUniqueId());
         team.ensureLeader(player.getUniqueId());
     }
 
     public void removeMember(Team team, Player player) {
+        plugin.getLogger().info("Removing member " + player.getName() + " from " + team.getName());
         team.getMembers().remove(player.getUniqueId());
         team.getAliveMembers().remove(player.getUniqueId());
 

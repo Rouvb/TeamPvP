@@ -43,7 +43,7 @@ public class GameHandler {
         Location worldLocation = LocationUtil.deserializeLocation(plugin.getConfigFile().getString("game.locations.game"));
         World world = worldLocation.getWorld();
         int maxTries = plugin.getConfigFile().getInt("rtp.max_tries");
-        int safeRange = Math.max(16, plugin.getConfigFile().getInt("rtp.range"));
+        int safeRange = plugin.getConfigFile().getInt("rtp.range");
 
         List<Team> teams = plugin.getTeamManager().getTeams();
         for (Team team : teams) {

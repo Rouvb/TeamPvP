@@ -15,6 +15,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
@@ -93,6 +94,17 @@ public class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeamMemberDeath(PlayerDeathEvent event) {
+        Game game = plugin.getGame();
+        GameStatus gameStatus = game.getGameStatus();
+        if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
+
+        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
+        if (winnerTeam == null) return;
+        plugin.getGameManager().endGame(winnerTeam);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerQuit(PlayerQuitEvent event) {
         Game game = plugin.getGame();
         GameStatus gameStatus = game.getGameStatus();
         if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
