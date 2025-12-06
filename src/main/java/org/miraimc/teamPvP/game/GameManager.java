@@ -4,7 +4,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.event.GameCountdownEvent;
@@ -13,11 +12,8 @@ import org.miraimc.teamPvP.game.event.GameEndEvent;
 import org.miraimc.teamPvP.game.event.GameStartEvent;
 import org.miraimc.teamPvP.game.task.CountdownTask;
 import org.miraimc.teamPvP.game.task.GameTask;
-import org.miraimc.teamPvP.profile.Profile;
-import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
-import org.miraimc.teamPvP.util.VisibilityUtil;
 
 import javax.annotation.Nullable;
 
@@ -58,17 +54,7 @@ public class GameManager {
         game.setGameStatus(GameStatus.PLAYING);
         cancelCountdown();
 
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                Profile profile = plugin.getProfileManager().getProfile(player);
-                if (profile != null) {
-                    profile.setStatus(ProfileStatus.PLAYING);
-                    plugin.getGameHandler().preparePlayerForGame(player);
-                }
-            });
-        });
-
-        plugin.getGameHandler().teleportAllToGameWorld();
+        Bukkit.getPluginManager().callEvent(new GameStartEvent(game));
 
         Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
         if (winnerTeam != null) {
@@ -79,7 +65,6 @@ public class GameManager {
         cancelGameTask();
         gameTask = new GameTask(plugin.getGame(), this)
                 .runTaskTimer(plugin, 0L, 20L);
-        Bukkit.getPluginManager().callEvent(new GameStartEvent(game));
     }
 
     private void cancelGameTask() {
@@ -93,8 +78,6 @@ public class GameManager {
         Game game = plugin.getGame();
         if (game.getGameStatus() != GameStatus.PLAYING) return;
         game.setGameStatus(GameStatus.DEATH_MATCH);
-        plugin.getGameHandler().sendDeathMatchAlert();
-        plugin.getGameHandler().teleportAllToDeathMatch();
         Bukkit.getPluginManager().callEvent(new GameDeathMatchEvent(game));
     }
 
@@ -111,17 +94,6 @@ public class GameManager {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Bukkit.dispatchCommand(plugin.getServer().getConsoleSender(), "stop");
         }, 20L * 15);
-    }
-
-    public void setSpectatorMode(Player player) {
-        Team team = plugin.getTeamManager().getTeam(player);
-        if (team != null) team.getAliveMembers().remove(player.getUniqueId());
-
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        if (profile != null) profile.setStatus(ProfileStatus.SPECTATING);
-
-        VisibilityUtil.updatePlayerVisibility(player, ProfileStatus.SPECTATING);
-        plugin.getProfileHandler().resetInventory(player);
     }
 
     /**

@@ -1,11 +1,7 @@
 package org.miraimc.teamPvP.game.listener;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,15 +13,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.miraimc.teamPvP.TeamPvP;
-import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.team.Team;
+import org.miraimc.teamPvP.team.event.TeamAddMemberEvent;
+import org.miraimc.teamPvP.team.event.TeamMergeEvent;
 import org.miraimc.teamPvP.team.event.TeamRemoveMemberEvent;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 public class GameListener implements Listener {
 
@@ -39,68 +35,52 @@ public class GameListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getEntity();
-
-        Team team = plugin.getTeamManager().getTeam(victim);
-        if (team == null) return;
-
-        Game game = plugin.getGame();
-        if (game.getGameStatus().equals(GameStatus.DEATH_MATCH)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 4L);
-            Title title = Title.title(
-                    Component.text(Lang.GAME_DEATH_SPECTATOR_TITLE.getMessage()),
-                    Component.text(Lang.GAME_DEATH_SPECTATOR_SUBTITLE.getMessage())
-            );
-            victim.showTitle(title);
-            plugin.getGameManager().setSpectatorMode(victim);
-            return;
-        }
-
-        Title title = Title.title(
-                Component.text(Lang.GAME_DEATH_PLAYER_TITLE.getMessage()),
-                Component.text(Lang.GAME_DEATH_PLAYER_SUBTITLE.getMessage())
-        );
-        victim.showTitle(title);
-
         Player killer = event.getEntity().getKiller();
-        if (killer == null || killer.equals(victim)) {
-            UUID leaderId = team.getLeader();
-            if (leaderId != null && leaderId.equals(victim.getUniqueId())) {
-                plugin.getRtpManager().randomTeleportAsync(victim,
-                        () -> plugin.getLogger().info("Leader " + victim.getName() + " teleported to random location."),
-                        () -> plugin.getLogger().warning("Failed to teleport leader " + victim.getName()));
-            } else {
-                Player leader = Bukkit.getPlayer(leaderId);
-                if (leader != null && leader.isOnline()) {
-                    victim.teleport(leader.getLocation());
-                }
-            }
-            return;
-        }
-
-        if (!team.getMembers().contains(killer.getUniqueId())) {
-            Team killerTeam = plugin.getTeamManager().getTeam(killer);
-            if (killerTeam == null) return;
-
-            plugin.getTeamHandler().handleTeam(killerTeam, victim);
-            setReducedHealth(victim);
-        }
-
-        UUID leaderId = team.getLeader();
-        if (leaderId != null) {
-            Player leader = Bukkit.getPlayer(leaderId);
-            if (leader != null && leader.isOnline()) {
-                victim.teleport(leader.getLocation());
-            }
-        }
+        plugin.getGameHandler().handleDeath(victim, killer);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        Team team = plugin.getTeamManager().getTeam(event.getPlayer());
-        if (team == null) return;
-        Player leader = Bukkit.getPlayer(team.getLeader());
-        if (leader != null && leader.isOnline()) {
-            event.setRespawnLocation(leader.getLocation());
+        Player player = event.getPlayer();
+        Team team = plugin.getTeamManager().getTeam(player);
+
+        // 팀이 없으면 게임 월드의 최고 지점으로
+        if (team == null || team.getLeader() == null) {
+            Location gameLocation = plugin.getGame().getGameLocation();
+            if (gameLocation != null && gameLocation.getWorld() != null) {
+                Location highestLocation = gameLocation.getWorld()
+                        .getHighestBlockAt(gameLocation)
+                        .getLocation()
+                        .add(0, 1, 0);
+                event.setRespawnLocation(highestLocation);
+            }
+            return;
+        }
+
+        Game game = plugin.getGame();
+        GameStatus status = game.getGameStatus();
+
+        // 데스매치 상태면 데스매치 위치로
+        if (status == GameStatus.DEATH_MATCH) {
+            Location deathMatchLoc = team.getDeathMatchLocation();
+            if (deathMatchLoc != null) {
+                event.setRespawnLocation(deathMatchLoc);
+            }
+            return;
+        }
+
+        // 게임 중이면 리더 위치로
+        if (status == GameStatus.PLAYING) {
+            Player leader = Bukkit.getPlayer(team.getLeader());
+            if (leader != null && leader.isOnline()) {
+                event.setRespawnLocation(leader.getLocation());
+            } else {
+                // 리더가 없으면 게임 위치로
+                Location gameLocation = plugin.getGame().getGameLocation();
+                if (gameLocation != null) {
+                    event.setRespawnLocation(gameLocation);
+                }
+            }
         }
     }
 
@@ -111,8 +91,9 @@ public class GameListener implements Listener {
         if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
 
         Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
-        if (winnerTeam == null) return;
-        plugin.getGameManager().endGame(winnerTeam);
+        if (winnerTeam != null) {
+            plugin.getGameManager().endGame(winnerTeam);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -122,36 +103,51 @@ public class GameListener implements Listener {
         if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
 
         Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
-        if (winnerTeam == null) return;
-        plugin.getGameManager().endGame(winnerTeam);
+        if (winnerTeam != null) {
+            plugin.getGameManager().endGame(winnerTeam);
+        }
     }
 
-    private void setReducedHealth(Player player) {
-        AttributeInstance maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
-        if (maxHealthAttr != null) {
-            maxHealthAttr.setBaseValue(10.0);
-            player.setHealth(10.0);
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTeamMerge(TeamMergeEvent event) {
+        Game game = plugin.getGame();
+        GameStatus gameStatus = game.getGameStatus();
+        if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
+
+        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
+        if (winnerTeam != null) {
+            plugin.getGameManager().endGame(winnerTeam);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTeamMemberAdd(TeamAddMemberEvent event) {
+        Game game = plugin.getGame();
+        GameStatus gameStatus = game.getGameStatus();
+        if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
+
+        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
+        if (winnerTeam != null) {
+            plugin.getGameManager().endGame(winnerTeam);
         }
     }
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) {
+        if (!(event.getDamager() instanceof Player damager) || !(event.getEntity() instanceof Player victim)) {
             return;
         }
-
-        Player victim = (Player) event.getEntity();
-        Player damager = (Player) event.getDamager();
-
-        Team victimTeam = plugin.getTeamManager().getTeam(victim);
-        Team damagerTeam = plugin.getTeamManager().getTeam(damager);
 
         Game game = plugin.getGame();
         if (game.getDuration() <= game.getInvincibilityTime()) {
             event.setCancelled(true);
+            return;
         }
 
-        if (victimTeam != null && victimTeam.equals(damagerTeam)) {
+        Team victimTeam = plugin.getTeamManager().getTeam(victim);
+        Team damagerTeam = plugin.getTeamManager().getTeam(damager);
+
+        if (victimTeam != null && damagerTeam != null && victimTeam.equals(damagerTeam)) {
             event.setCancelled(true);
         }
     }
@@ -159,6 +155,7 @@ public class GameListener implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
+
         Game game = plugin.getGame();
         if (game.getDuration() <= game.getInvincibilityTime()) {
             event.setCancelled(true);

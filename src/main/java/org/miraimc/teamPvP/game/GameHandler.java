@@ -3,10 +3,16 @@ package org.miraimc.teamPvP.game;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
+import org.miraimc.teamPvP.profile.Profile;
+import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
+import org.miraimc.teamPvP.util.VisibilityUtil;
 
 import java.util.*;
 
@@ -21,10 +27,19 @@ public class GameHandler {
     public void preparePlayerForGame(Player player) {
         Team team = plugin.getTeamManager().getTeam(player);
         if (team == null) {
-            plugin.getGameManager().setSpectatorMode(player);
+            handleSpectator(player);
+            Location gameLocation = plugin.getGame().getGameLocation();
+            if (gameLocation != null && gameLocation.getWorld() != null) {
+                Location highestLocation = gameLocation.getWorld()
+                        .getHighestBlockAt(gameLocation)
+                        .getLocation()
+                        .add(0, 1, 0);
+                player.teleport(highestLocation);
+            }
             return;
         }
 
+        plugin.getProfileManager().getProfile(player).setStatus(ProfileStatus.PLAYING);
         plugin.getProfileHandler().resetInventory(player);
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
@@ -53,7 +68,6 @@ public class GameHandler {
         }
     }
 
-
     public void teleportAllToGameWorld() {
         List<Team> teams = plugin.getTeamManager().getTeams();
 
@@ -78,6 +92,154 @@ public class GameHandler {
         }
     }
 
+    public void handleSpectator(Player player) {
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        if (profile != null) {
+            profile.setStatus(ProfileStatus.SPECTATING);
+        }
+
+        Team team = plugin.getTeamManager().getTeam(player);
+        if (team != null) {
+            team.getAliveMembers().remove(player.getUniqueId());
+        }
+
+        Title title = Title.title(
+                Component.text(Lang.GAME_DEATH_SPECTATOR_TITLE.getMessage()),
+                Component.text(Lang.GAME_DEATH_SPECTATOR_SUBTITLE.getMessage())
+        );
+        player.showTitle(title);
+
+        VisibilityUtil.updatePlayerVisibility(player, ProfileStatus.SPECTATING);
+        plugin.getProfileHandler().resetInventory(player);
+    }
+
+    public void handleDeath(Player victim, @Nullable Player killer) {
+        Team victimTeam = plugin.getTeamManager().getTeam(victim);
+        if (victimTeam == null) return;
+
+        Game game = plugin.getGame();
+        GameStatus gameStatus = game.getGameStatus();
+
+        // 데스매치 중이면 관전자로 전환
+        if (gameStatus == GameStatus.DEATH_MATCH) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                victim.spigot().respawn();
+                handleSpectator(victim);
+            }, 4L);
+            return;
+        }
+
+        // 게임 중이 아니면 무시
+        if (gameStatus != GameStatus.PLAYING) {
+            return;
+        }
+
+        boolean isLeader = victimTeam.getLeader() != null &&
+                victimTeam.getLeader().equals(victim.getUniqueId());
+
+        // 킬러가 있고 다른 팀인 경우
+        if (killer != null && !killer.equals(victim)) {
+            Team killerTeam = plugin.getTeamManager().getTeam(killer);
+
+            // 다른 팀에게 죽은 경우
+            if (killerTeam != null && !killerTeam.equals(victimTeam)) {
+                if (isLeader) {
+                    // 리더가 죽으면 팀 전체 흡수
+                    handleLeaderDeath(victimTeam, killerTeam, victim);
+                } else {
+                    // 일반 팀원만 흡수
+                    handleMemberDeath(victim, victimTeam, killerTeam);
+                }
+                return;
+            }
+        }
+
+        // 자살 또는 환경 데미지로 사망한 경우
+        handleNaturalDeath(victim, victimTeam, isLeader);
+    }
+
+    private void handleLeaderDeath(Team victimTeam, Team killerTeam, Player leader) {
+        plugin.getLogger().info("Leader " + leader.getName() + " died. Merging team " +
+                victimTeam.getName() + " into " + killerTeam.getName());
+
+        // 흡수될 팀원들의 UUID 저장
+        Set<UUID> absorbedMembers = new HashSet<>(victimTeam.getMembers());
+
+        // 팀 전체를 킬러 팀으로 병합
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            plugin.getTeamManager().mergeTeams(victimTeam, killerTeam);
+
+            // 새 팀 리더 위치로 텔레포트 및 체력 설정
+            UUID newLeaderId = killerTeam.getLeader();
+            if (newLeaderId != null) {
+                Player newLeader = Bukkit.getPlayer(newLeaderId);
+                if (newLeader != null && newLeader.isOnline()) {
+                    for (UUID memberId : killerTeam.getMembers()) {
+                        Player member = Bukkit.getPlayer(memberId);
+                        if (member != null && member.isOnline()) {
+                            member.teleport(newLeader.getLocation());
+
+                            // 흡수된 팀원들은 체력 10칸으로 설정
+                            if (absorbedMembers.contains(memberId)) {
+                                setReducedHealth(member);
+                            }
+                        }
+                    }
+                }
+            }
+        }, 4L);
+    }
+
+    private void handleMemberDeath(Player victim, Team victimTeam, Team killerTeam) {
+        plugin.getLogger().info("Member " + victim.getName() + " died. Moving from " +
+                victimTeam.getName() + " to " + killerTeam.getName());
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            // 기존 팀에서 제거하고 새 팀에 추가
+            plugin.getTeamManager().removeMember(victimTeam, victim);
+            plugin.getTeamManager().addMember(killerTeam, victim);
+
+            // 체력 감소
+            setReducedHealth(victim);
+
+            // 새 팀 리더 위치로 텔레포트
+            UUID newLeaderId = killerTeam.getLeader();
+            if (newLeaderId != null) {
+                Player newLeader = Bukkit.getPlayer(newLeaderId);
+                if (newLeader != null && newLeader.isOnline()) {
+                    victim.teleport(newLeader.getLocation());
+                }
+            }
+        }, 4L);
+    }
+
+    private void handleNaturalDeath(Player victim, Team team, boolean isLeader) {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (isLeader) {
+                // 리더는 랜덤 위치로
+                plugin.getRtpManager().randomTeleportAsync(victim,
+                        () -> plugin.getLogger().info("Leader " + victim.getName() + " teleported to random location."),
+                        () -> plugin.getLogger().warning("Failed to teleport leader " + victim.getName()));
+            } else {
+                // 일반 팀원은 리더 위치로
+                UUID leaderId = team.getLeader();
+                if (leaderId != null) {
+                    Player leader = Bukkit.getPlayer(leaderId);
+                    if (leader != null && leader.isOnline()) {
+                        victim.teleport(leader.getLocation());
+                    }
+                }
+            }
+        }, 4L);
+    }
+
+    private void setReducedHealth(Player player) {
+        AttributeInstance maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
+        if (maxHealthAttr != null) {
+            maxHealthAttr.setBaseValue(10.0);
+            player.setHealth(10.0);
+        }
+    }
 
     public void sendDeathMatchAlert() {
         GameManager manager = plugin.getGameManager();
@@ -129,6 +291,7 @@ public class GameHandler {
         Bukkit.getOnlinePlayers().forEach(player -> {
             formattedMessages.forEach(player::sendMessage);
             player.showTitle(title);
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 0.1F, 1.0F);
         });
     }
 }

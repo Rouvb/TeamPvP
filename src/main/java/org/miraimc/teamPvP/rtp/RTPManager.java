@@ -26,8 +26,14 @@ public class RTPManager {
         rtpTask.runTaskTimerAsynchronously(plugin, 20L, 20L * 60 * 5);
     }
 
-    private int getRandomRange(int range) {
-        return ThreadLocalRandom.current().nextInt(-range, range + 1);
+    /**
+     * -range ~ +range 범위에서 랜덤 좌표 생성
+     * 예: range=500 -> -500 ~ 500
+     */
+    private int getRandomCoordinate(int range) {
+        // 더 넓은 분포를 위해 난수 생성 개선
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        return random.nextInt(-range, range + 1);
     }
 
     private boolean isUnsafeMaterial(Material material) {
@@ -68,8 +74,11 @@ public class RTPManager {
             return;
         }
 
-        int x = getRandomRange(range);
-        int z = getRandomRange(range);
+        // 각 시도마다 완전히 새로운 랜덤 좌표 생성
+        // ThreadLocalRandom을 명시적으로 호출하여 독립적인 난수 보장
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int x = random.nextInt(-range, range + 1);
+        int z = random.nextInt(-range, range + 1);
 
         Location probe = new Location(world, x, 0, z);
 
@@ -132,15 +141,14 @@ public class RTPManager {
     @Nullable
     private Location getSafeRandomLocationSync(World world, int range, int maxTries) {
         for (int i = 0; i < maxTries; i++) {
-            int x = getRandomRange(range);
-            int z = getRandomRange(range);
+            int x = getRandomCoordinate(range);
+            int z = getRandomCoordinate(range);
             int y = world.getHighestBlockYAt(x, z);
             if (y <= 0) continue;
             Location location = new Location(world, x + 0.5, y + 1.0, z + 0.5);
             Material ground = location.getBlock().getType();
             Material above = location.clone().add(0, 1, 0).getBlock().getType();
             Material above2 = location.clone().add(0, 2, 0).getBlock().getType();
-
 
             if (!isUnsafeMaterial(ground) && above.isAir() && above2.isAir()) {
                 return location;
@@ -151,7 +159,10 @@ public class RTPManager {
 
     public void randomTeleportAsync(Player player, int range, Runnable onSuccess, Runnable onFail) {
         Location rtpLocation = plugin.getGame().getGameLocation();
-        if (rtpLocation == null) return;
+        if (rtpLocation == null) {
+            if (onFail != null) onFail.run();
+            return;
+        }
 
         World world = rtpLocation.getWorld();
         if (world == null) {
@@ -160,9 +171,8 @@ public class RTPManager {
         }
 
         int maxTries = plugin.getConfigFile().getInt("rtp.max_tries");
-        int safeRange = Math.max(16, range);
 
-        findSafeLocationAsync(world, safeRange, maxTries).thenAccept(location -> {
+        findSafeLocationAsync(world, range, maxTries).thenAccept(location -> {
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 if (location != null && player.isOnline()) {
                     player.teleport(location);
@@ -172,7 +182,7 @@ public class RTPManager {
                 }
             });
         }).exceptionally(ex -> {
-            plugin.getLogger().warning("Unexpected error finding safe RTP Location" + ex);
+            plugin.getLogger().warning("Unexpected error finding safe RTP location: " + ex);
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 if (onFail != null) onFail.run();
             });

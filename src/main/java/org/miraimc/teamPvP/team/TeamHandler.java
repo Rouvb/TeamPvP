@@ -21,33 +21,47 @@ public class TeamHandler {
         TeamManager manager = plugin.getTeamManager();
         Team currentTeam = plugin.getTeamManager().getTeam(player);
 
-        if (!player.isOnline() && currentTeam != null) {
-            manager.removeMember(currentTeam, player);
-            return;
+        if (!player.isOnline()) {
+            if (currentTeam != null) {
+                manager.removeMember(currentTeam, player);
+            }
         }
 
-        // 게임 상태 확인
-        if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
+        GameStatus gameStatus = plugin.getGame().getGameStatus();
+
+        // 로비 상태: 자유롭게 팀 변경 가능
+        if (gameStatus == GameStatus.LOBBY) {
             if (currentTeam != null) {
-                UUID leaderId = currentTeam.getLeader();
-                if (leaderId == null || !leaderId.equals(player.getUniqueId())) {
-                    manager.removeMember(currentTeam, player);
-                    if (newTeam != null) {
-                        manager.addMember(newTeam, player);
-                    }
-                } else if (newTeam != null) {
-                    manager.mergeTeams(currentTeam, newTeam);
-                }
+                manager.removeMember(currentTeam, player);
+            }
+            if (newTeam != null) {
+                manager.addMember(newTeam, player);
             }
             return;
         }
 
-        if (currentTeam != null) {
-            manager.removeMember(currentTeam, player);
-        }
+        // 게임 중 또는 데스매치: 특수 처리
+        if (gameStatus == GameStatus.PLAYING || gameStatus == GameStatus.DEATH_MATCH) {
+            // 현재 팀이 없으면 아무 처리도 하지 않음
+            if (currentTeam == null) {
+                return;
+            }
 
-        if (newTeam != null) {
-            manager.addMember(newTeam, player);
+            UUID leaderId = currentTeam.getLeader();
+            boolean isLeader = leaderId != null && leaderId.equals(player.getUniqueId());
+
+            if (isLeader && newTeam != null) {
+                // 리더가 다른 팀으로 이동: 팀 병합
+                plugin.getLogger().info("Leader " + player.getName() + " moving. Merging " +
+                        currentTeam.getName() + " into " + newTeam.getName());
+                manager.mergeTeams(currentTeam, newTeam);
+            } else if (!isLeader) {
+                // 일반 팀원: 단순 이동
+                manager.removeMember(currentTeam, player);
+                if (newTeam != null) {
+                    manager.addMember(newTeam, player);
+                }
+            }
         }
     }
 
