@@ -40,10 +40,6 @@ public class GameListener implements Listener {
     }
 
     private void checkEndGame() {
-        Game game = plugin.getGame();
-        GameStatus gameStatus = game.getGameStatus();
-        if (!(gameStatus.equals(GameStatus.PLAYING) || !gameStatus.equals(GameStatus.DEATH_MATCH))) return;
-
         Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
         if (winnerTeam != null) {
             plugin.getGameManager().endGame(winnerTeam);
