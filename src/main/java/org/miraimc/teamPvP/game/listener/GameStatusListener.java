@@ -24,7 +24,6 @@ public class GameStatusListener implements Listener {
             if (profile == null) continue;
             plugin.getGameHandler().preparePlayerForGame(player);
         }
-
         plugin.getGameHandler().teleportAllToGameWorld();
     }
 

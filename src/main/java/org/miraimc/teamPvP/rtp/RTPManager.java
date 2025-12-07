@@ -31,7 +31,6 @@ public class RTPManager {
      * 예: range=500 -> -500 ~ 500
      */
     private int getRandomCoordinate(int range) {
-        // 더 넓은 분포를 위해 난수 생성 개선
         ThreadLocalRandom random = ThreadLocalRandom.current();
         return random.nextInt(-range, range + 1);
     }
@@ -74,12 +73,32 @@ public class RTPManager {
             return;
         }
 
-        // 각 시도마다 완전히 새로운 랜덤 좌표 생성
-        // ThreadLocalRandom을 명시적으로 호출하여 독립적인 난수 보장
+        // 더 분산된 좌표를 위해 개선된 랜덤 생성
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        int x = random.nextInt(-range, range + 1);
-        int z = random.nextInt(-range, range + 1);
 
+        // 시도 횟수에 따라 다른 범위 사용 (초반에는 넓게, 나중에는 전체 범위)
+        int effectiveRange = (attemptIndex < 3)
+                ? range  // 처음 3번은 전체 범위
+                : (int)(range * (0.7 + random.nextDouble() * 0.3)); // 이후는 70-100% 범위
+
+        // 좌표 생성
+        int tempX = random.nextInt(-effectiveRange, effectiveRange + 1);
+        int tempZ = random.nextInt(-effectiveRange, effectiveRange + 1);
+
+        // 중심부(0,0) 근처 회피 (반경 50 이내는 80% 확률로 외곽으로 이동)
+        if (Math.abs(tempX) < 50 && Math.abs(tempZ) < 50 && random.nextDouble() < 0.8) {
+            // 외곽으로 밀어내기
+            int direction = random.nextInt(4);
+            switch (direction) {
+                case 0 -> tempX = random.nextInt(range / 2, range + 1);          // 동쪽
+                case 1 -> tempX = random.nextInt(-range, -(range / 2) + 1);      // 서쪽
+                case 2 -> tempZ = random.nextInt(range / 2, range + 1);          // 남쪽
+                case 3 -> tempZ = random.nextInt(-range, -(range / 2) + 1);      // 북쪽
+            }
+        }
+
+        final int x = tempX;
+        final int z = tempZ;
         Location probe = new Location(world, x, 0, z);
 
         try {

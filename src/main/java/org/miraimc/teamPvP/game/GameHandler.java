@@ -15,6 +15,7 @@ import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.VisibilityUtil;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameHandler {
 
@@ -60,7 +61,8 @@ public class GameHandler {
             return;
         }
 
-        Location randomLocation = availableLocations.remove(0);
+        int randomIndex = ThreadLocalRandom.current().nextInt(availableLocations.size());
+        Location randomLocation = availableLocations.remove(randomIndex);
 
         if (player != null && player.isOnline()) {
             player.teleport(randomLocation);
@@ -113,6 +115,11 @@ public class GameHandler {
         plugin.getProfileHandler().resetInventory(player);
     }
 
+    /**
+     * 플레이어가 죽었을 경우를 담당하는 메서드
+     * @param victim
+     * @param killer
+     */
     public void handleDeath(Player victim, @Nullable Player killer) {
         Team victimTeam = plugin.getTeamManager().getTeam(victim);
         if (victimTeam == null) return;
@@ -158,6 +165,12 @@ public class GameHandler {
         handleNaturalDeath(victim, victimTeam, isLeader);
     }
 
+    /**
+     * 리더가 죽었을 경우
+     * @param victimTeam
+     * @param killerTeam
+     * @param leader
+     */
     private void handleLeaderDeath(Team victimTeam, Team killerTeam, Player leader) {
         plugin.getLogger().info("Leader " + leader.getName() + " died. Merging team " +
                 victimTeam.getName() + " into " + killerTeam.getName());
@@ -190,6 +203,12 @@ public class GameHandler {
         }, 4L);
     }
 
+    /**
+     * 일반 멤버가 상대팀에게 죽었을 경우
+     * @param victim
+     * @param victimTeam
+     * @param killerTeam
+     */
     private void handleMemberDeath(Player victim, Team victimTeam, Team killerTeam) {
         plugin.getLogger().info("Member " + victim.getName() + " died. Moving from " +
                 victimTeam.getName() + " to " + killerTeam.getName());
@@ -213,6 +232,12 @@ public class GameHandler {
         }, 4L);
     }
 
+    /**
+     * 자연사로 죽었을 경우 리더는 랜덤 위치, 일반 팀원은 리더의 위치로 텔레포트
+     * @param victim
+     * @param team
+     * @param isLeader
+     */
     private void handleNaturalDeath(Player victim, Team team, boolean isLeader) {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (isLeader) {
