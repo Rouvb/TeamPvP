@@ -2,6 +2,7 @@ package org.miraimc.teamPvP.team.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
@@ -33,6 +34,7 @@ public class TeamCommand extends BaseCommand {
     }
 
     @Subcommand("list|목록")
+    @CommandPermission("teampvp.team.list")
     public void onList(Player sender) {
         List<Team> teams = plugin.getTeamManager().getTeams();
 
@@ -42,7 +44,7 @@ public class TeamCommand extends BaseCommand {
             String message = String.format(" %s%s &7(%d): %s",
                     team.getPrefix(),
                     team.getDisplayName(),
-                    team.getMembers().size(),
+                    team.getAliveMembers().size(),
                     plugin.getTeamHandler().parseTeamMembers(team));
             sender.sendMessage(TextUtil.translate(message));
         }
@@ -66,6 +68,7 @@ public class TeamCommand extends BaseCommand {
     }
 
     @Subcommand("forcejoin|강제참가")
+    @CommandPermission("teampvp.team.forcejoin")
     public void onForceJoin(Player sender, String teamName) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
             sender.sendMessage(Lang.TEAM_ERROR_UNABLE_ACCESS.getMessage());

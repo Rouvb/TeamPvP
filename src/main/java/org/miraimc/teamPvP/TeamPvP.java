@@ -20,7 +20,6 @@ import org.miraimc.teamPvP.profile.listener.LobbyListener;
 import org.miraimc.teamPvP.profile.listener.ProfileListener;
 import org.miraimc.teamPvP.profile.listener.ProfilePreventionListener;
 import org.miraimc.teamPvP.profile.listener.WorldPreventionListener;
-import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.scoreboard.ScoreboardManager;
 import org.miraimc.teamPvP.team.TeamHandler;
 import org.miraimc.teamPvP.team.TeamManager;
@@ -48,7 +47,6 @@ public final class TeamPvP extends JavaPlugin {
     private TeamHandler teamHandler;
     private GameManager gameManager;
     private GameHandler gameHandler;
-    private RTPManager rtpManager;
     private ScoreboardManager scoreboardManager;
     private final Map<UUID, FastBoard> boards = new HashMap<>();
 
@@ -69,7 +67,6 @@ public final class TeamPvP extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Disabling TeamPvP...");
-        rtpManager.getRtpTask().cancel();
     }
 
     private void loadFiles() {
@@ -99,7 +96,6 @@ public final class TeamPvP extends JavaPlugin {
         teamHandler = new TeamHandler(this);
         gameManager = new GameManager(this);
         gameHandler = new GameHandler(this);
-        rtpManager = new RTPManager(this);
         scoreboardManager = new ScoreboardManager(this);
     }
 

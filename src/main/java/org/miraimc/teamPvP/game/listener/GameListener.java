@@ -39,6 +39,17 @@ public class GameListener implements Listener {
         plugin.getGameHandler().handleDeath(victim, killer);
     }
 
+    private void checkEndGame() {
+        Game game = plugin.getGame();
+        GameStatus gameStatus = game.getGameStatus();
+        if (!(gameStatus.equals(GameStatus.PLAYING) || !gameStatus.equals(GameStatus.DEATH_MATCH))) return;
+
+        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
+        if (winnerTeam != null) {
+            plugin.getGameManager().endGame(winnerTeam);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
@@ -86,50 +97,27 @@ public class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeamMemberDeath(PlayerDeathEvent event) {
-        Game game = plugin.getGame();
-        GameStatus gameStatus = game.getGameStatus();
-        if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
-
-        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
-        if (winnerTeam != null) {
-            plugin.getGameManager().endGame(winnerTeam);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onTeamMemberLeave(TeamRemoveMemberEvent event) {
-        Game game = plugin.getGame();
-        GameStatus gameStatus = game.getGameStatus();
-        if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
-
-        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
-        if (winnerTeam != null) {
-            plugin.getGameManager().endGame(winnerTeam);
-        }
+        checkEndGame();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeamMerge(TeamMergeEvent event) {
-        Game game = plugin.getGame();
-        GameStatus gameStatus = game.getGameStatus();
-        if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
+        checkEndGame();
+    }
 
-        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
-        if (winnerTeam != null) {
-            plugin.getGameManager().endGame(winnerTeam);
-        }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTeamMemberRemove(TeamRemoveMemberEvent event) {
+        checkEndGame();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeamMemberAdd(TeamAddMemberEvent event) {
-        Game game = plugin.getGame();
-        GameStatus gameStatus = game.getGameStatus();
-        if (!(gameStatus.equals(GameStatus.PLAYING) || gameStatus.equals(GameStatus.DEATH_MATCH))) return;
+        checkEndGame();
+    }
 
-        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
-        if (winnerTeam != null) {
-            plugin.getGameManager().endGame(winnerTeam);
-        }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTeamMemberRespawn(PlayerRespawnEvent event) {
+        checkEndGame();
     }
 
     @EventHandler

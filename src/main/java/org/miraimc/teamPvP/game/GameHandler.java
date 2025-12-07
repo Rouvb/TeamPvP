@@ -11,11 +11,11 @@ import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
+import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.VisibilityUtil;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class GameHandler {
 
@@ -53,23 +53,6 @@ public class GameHandler {
         plugin.getGameManager().TitleAll(title);
     }
 
-    public void teleportPlayerToRandomLocation(Player player) {
-        List<Location> availableLocations = plugin.getRtpManager().getLocations();
-
-        if (availableLocations.isEmpty()) {
-            plugin.getLogger().warning("No available RTP locations for " + player.getName());
-            return;
-        }
-
-        int randomIndex = ThreadLocalRandom.current().nextInt(availableLocations.size());
-        Location randomLocation = availableLocations.remove(randomIndex);
-
-        if (player != null && player.isOnline()) {
-            player.teleport(randomLocation);
-            plugin.getLogger().info("Teleported " + player.getName() + " to " + randomLocation);
-        }
-    }
-
     public void teleportAllToGameWorld() {
         List<Team> teams = plugin.getTeamManager().getTeams();
 
@@ -81,7 +64,9 @@ public class GameHandler {
             if (leader == null || !leader.isOnline()) continue;
 
             // Teleport leader to random location
-            teleportPlayerToRandomLocation(leader);
+            String worldName = "world";
+            int range = plugin.getConfigFile().getInt("rtp.range");
+            RTPManager.teleportPlayer(leader, worldName, range);
 
             // Teleport members to leader location
             for (UUID uuid : team.getMembers()) {
@@ -242,9 +227,9 @@ public class GameHandler {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (isLeader) {
                 // 리더는 랜덤 위치로
-                plugin.getRtpManager().randomTeleportAsync(victim,
-                        () -> plugin.getLogger().info("Leader " + victim.getName() + " teleported to random location."),
-                        () -> plugin.getLogger().warning("Failed to teleport leader " + victim.getName()));
+                String worldName = "world";
+                int range = plugin.getConfigFile().getInt("rtp.range");
+                RTPManager.teleportPlayer(victim, worldName, range);
             } else {
                 // 일반 팀원은 리더 위치로
                 UUID leaderId = team.getLeader();

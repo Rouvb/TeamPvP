@@ -70,7 +70,7 @@ public class TeamHandler {
             return ChatColor.GRAY + "None";
         }
 
-        List<String> teamMembers = team.getMembers().stream()
+        List<String> teamMembers = team.getAliveMembers().stream()
                 .map(uuid -> {
                     Player player = Bukkit.getPlayer(uuid);
                     return team.getColor() + (player != null ? player.getName() : "알 수 없음");
