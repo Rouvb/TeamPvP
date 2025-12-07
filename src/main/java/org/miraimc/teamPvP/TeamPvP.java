@@ -20,6 +20,7 @@ import org.miraimc.teamPvP.profile.listener.LobbyListener;
 import org.miraimc.teamPvP.profile.listener.ProfileListener;
 import org.miraimc.teamPvP.profile.listener.ProfilePreventionListener;
 import org.miraimc.teamPvP.profile.listener.WorldPreventionListener;
+import org.miraimc.teamPvP.rtp.RTPListener;
 import org.miraimc.teamPvP.scoreboard.ScoreboardManager;
 import org.miraimc.teamPvP.team.TeamHandler;
 import org.miraimc.teamPvP.team.TeamManager;
@@ -110,6 +111,7 @@ public final class TeamPvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TeamListener(this), this);
         getServer().getPluginManager().registerEvents(new TeamChatListener(this), this);
         getServer().getPluginManager().registerEvents(new ServerListener(this), this);
+        getServer().getPluginManager().registerEvents(new RTPListener(this), this);
     }
 
     private void registerCommands() {

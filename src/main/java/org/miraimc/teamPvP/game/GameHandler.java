@@ -55,6 +55,7 @@ public class GameHandler {
 
     public void teleportAllToGameWorld() {
         List<Team> teams = plugin.getTeamManager().getTeams();
+        List<Location> rtpLocations = RTPManager.getLocations();
 
         for (Team team : teams) {
             UUID leaderId = team.getLeader();
@@ -64,16 +65,15 @@ public class GameHandler {
             if (leader == null || !leader.isOnline()) continue;
 
             // Teleport leader to random location
-            String worldName = "world";
-            int range = plugin.getConfigFile().getInt("rtp.range");
-            RTPManager.teleportPlayer(leader, worldName, range);
+            Location location = rtpLocations.remove(0);
+            leader.teleportAsync(location);
 
             // Teleport members to leader location
             for (UUID uuid : team.getMembers()) {
                 if (uuid.equals(leaderId)) continue;
                 Player member = Bukkit.getPlayer(uuid);
                 if (member != null && member.isOnline()) {
-                    member.teleport(leader.getLocation());
+                    member.teleport(location);
                 }
             }
         }
@@ -180,7 +180,8 @@ public class GameHandler {
             if (newLeaderId != null) {
                 Player newLeader = Bukkit.getPlayer(newLeaderId);
                 if (newLeader != null && newLeader.isOnline()) {
-                    for (UUID memberId : killerTeam.getMembers()) {
+                    // 흡수당한 팀원을 리더 위치로 텔레포트
+                    for (UUID memberId : absorbedMembers) {
                         Player member = Bukkit.getPlayer(memberId);
                         if (member != null && member.isOnline()) {
                             member.teleport(newLeader.getLocation());
@@ -235,9 +236,9 @@ public class GameHandler {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (isLeader) {
                 // 리더는 랜덤 위치로
-                String worldName = "world";
-                int range = plugin.getConfigFile().getInt("rtp.range");
-                RTPManager.teleportPlayer(victim, worldName, range);
+                List<Location> rtpLocations = RTPManager.getLocations();
+                Location location = rtpLocations.remove(0);
+                victim.teleportAsync(location);
             } else {
                 // 일반 팀원은 리더 위치로
                 UUID leaderId = team.getLeader();

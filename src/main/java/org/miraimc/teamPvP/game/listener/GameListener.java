@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
@@ -30,6 +31,50 @@ public class GameListener implements Listener {
 
     public GameListener(TeamPvP plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        Team team = plugin.getTeamManager().getTeam(player);
+
+        if (team == null) {
+            GameStatus status = plugin.getGame().getGameStatus();
+            switch (status) {
+                case PLAYING:
+                    plugin.getGameHandler().handleSpectator(player);
+                    teleportToHighestBlock(player, plugin.getGame().getGameLocation());
+                    break;
+                case DEATH_MATCH:
+                    plugin.getGameHandler().handleSpectator(player);
+                    teleportToLocation(player, plugin.getGame().getDeathMatchLocation());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 지정된 위치의 가장 높은 블록 위로 플레이어를 텔레포트
+     */
+    private void teleportToHighestBlock(Player player, Location baseLocation) {
+        if (baseLocation == null || baseLocation.getWorld() == null) return;
+
+        Location highestLocation = baseLocation.getWorld()
+                .getHighestBlockAt(baseLocation)
+                .getLocation()
+                .add(0, 1, 0);
+
+        player.teleport(highestLocation);
+    }
+
+    /**
+     * 지정된 위치로 플레이어를 텔레포트
+     */
+    private void teleportToLocation(Player player, Location location) {
+        if (location == null || location.getWorld() == null) return;
+        player.teleport(location);
     }
 
     @EventHandler
