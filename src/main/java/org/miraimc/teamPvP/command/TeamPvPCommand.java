@@ -9,6 +9,7 @@ import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
+import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.TextUtil;
@@ -66,30 +67,42 @@ public class TeamPvPCommand extends BaseCommand {
             targetPlayer = target.getPlayer();
         }
 
-        Team team = plugin.getTeamManager().getTeam(targetPlayer);
         Profile profile = plugin.getProfileManager().getProfile(targetPlayer);
+        Game game = plugin.getGame();
+        Team team = plugin.getTeamManager().getTeam(targetPlayer);
 
         sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
         sender.sendMessage(TextUtil.translate("&b&lLocations:"));
-        sender.sendMessage(TextUtil.translate(" &fLobby: &b" + plugin.getConfigFile().getString("game.locations.lobby")));
-        sender.sendMessage(TextUtil.translate(" &fGame: &b" + plugin.getConfigFile().getString("game.locations.game")));
+        sender.sendMessage(TextUtil.translate("&f Lobby: &b" + plugin.getConfigFile().getString("game.locations.lobby")));
+        sender.sendMessage(TextUtil.translate("&f Game: &b" + plugin.getConfigFile().getString("game.locations.game")));
+        sender.sendMessage(TextUtil.translate("&f Death Match: &b" + plugin.getConfigFile().getString("game.locations.death_match")));
 
         if (profile != null) {
             sender.sendMessage(" ");
             sender.sendMessage(TextUtil.translate("&b&lProfile Info:"));
-            sender.sendMessage(TextUtil.translate(" &fStatus: &b" + profile.getStatus().name()));
-            sender.sendMessage(TextUtil.translate(" &fBuild Mode: &b" + profile.isBuildMode()));
+            sender.sendMessage(TextUtil.translate("&f Status: &b" + profile.getStatus().name()));
+            sender.sendMessage(TextUtil.translate("&f Build Mode: &b" + profile.isBuildMode()));
+        }
+        
+        if (game != null) {
+            sender.sendMessage(" ");
+            sender.sendMessage(TextUtil.translate("&b&lGame Info:"));
+            sender.sendMessage(TextUtil.translate("&f Status: &b" + game.getGameStatus().name()));
+            sender.sendMessage(TextUtil.translate("&f Duration: &b" + game.getDuration()));
+            sender.sendMessage(TextUtil.translate("&f Invincibility Time: &b" + game.getInvincibilityTime()));
+            sender.sendMessage(TextUtil.translate("&f Countdown Time: &b" + game.getCountdownTime()));
+            sender.sendMessage(TextUtil.translate("&f Death Match Time: &b" + game.getDeathMatchTime()));
         }
 
         if (team != null) {
             sender.sendMessage(" ");
             sender.sendMessage(TextUtil.translate("&b&lTeam Info:"));
-            sender.sendMessage(TextUtil.translate(" &fTeam: &b" + team.getName()));
-            sender.sendMessage(TextUtil.translate(" &fTeam Display Name: &b" + team.getColor() + team.getDisplayName()));
-            sender.sendMessage(TextUtil.translate(" &fTeam Prefix: &b" + team.getPrefix()));
-            sender.sendMessage(TextUtil.translate(" &fTeam Leader: &b" + team.getLeader()));
-            sender.sendMessage(TextUtil.translate(" &fTeam Weight: &b" + team.getWeight()));
-            sender.sendMessage(TextUtil.translate(" &fTeam Members: &b" + plugin.getTeamHandler().parseTeamMembers(team)));
+            sender.sendMessage(TextUtil.translate("&f Team: &b" + team.getName()));
+            sender.sendMessage(TextUtil.translate("&f Team Display Name: &b" + team.getColor() + team.getDisplayName()));
+            sender.sendMessage(TextUtil.translate("&f Team Prefix: &b" + team.getPrefix()));
+            sender.sendMessage(TextUtil.translate("&f Team Leader: &b" + team.getLeader()));
+            sender.sendMessage(TextUtil.translate("&f Team Weight: &b" + team.getWeight()));
+            sender.sendMessage(TextUtil.translate("&f Team Members: &b" + plugin.getTeamHandler().parseTeamMembers(team)));
         }
 
         sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));

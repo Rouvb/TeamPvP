@@ -79,6 +79,13 @@ public class GameHandler {
         }
     }
 
+    private void checkEndGame() {
+        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
+        if (winnerTeam != null) {
+            plugin.getGameManager().endGame(winnerTeam);
+        }
+    }
+
     public void handleSpectator(Player player) {
         Profile profile = plugin.getProfileManager().getProfile(player);
         if (profile != null) {
@@ -98,6 +105,7 @@ public class GameHandler {
 
         VisibilityUtil.updatePlayerVisibility(player, ProfileStatus.SPECTATING);
         plugin.getProfileHandler().resetInventory(player);
+        checkEndGame();
     }
 
     /**
