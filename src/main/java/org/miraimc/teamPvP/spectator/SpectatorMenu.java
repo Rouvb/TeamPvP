@@ -111,21 +111,23 @@ public class SpectatorMenu implements InventoryProvider {
                         .displayName(Lang.SPECTATOR_MENU_ITEM_PREV_PAGE.getMessage())
                         .build(),
                 e -> {
-            if (pagination.isFirst()) {
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
-            } else {
-                contents.inventory().open(player, pagination.previous().getPage());
-            }
-        }
-                ));
+                    if (pagination.isFirst()) {
+                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.0F);
+                    } else {
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                        contents.inventory().open(player, pagination.previous().getPage());
+                    }
+                }
+        ));
 
         contents.set(0, 8, ClickableItem.of(new ItemBuilder(Material.ARROW)
                         .displayName(Lang.SPECTATOR_MENU_ITEM_NEXT_PAGE.getMessage())
                         .build(),
                 e -> {
                     if (pagination.isLast()) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
+                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.0F);
                     } else {
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                         contents.inventory().open(player, pagination.next().getPage());
                     }
                 }
