@@ -38,8 +38,14 @@ public enum Lang {
     GAME_INVINCIBILITY("game.invincibility"),
 
     // ===== Game Death =====
-    GAME_DEATH_PLAYER_TITLE("game.death.player.title"),
-    GAME_DEATH_PLAYER_SUBTITLE("game.death.player.subtitle"),
+    GAME_DEATH_LEADER_NATURAL_TITLE("game.death.leader_natural.title"),
+    GAME_DEATH_LEADER_NATURAL_SUBTITLE("game.death.leader_natural.subtitle"),
+    GAME_DEATH_MEMBER_NATURAL_TITLE("game.death.member_natural.title"),
+    GAME_DEATH_MEMBER_NATURAL_SUBTITLE("game.death.member_natural.subtitle"),
+    GAME_DEATH_LEADER_ABSORPTION_TITLE("game.death.leader_absorption.title"),
+    GAME_DEATH_LEADER_ABSORPTION_SUBTITLE("game.death.leader_absorption.subtitle"),
+    GAME_DEATH_MEMBER_ABSORPTION_TITLE("game.death.member_absorption.title"),
+    GAME_DEATH_MEMBER_ABSORPTION_SUBTITLE("game.death.member_absorption.subtitle"),
     GAME_DEATH_SPECTATOR_TITLE("game.death.spectator_mode.title"),
     GAME_DEATH_SPECTATOR_SUBTITLE("game.death.spectator_mode.subtitle"),
 

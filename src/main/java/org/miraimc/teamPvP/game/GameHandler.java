@@ -11,6 +11,7 @@ import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
+import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;
 import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.VisibilityUtil;
@@ -40,7 +41,10 @@ public class GameHandler {
             return;
         }
 
-        plugin.getProfileManager().getProfile(player).setStatus(ProfileStatus.PLAYING);
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        profile.setStatus(ProfileStatus.PLAYING);
+        Bukkit.getPluginManager().callEvent(new ProfileStatusEvent(profile));
+
         plugin.getProfileHandler().resetInventory(player);
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
@@ -87,14 +91,15 @@ public class GameHandler {
     }
 
     public void handleSpectator(Player player) {
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        if (profile != null) {
-            profile.setStatus(ProfileStatus.SPECTATING);
-        }
-
         Team team = plugin.getTeamManager().getTeam(player);
         if (team != null) {
             team.getAliveMembers().remove(player.getUniqueId());
+        }
+
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        if (profile != null) {
+            profile.setStatus(ProfileStatus.SPECTATING);
+            Bukkit.getPluginManager().callEvent(new ProfileStatusEvent(profile));
         }
 
         Title title = Title.title(
@@ -185,11 +190,18 @@ public class GameHandler {
                         Player member = Bukkit.getPlayer(memberId);
                         if (member != null && member.isOnline()) {
                             member.teleport(newLeader.getLocation());
-
-                            // 흡수된 팀원들은 체력 10칸으로 설정
-                            if (absorbedMembers.contains(memberId)) {
-                                setReducedHealth(member);
-                            }
+                            setReducedHealth(member);
+                            Title title = Title.title(
+                                    Component.text(Lang.GAME_DEATH_LEADER_ABSORPTION_TITLE.getMessage()
+                                            .replace("{team_prefix}", killerTeam.getPrefix())
+                                            .replace("{team_display_name}", killerTeam.getDisplayName())
+                                    ),
+                                    Component.text(Lang.GAME_DEATH_LEADER_ABSORPTION_SUBTITLE.getMessage()
+                                            .replace("{team_prefix}", killerTeam.getPrefix())
+                                            .replace("{team_display_name}", killerTeam.getDisplayName())
+                                    )
+                            );
+                            member.showTitle(title);
                         }
                     }
                 }
@@ -221,6 +233,17 @@ public class GameHandler {
                 Player newLeader = Bukkit.getPlayer(newLeaderId);
                 if (newLeader != null && newLeader.isOnline()) {
                     victim.teleport(newLeader.getLocation());
+                    Title title = Title.title(
+                            Component.text(Lang.GAME_DEATH_MEMBER_ABSORPTION_TITLE.getMessage()
+                                    .replace("{team_prefix}", killerTeam.getPrefix())
+                                    .replace("{team_display_name}", killerTeam.getDisplayName())
+                            ),
+                            Component.text(Lang.GAME_DEATH_MEMBER_ABSORPTION_SUBTITLE.getMessage()
+                                    .replace("{team_prefix}", killerTeam.getPrefix())
+                                    .replace("{team_display_name}", killerTeam.getDisplayName())
+                            )
+                    );
+                    victim.showTitle(title);
                 }
             }
         }, 4L);
@@ -239,6 +262,17 @@ public class GameHandler {
                 List<Location> rtpLocations = RTPManager.getLocations();
                 Location location = rtpLocations.remove(0);
                 victim.teleportAsync(location);
+                Title title = Title.title(
+                        Component.text(Lang.GAME_DEATH_LEADER_NATURAL_TITLE.getMessage()
+                                .replace("{team_prefix}", team.getPrefix())
+                                .replace("{team_display_name}", team.getDisplayName())
+                        ),
+                        Component.text(Lang.GAME_DEATH_LEADER_NATURAL_SUBTITLE.getMessage()
+                                .replace("{team_prefix}", team.getPrefix())
+                                .replace("{team_display_name}", team.getDisplayName())
+                        )
+                );
+                victim.showTitle(title);
             } else {
                 // 일반 팀원은 리더 위치로
                 UUID leaderId = team.getLeader();
@@ -246,6 +280,17 @@ public class GameHandler {
                     Player leader = Bukkit.getPlayer(leaderId);
                     if (leader != null && leader.isOnline()) {
                         victim.teleport(leader.getLocation());
+                        Title title = Title.title(
+                                Component.text(Lang.GAME_DEATH_MEMBER_NATURAL_TITLE.getMessage()
+                                        .replace("{team_prefix}", team.getPrefix())
+                                        .replace("{team_display_name}", team.getDisplayName())
+                                ),
+                                Component.text(Lang.GAME_DEATH_MEMBER_NATURAL_SUBTITLE.getMessage()
+                                        .replace("{team_prefix}", team.getPrefix())
+                                        .replace("{team_display_name}", team.getDisplayName())
+                                )
+                        );
+                        victim.showTitle(title);
                     }
                 }
             }

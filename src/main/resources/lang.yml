@@ -32,12 +32,21 @@ game:
     subtitle: "&f우승 팀: &b{team_color}{team_display_name}"
   invincibility: "&f무적 시간이 &b{time} &f후에 해제됩니다!"
   death:
-    player:
+    leader_natural:
       title: "&c&l사망"
-      subtitle: ""
+      subtitle: "&f무작위 위치로 이동되었습니다"
+    member_natural:
+      title: "&c&l사망"
+      subtitle: "&f리더의 위치로 이동되었습니다"
+    leader_absorption:
+      title: "&c&l팀 흡수"
+      subtitle: "&f당신의 팀이 {team_prefix}{team_display_name} &f팀에 흡수되었습니다"
+    member_absorption:
+      title: "&c&l사망"
+      subtitle: "&f{team_prefix}{team_display_name} &f팀에 흡수되었습니다"
     spectator_mode:
       title: "&c&l사망"
-      subtitle: "&f이제 관전 모드가 되었습니다!"
+      subtitle: "&f관전 모드로 전환되었습니다"
 team:
   command:
     help:

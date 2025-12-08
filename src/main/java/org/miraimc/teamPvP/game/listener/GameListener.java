@@ -11,11 +11,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameStatus;
+import org.miraimc.teamPvP.profile.event.ProfileAddEvent;
+import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.team.event.TeamAddMemberEvent;
 import org.miraimc.teamPvP.team.event.TeamMergeEvent;
@@ -34,7 +35,7 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onProfileAdd(ProfileAddEvent event) {
         Player player = event.getPlayer();
         Team team = plugin.getTeamManager().getTeam(player);
 
@@ -158,6 +159,11 @@ public class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeamMemberRespawn(PlayerRespawnEvent event) {
+        checkEndGame();
+    }
+
+    @EventHandler
+    public void onProfileChangeStatus(ProfileStatusEvent event) {
         checkEndGame();
     }
 

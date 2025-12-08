@@ -20,5 +20,4 @@ public class Profile {
         this.chatChannel = ChatChannel.GLOBAL;
         this.buildMode = false;
     }
-
 }
