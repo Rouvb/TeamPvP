@@ -55,7 +55,24 @@
                                     <pattern>co.aikar.locales</pattern>
                                     <shadedPattern>org.miraimc.locales</shadedPattern>
                                 </relocation>
+
+                                <!-- SmartInvs -->
+                                <relocation>
+                                    <pattern>fr.minuskube.inv</pattern>
+                                    <shadedPattern>org.miraimc.smartinvs</shadedPattern>
+                                </relocation>
                             </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>com/cryptomorin/xseries/XBiome*</exclude>
+                                        <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
+                                        <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
+                                        <exclude>com/cryptomorin/xseries/SkullCacheListener*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
@@ -128,5 +145,11 @@
             <version>2.21.0</version>
         </dependency>
 
+        <!-- SmartInvs -->
+        <dependency>
+            <groupId>fr.minuskube.inv</groupId>
+            <artifactId>smart-invs</artifactId>
+            <version>1.2.7</version>
+        </dependency>
     </dependencies>
 </project>

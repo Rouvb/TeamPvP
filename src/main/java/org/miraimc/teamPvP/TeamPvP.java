@@ -1,6 +1,7 @@
 package org.miraimc.teamPvP;
 
 import co.aikar.commands.PaperCommandManager;
+import fr.minuskube.inv.InventoryManager;
 import fr.mrmicky.fastboard.FastBoard;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +23,8 @@ import org.miraimc.teamPvP.profile.listener.ProfilePreventionListener;
 import org.miraimc.teamPvP.profile.listener.WorldPreventionListener;
 import org.miraimc.teamPvP.rtp.RTPListener;
 import org.miraimc.teamPvP.scoreboard.ScoreboardManager;
+import org.miraimc.teamPvP.spectator.SpectatorHandler;
+import org.miraimc.teamPvP.spectator.SpectatorListener;
 import org.miraimc.teamPvP.team.TeamHandler;
 import org.miraimc.teamPvP.team.TeamManager;
 import org.miraimc.teamPvP.team.command.TeamAdminCommand;
@@ -48,7 +51,9 @@ public final class TeamPvP extends JavaPlugin {
     private TeamHandler teamHandler;
     private GameManager gameManager;
     private GameHandler gameHandler;
+    private SpectatorHandler spectatorHandler;
     private ScoreboardManager scoreboardManager;
+    private InventoryManager inventoryManager;
     private final Map<UUID, FastBoard> boards = new HashMap<>();
 
     @Override
@@ -97,7 +102,10 @@ public final class TeamPvP extends JavaPlugin {
         teamHandler = new TeamHandler(this);
         gameManager = new GameManager(this);
         gameHandler = new GameHandler(this);
+        spectatorHandler = new SpectatorHandler(this);
         scoreboardManager = new ScoreboardManager(this);
+        inventoryManager = new InventoryManager(this);
+        inventoryManager.init();
     }
 
     private void registerListeners() {
@@ -112,6 +120,7 @@ public final class TeamPvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TeamChatListener(this), this);
         getServer().getPluginManager().registerEvents(new ServerListener(this), this);
         getServer().getPluginManager().registerEvents(new RTPListener(this), this);
+        getServer().getPluginManager().registerEvents(new SpectatorListener(this), this);
     }
 
     private void registerCommands() {

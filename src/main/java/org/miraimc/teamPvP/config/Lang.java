@@ -49,6 +49,14 @@ public enum Lang {
     GAME_DEATH_SPECTATOR_TITLE("game.death.spectator_mode.title"),
     GAME_DEATH_SPECTATOR_SUBTITLE("game.death.spectator_mode.subtitle"),
 
+    // Spectator
+    SPECTATOR_ITEM_SPECTATOR_MENU("spectator.item.spectator_menu"),
+    SPECTATOR_MENU_TITLE("spectator.menu.title"),
+    SPECTATOR_MENU_ITEM_NEXT_PAGE("spectator.menu.item.next_page"),
+    SPECTATOR_MENU_ITEM_PREV_PAGE("spectator.menu.item.prev_page"),
+    SPECTATOR_MENU_ITEM_TARGET_NAME("spectator.menu.item.target.name"),
+    SPECTATOR_MENU_ITEM_TARGET_LORE("spectator.menu.item.target.lore"),
+
     // ===== Team Command =====
     TEAM_COMMAND_HELP("team.command.help"),
 
