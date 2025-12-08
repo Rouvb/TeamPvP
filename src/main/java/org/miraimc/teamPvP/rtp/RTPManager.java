@@ -13,6 +13,16 @@ public class RTPManager {
 
     @Getter private static final List<Location> locations = new ArrayList<>();
 
+    public static void preloadLocations() {
+        for (Location loc : locations) {
+            if (loc == null || loc.getWorld() == null) continue;
+
+            loc.getWorld().getChunkAtAsync(loc).thenAccept(chunk -> {
+                Bukkit.getLogger().info("Preloaded Chunk: " + chunk);
+            });
+        }
+    }
+
     public static void teleportPlayer(Player player, String worldName, int range) {
         World world = Bukkit.getWorld(worldName);
         if (world == null) {

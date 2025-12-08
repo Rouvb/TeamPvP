@@ -12,6 +12,7 @@ import org.miraimc.teamPvP.game.event.GameEndEvent;
 import org.miraimc.teamPvP.game.event.GameStartEvent;
 import org.miraimc.teamPvP.game.task.CountdownTask;
 import org.miraimc.teamPvP.game.task.GameTask;
+import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
 
@@ -33,6 +34,8 @@ public class GameManager {
         if (game.getGameStatus() != GameStatus.LOBBY) return;
 
         game.setGameStatus(GameStatus.STARTING);
+
+        RTPManager.preloadLocations();
 
         cancelCountdown();
         countdownTask = new CountdownTask(this, plugin.getGame())

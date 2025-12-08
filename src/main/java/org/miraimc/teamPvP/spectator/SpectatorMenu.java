@@ -101,7 +101,7 @@ public class SpectatorMenu implements InventoryProvider {
 
     private void addPageButtons(Player player, InventoryContents contents, Pagination pagination) {
         for (int col = 0; col < 9; col++) {
-            contents.set(0, col, ClickableItem.empty(new ItemBuilder(Material.BLACK_STAINED_GLASS)
+            contents.set(0, col, ClickableItem.empty(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
                     .displayName(TextUtil.translate("&f"))
                     .build()
             ));
