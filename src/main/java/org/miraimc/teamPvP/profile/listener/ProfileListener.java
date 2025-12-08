@@ -28,6 +28,7 @@ public class ProfileListener implements Listener {
 
         if (!plugin.getGame().getGameStatus().equals(GameStatus.LOBBY)) {
             profile = plugin.getProfileManager().addProfile(player, ProfileStatus.SPECTATING);
+            plugin.getSpectatorHandler().handleSpectator(player);
         } else {
             profile = plugin.getProfileManager().addProfile(player, ProfileStatus.WAITING);
         }

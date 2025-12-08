@@ -14,7 +14,6 @@ import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;
 import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.team.Team;
-import org.miraimc.teamPvP.util.VisibilityUtil;
 
 import java.util.*;
 
@@ -29,7 +28,7 @@ public class GameHandler {
     public void preparePlayerForGame(Player player) {
         Team team = plugin.getTeamManager().getTeam(player);
         if (team == null) {
-            handleSpectator(player);
+            plugin.getSpectatorHandler().handleSpectator(player);
             Location gameLocation = plugin.getGame().getGameLocation();
             if (gameLocation != null && gameLocation.getWorld() != null) {
                 Location highestLocation = gameLocation.getWorld()
@@ -83,36 +82,6 @@ public class GameHandler {
         }
     }
 
-    private void checkEndGame() {
-        Team winnerTeam = plugin.getTeamManager().getWinnerTeam();
-        if (winnerTeam != null) {
-            plugin.getGameManager().endGame(winnerTeam);
-        }
-    }
-
-    public void handleSpectator(Player player) {
-        Team team = plugin.getTeamManager().getTeam(player);
-        if (team != null) {
-            team.getAliveMembers().remove(player.getUniqueId());
-        }
-
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        if (profile != null) {
-            profile.setStatus(ProfileStatus.SPECTATING);
-            Bukkit.getPluginManager().callEvent(new ProfileStatusEvent(profile));
-        }
-
-        Title title = Title.title(
-                Component.text(Lang.GAME_DEATH_SPECTATOR_TITLE.getMessage()),
-                Component.text(Lang.GAME_DEATH_SPECTATOR_SUBTITLE.getMessage())
-        );
-        player.showTitle(title);
-
-        VisibilityUtil.updatePlayerVisibility(player, ProfileStatus.SPECTATING);
-        plugin.getProfileHandler().resetInventory(player);
-        checkEndGame();
-    }
-
     /**
      * 플레이어가 죽었을 경우를 담당하는 메서드
      * @param victim
@@ -129,7 +98,7 @@ public class GameHandler {
         if (gameStatus == GameStatus.DEATH_MATCH) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 victim.spigot().respawn();
-                handleSpectator(victim);
+                plugin.getSpectatorHandler().handleSpectator(victim);
             }, 4L);
             return;
         }
@@ -325,6 +294,14 @@ public class GameHandler {
                 if (player == null || !player.isOnline()) continue;
                 player.teleport(team.getDeathMatchLocation());
             }
+        }
+
+        List<Player> spectators = plugin.getSpectatorHandler().getSpectators();
+        for (Player spectator : spectators) {
+            if (spectator == null || !spectator.isOnline()) continue;
+            Location deathMatchLocation = plugin.getGame().getDeathMatchLocation();
+            if (deathMatchLocation == null) continue;
+            spectator.teleport(deathMatchLocation);
         }
     }
 

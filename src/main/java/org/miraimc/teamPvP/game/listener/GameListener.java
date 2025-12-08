@@ -43,11 +43,11 @@ public class GameListener implements Listener {
             GameStatus status = plugin.getGame().getGameStatus();
             switch (status) {
                 case PLAYING:
-                    plugin.getGameHandler().handleSpectator(player);
+                    plugin.getSpectatorHandler().handleSpectator(player);
                     teleportToHighestBlock(player, plugin.getGame().getGameLocation());
                     break;
                 case DEATH_MATCH:
-                    plugin.getGameHandler().handleSpectator(player);
+                    plugin.getSpectatorHandler().handleSpectator(player);
                     teleportToLocation(player, plugin.getGame().getDeathMatchLocation());
                     break;
                 default:

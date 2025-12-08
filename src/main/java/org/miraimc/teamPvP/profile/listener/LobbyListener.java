@@ -5,8 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.profile.ProfileStatus;
+import org.miraimc.teamPvP.profile.event.ProfileAddEvent;
 import org.miraimc.teamPvP.util.TextUtil;
 
 public class LobbyListener implements Listener {
@@ -17,19 +18,22 @@ public class LobbyListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        plugin.getProfileHandler().resetInventory(player);
-        player.getInventory().setHeldItemSlot(4);
+    @EventHandler()
+    public void onPlayerJoin(ProfileAddEvent event) {
+        if (event.getProfile().getStatus() == ProfileStatus.WAITING) {
+            Player player = event.getPlayer();
 
-        Location location = plugin.getGame().getLobbyLocation();
-        if (location == null) {
-            player.sendMessage(TextUtil.translate("&cYou must specify a lobby location!"));
-            return;
+            plugin.getProfileHandler().resetInventory(player);
+            player.getInventory().setHeldItemSlot(4);
+            Location location = plugin.getGame().getLobbyLocation();
+
+            if (location == null) {
+                player.sendMessage(TextUtil.translate("&cYou must specify a lobby location!"));
+                return;
+            }
+
+            player.teleport(location);
         }
-
-        player.teleport(location);
     }
 
 }
