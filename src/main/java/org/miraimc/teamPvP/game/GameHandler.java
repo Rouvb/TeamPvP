@@ -6,6 +6,8 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
@@ -16,6 +18,7 @@ import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.team.Team;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class GameHandler {
 
@@ -25,7 +28,25 @@ public class GameHandler {
         this.plugin = plugin;
     }
 
-    public void preparePlayerForGame(Player player) {
+    public void handleStartPlayer(Player player) {
+        Team team = plugin.getTeamManager().getTeam(player);
+        if (team == null) return;
+
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        profile.setStatus(ProfileStatus.PLAYING);
+        Bukkit.getPluginManager().callEvent(new ProfileStatusEvent(profile));
+        plugin.getProfileHandler().resetInventory(player);
+
+        player.sendMessage(Lang.GAME_STATUS_STARTED_MESSAGE.getMessage());
+        Title title = Title.title(
+                Component.text(Lang.GAME_STATUS_STARTED_TITLE.getMessage()),
+                Component.text(Lang.GAME_STATUS_STARTED_SUBTITLE.getMessage())
+        );
+        plugin.getGameManager().TitleAll(title);
+    }
+
+    public void handleCountdownPlayer(Player player) {
+        Profile profile = plugin.getProfileManager().getProfile(player);
         Team team = plugin.getTeamManager().getTeam(player);
         if (team == null) {
             plugin.getSpectatorHandler().handleSpectator(player);
@@ -40,25 +61,21 @@ public class GameHandler {
             return;
         }
 
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        profile.setStatus(ProfileStatus.PLAYING);
+        profile.setStatus(ProfileStatus.STARTING);
         Bukkit.getPluginManager().callEvent(new ProfileStatusEvent(profile));
-
         plugin.getProfileHandler().resetInventory(player);
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
         player.setFlying(false);
-        player.sendMessage(Lang.GAME_STATUS_STARTED_MESSAGE.getMessage());
-        Title title = Title.title(
-                Component.text(Lang.GAME_STATUS_STARTED_TITLE.getMessage()),
-                Component.text(Lang.GAME_STATUS_STARTED_SUBTITLE.getMessage())
-        );
-        plugin.getGameManager().TitleAll(title);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, PotionEffect.INFINITE_DURATION, 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 0));
     }
 
-    public void teleportAllToGameWorld() {
+    public CompletableFuture<Void> teleportAllToGameWorld() {
         List<Team> teams = plugin.getTeamManager().getTeams();
         List<Location> rtpLocations = RTPManager.getLocations();
+
+        List<CompletableFuture<Boolean>> teleportFutures = new ArrayList<>();
 
         for (Team team : teams) {
             UUID leaderId = team.getLeader();
@@ -67,19 +84,34 @@ public class GameHandler {
             Player leader = Bukkit.getPlayer(leaderId);
             if (leader == null || !leader.isOnline()) continue;
 
+            if (rtpLocations.isEmpty()) {
+                plugin.getLogger().warning("Not enough RTP locations for all teams!");
+                break;
+            }
+
             // Teleport leader to random location
             Location location = rtpLocations.remove(0);
-            leader.teleportAsync(location);
+            CompletableFuture<Boolean> leaderTeleport = leader.teleportAsync(location);
+            teleportFutures.add(leaderTeleport);
 
             // Teleport members to leader location
             for (UUID uuid : team.getMembers()) {
                 if (uuid.equals(leaderId)) continue;
                 Player member = Bukkit.getPlayer(uuid);
                 if (member != null && member.isOnline()) {
-                    member.teleport(location);
+                    CompletableFuture<Boolean> memberTeleport = leaderTeleport.thenCompose(success -> {
+                        if (success) {
+                            return member.teleportAsync(leader.getLocation());
+                        } else {
+                            return CompletableFuture.completedFuture(false);
+                        }
+                    });
+                    teleportFutures.add(memberTeleport);
                 }
             }
         }
+
+        return CompletableFuture.allOf(teleportFutures.toArray(new CompletableFuture[0]));
     }
 
     /**

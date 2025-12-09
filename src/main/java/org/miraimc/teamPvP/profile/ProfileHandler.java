@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.team.Team;
 
@@ -24,7 +25,9 @@ public class ProfileHandler {
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.getInventory().setItemInOffHand(null);
-        player.getActivePotionEffects().clear();
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
         player.setFoodLevel(20);
         player.setSaturation(5.0f);
         player.setExp(0.0f);

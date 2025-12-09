@@ -4,6 +4,7 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.event.GameCountdownEvent;
@@ -12,11 +13,11 @@ import org.miraimc.teamPvP.game.event.GameEndEvent;
 import org.miraimc.teamPvP.game.event.GameStartEvent;
 import org.miraimc.teamPvP.game.task.CountdownTask;
 import org.miraimc.teamPvP.game.task.GameTask;
-import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.LocationUtil;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public class GameManager {
 
@@ -34,16 +35,27 @@ public class GameManager {
         if (game.getGameStatus() != GameStatus.LOBBY) return;
 
         game.setGameStatus(GameStatus.STARTING);
-
-        RTPManager.preloadLocations();
-
-        cancelCountdown();
-        countdownTask = new CountdownTask(this, plugin.getGame())
-                .runTaskTimer(plugin, 0L, 20L);
         Bukkit.getPluginManager().callEvent(new GameCountdownEvent(plugin.getGame()));
+
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        for (Player player : onlinePlayers) {
+            plugin.getGameHandler().handleCountdownPlayer(player);
+        }
+
+        plugin.getGameHandler().teleportAllToGameWorld()
+                .thenRun(() -> Bukkit.getScheduler().runTask(plugin, () -> {
+                    cancelCountdown();
+                    countdownTask = new CountdownTask(this, plugin.getGame())
+                            .runTaskTimer(plugin, 0L, 20L);
+                    plugin.getLogger().info("All players teleported! Starting countdown...");
+                }))
+                .exceptionally(ex -> {
+                    plugin.getLogger().severe("Teleport failed: " + ex.getMessage());
+                    return null;
+                });
     }
 
-    private void cancelCountdown() {
+    public void cancelCountdown() {
         if (countdownTask != null) {
             countdownTask.cancel();
             countdownTask = null;
@@ -65,6 +77,11 @@ public class GameManager {
             return;
         }
 
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        for (Player player : onlinePlayers) {
+            plugin.getGameHandler().handleStartPlayer(player);
+        }
+
         cancelGameTask();
         gameTask = new GameTask(plugin.getGame(), this)
                 .runTaskTimer(plugin, 0L, 20L);
@@ -82,6 +99,8 @@ public class GameManager {
         if (game.getGameStatus() != GameStatus.PLAYING) return;
         game.setGameStatus(GameStatus.DEATH_MATCH);
         Bukkit.getPluginManager().callEvent(new GameDeathMatchEvent(game));
+        plugin.getGameHandler().sendDeathMatchAlert();
+        plugin.getGameHandler().teleportAllToDeathMatch();
     }
 
     public void endGame(@Nullable Team winnerTeam) {

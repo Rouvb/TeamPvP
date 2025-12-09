@@ -11,8 +11,8 @@ import org.miraimc.teamPvP.game.GameHandler;
 import org.miraimc.teamPvP.game.GameManager;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.game.command.GameCommand;
+import org.miraimc.teamPvP.game.listener.GameCountdownListener;
 import org.miraimc.teamPvP.game.listener.GameListener;
-import org.miraimc.teamPvP.game.listener.GameStatusListener;
 import org.miraimc.teamPvP.listener.ServerListener;
 import org.miraimc.teamPvP.placeholder.TeamPvPExpansion;
 import org.miraimc.teamPvP.profile.ProfileHandler;
@@ -115,7 +115,7 @@ public final class TeamPvP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LobbyListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldPreventionListener(this), this);
         getServer().getPluginManager().registerEvents(new GameListener(this), this);
-        getServer().getPluginManager().registerEvents(new GameStatusListener(this), this);
+        getServer().getPluginManager().registerEvents(new GameCountdownListener(this), this);
         getServer().getPluginManager().registerEvents(new TeamListener(this), this);
         getServer().getPluginManager().registerEvents(new TeamChatListener(this), this);
         getServer().getPluginManager().registerEvents(new ServerListener(this), this);
