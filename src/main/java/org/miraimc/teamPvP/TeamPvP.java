@@ -4,6 +4,7 @@ import co.aikar.commands.PaperCommandManager;
 import fr.minuskube.inv.InventoryManager;
 import fr.mrmicky.fastboard.FastBoard;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.miraimc.teamPvP.command.TeamPvPCommand;
 import org.miraimc.teamPvP.game.Game;
@@ -33,6 +34,7 @@ import org.miraimc.teamPvP.team.listener.TeamChatListener;
 import org.miraimc.teamPvP.team.listener.TeamListener;
 import org.miraimc.teamPvP.util.BasicConfigFile;
 import org.miraimc.teamPvP.world.WorldManager;
+import org.popcraft.chunky.api.ChunkyAPI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +56,7 @@ public final class TeamPvP extends JavaPlugin {
     private SpectatorHandler spectatorHandler;
     private ScoreboardManager scoreboardManager;
     private InventoryManager inventoryManager;
+    private ChunkyAPI chunky;
     private final Map<UUID, FastBoard> boards = new HashMap<>();
 
     @Override
@@ -68,6 +71,7 @@ public final class TeamPvP extends JavaPlugin {
         registerCommands();
         registerPlaceholder();
         loadScoreboardUpdater();
+        loadChunky();
     }
 
     @Override
@@ -146,5 +150,10 @@ public final class TeamPvP extends JavaPlugin {
                 scoreboardManager.updateScoreboard(board);
             }
         }, 0, 20L);
+    }
+
+    public void loadChunky() {
+        if (!Bukkit.getPluginManager().isPluginEnabled("Chunky")) return;
+        chunky = Bukkit.getServer().getServicesManager().load(ChunkyAPI.class);
     }
 }

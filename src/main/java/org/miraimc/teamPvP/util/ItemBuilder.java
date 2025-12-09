@@ -2,17 +2,17 @@ package org.miraimc.teamPvP.util;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -466,6 +466,27 @@ public class ItemBuilder {
         this.unbreakable = unbreakable;
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
+        return this;
+    }
+
+    /**
+     * Set the item skull owner
+     */
+    public ItemBuilder skullOwner(String playerName) {
+        if (item.getType() == Material.PLAYER_HEAD) {
+            SkullMeta skull = (SkullMeta) meta;
+            skull.setOwner(playerName);
+            item.setItemMeta(skull);
+        }
+        return this;
+    }
+
+    public ItemBuilder skullOwner(OfflinePlayer offlinePlayer) {
+        if (item.getType() == Material.PLAYER_HEAD) {
+            SkullMeta skull = (SkullMeta) meta;
+            skull.setOwningPlayer(offlinePlayer);
+            item.setItemMeta(skull);
+        }
         return this;
     }
 

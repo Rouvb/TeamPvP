@@ -5,3 +5,4 @@ api-version: '1.21'
 authors: [ MiraiMC Development ]
 softdepend:
   - PlaceholderAPI
+  - Chunky

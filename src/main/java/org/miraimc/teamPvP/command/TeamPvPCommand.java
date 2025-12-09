@@ -13,6 +13,7 @@ import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.TextUtil;
+import org.popcraft.chunky.api.ChunkyAPI;
 
 @CommandAlias("teampvp")
 public class TeamPvPCommand extends BaseCommand {
@@ -26,6 +27,12 @@ public class TeamPvPCommand extends BaseCommand {
     @Subcommand("start|시작")
     @CommandPermission("teampvp.start")
     public void onStart(Player sender) {
+        ChunkyAPI chunky = plugin.getChunky();
+        if (chunky != null && chunky.isRunning("world")) {
+            sender.sendMessage(Lang.GAME_ERROR_WORLD_GENERATING.getMessage());
+            return;
+        }
+
         Team team = plugin.getTeamManager().getWinnerTeam();
         if (team != null) {
             sender.sendMessage(Lang.GAME_ERROR_START_CONDITION.getMessage());
