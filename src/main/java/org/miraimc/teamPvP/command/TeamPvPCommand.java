@@ -31,7 +31,14 @@ public class TeamPvPCommand extends BaseCommand {
             sender.sendMessage(Lang.GAME_ERROR_START_CONDITION.getMessage());
             return;
         }
+        sender.sendMessage(Lang.GAME_STARTING.getMessage());
         plugin.getGameManager().startCountdown();
+    }
+
+    @Subcommand("end|stop|종료|중지")
+    @CommandPermission("teampvp.end")
+    public void onEnd(Player sender) {
+        plugin.getGameManager().endGame(null);
     }
 
     @Subcommand("reload")
