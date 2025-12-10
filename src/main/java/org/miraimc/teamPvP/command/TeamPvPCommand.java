@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
@@ -29,7 +30,23 @@ public class TeamPvPCommand extends BaseCommand {
     public void onStart(Player sender) {
         ChunkyAPI chunky = plugin.getChunky();
         if (chunky != null && chunky.isRunning("world")) {
-            sender.sendMessage(Lang.GAME_ERROR_WORLD_GENERATING.getMessage());
+            chunky.onGenerationProgress(event -> {
+                if (event.world().equalsIgnoreCase("world")) {
+                    float progress = event.progress();
+                    sender.sendActionBar(Lang.GAME_ERROR_WORLD_GENERATING_ACTION_BAR.getMessage()
+                                    .replace("{progress}", String.format("%.2f", progress))
+                    );
+                }
+            });
+
+            chunky.onGenerationComplete(event -> {
+                if (event.world().equalsIgnoreCase("world")) {
+                    sender.sendMessage(Lang.GAME_ERROR_WORLD_GENERATING_DONE.getMessage());
+                    sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
+                }
+            });
+
+            sender.sendMessage(Lang.GAME_ERROR_WORLD_GENERATING_GENERATING.getMessage());
             return;
         }
 

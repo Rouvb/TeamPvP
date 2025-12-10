@@ -16,7 +16,11 @@ public enum Lang {
 
     // ===== Game Errors =====
     GAME_ERROR_START_CONDITION("game.error.start_condition"),
-    GAME_ERROR_WORLD_GENERATING("game.error.world_generating"),
+
+    // ===== World Generating =====
+    GAME_ERROR_WORLD_GENERATING_GENERATING("game.world_generating.generating"),
+    GAME_ERROR_WORLD_GENERATING_DONE("game.world_generating.done"),
+    GAME_ERROR_WORLD_GENERATING_ACTION_BAR("game.world_generating.action_bar"),
 
     // ===== Game Status =====
     GAME_STARTING("game.starting"),
