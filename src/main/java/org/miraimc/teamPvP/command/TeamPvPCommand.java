@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
@@ -43,6 +44,7 @@ public class TeamPvPCommand extends BaseCommand {
                 if (event.world().equalsIgnoreCase("world")) {
                     sender.sendMessage(Lang.GAME_ERROR_WORLD_GENERATING_DONE.getMessage());
                     sender.playSound(sender.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
+                    Bukkit.getScheduler().runTask(plugin, () -> plugin.getGameManager().startCountdown());
                 }
             });
 
@@ -55,6 +57,7 @@ public class TeamPvPCommand extends BaseCommand {
             sender.sendMessage(Lang.GAME_ERROR_START_CONDITION.getMessage());
             return;
         }
+
         plugin.getGameManager().startCountdown();
     }
 
