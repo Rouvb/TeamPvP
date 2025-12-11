@@ -73,6 +73,7 @@ public class TeamPvPCommand extends BaseCommand {
         plugin.getConfigFile().reload();
         plugin.getScoreboardFile().reload();
         plugin.getTeamsFile().reload();
+        plugin.getLangFile().reload();
 
         sender.sendMessage(TextUtil.translate("&aPlugin has been reloaded."));
     }
