@@ -37,6 +37,7 @@ public class GameManager {
         game.setGameStatus(GameStatus.STARTING);
         Bukkit.getPluginManager().callEvent(new GameCountdownEvent(plugin.getGame()));
 
+        plugin.getGameHandler().handleCountdownWorld();
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         for (Player player : onlinePlayers) {
             plugin.getGameHandler().handleCountdownPlayer(player);

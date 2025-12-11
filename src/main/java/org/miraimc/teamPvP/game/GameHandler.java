@@ -28,21 +28,9 @@ public class GameHandler {
         this.plugin = plugin;
     }
 
-    public void handleStartPlayer(Player player) {
-        Team team = plugin.getTeamManager().getTeam(player);
-        if (team == null) return;
-
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        profile.setStatus(ProfileStatus.PLAYING);
-        Bukkit.getPluginManager().callEvent(new ProfileStatusEvent(profile));
-        plugin.getProfileHandler().resetInventory(player);
-
-        player.sendMessage(Lang.GAME_STATUS_STARTED_MESSAGE.getMessage());
-        Title title = Title.title(
-                Component.text(Lang.GAME_STATUS_STARTED_TITLE.getMessage()),
-                Component.text(Lang.GAME_STATUS_STARTED_SUBTITLE.getMessage())
-        );
-        plugin.getGameManager().TitleAll(title);
+    public void handleCountdownWorld() {
+        World world = plugin.getGame().getGameLocation().getWorld();
+        world.setTime(0);
     }
 
     public void handleCountdownPlayer(Player player) {
@@ -69,6 +57,23 @@ public class GameHandler {
         player.setFlying(false);
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, PotionEffect.INFINITE_DURATION, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 0));
+    }
+
+    public void handleStartPlayer(Player player) {
+        Team team = plugin.getTeamManager().getTeam(player);
+        if (team == null) return;
+
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        profile.setStatus(ProfileStatus.PLAYING);
+        Bukkit.getPluginManager().callEvent(new ProfileStatusEvent(profile));
+        plugin.getProfileHandler().resetInventory(player);
+
+        player.sendMessage(Lang.GAME_STATUS_STARTED_MESSAGE.getMessage());
+        Title title = Title.title(
+                Component.text(Lang.GAME_STATUS_STARTED_TITLE.getMessage()),
+                Component.text(Lang.GAME_STATUS_STARTED_SUBTITLE.getMessage())
+        );
+        plugin.getGameManager().TitleAll(title);
     }
 
     public CompletableFuture<Void> teleportAllToGameWorld() {
