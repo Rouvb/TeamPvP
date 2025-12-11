@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -35,6 +37,25 @@ public class SpectatorListener implements Listener {
                         .collect(Collectors.toList());
                 SpectatorMenu.open(player, alivePlayers);
             }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        if (profile.getStatus() == ProfileStatus.SPECTATING) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryCreative(InventoryCreativeEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Profile profile = plugin.getProfileManager().getProfile(player);
+
+        if (profile.getStatus() == ProfileStatus.SPECTATING) {
+            event.setCancelled(true);
         }
     }
 
