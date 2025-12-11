@@ -55,7 +55,6 @@ public class TeamPvPCommand extends BaseCommand {
             sender.sendMessage(Lang.GAME_ERROR_START_CONDITION.getMessage());
             return;
         }
-        sender.sendMessage(Lang.GAME_STARTING.getMessage());
         plugin.getGameManager().startCountdown();
     }
 

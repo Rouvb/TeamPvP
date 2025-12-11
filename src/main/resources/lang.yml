@@ -10,7 +10,6 @@ game:
     generating: "&7월드가 생성 중 입니다..."
     done: "&a월드 생성이 완료되었습니다."
     action_bar: "&7월드 생성 진행도: {progress}%"
-  starting: "&7게임이 준비 중 입니다..."
   status:
     countdown:
       message: "&f게임이 &b{time}&f초 후 시작됩니다..."

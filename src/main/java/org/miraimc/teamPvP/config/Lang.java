@@ -23,7 +23,6 @@ public enum Lang {
     GAME_ERROR_WORLD_GENERATING_ACTION_BAR("game.world_generating.action_bar"),
 
     // ===== Game Status =====
-    GAME_STARTING("game.starting"),
     GAME_STATUS_COUNTDOWN_MESSAGE("game.status.countdown.message"),
     GAME_STATUS_COUNTDOWN_TITLE("game.status.countdown.title"),
     GAME_STATUS_COUNTDOWN_SUBTITLE("game.status.countdown.subtitle"),
