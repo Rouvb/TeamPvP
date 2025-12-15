@@ -1,6 +1,7 @@
 package org.miraimc.teamPvP.placeholder;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.miraimc.teamPvP.TeamPvP;
@@ -41,13 +42,15 @@ public class TeamPvPExpansion extends PlaceholderExpansion {
 
         return switch (params.toLowerCase()) {
             case "player_status" -> profile.getStatus().toString();
-            case "team_weight"   -> team != null ? String.valueOf(team.getWeight()) : "0";
-            case "team_name"     -> team != null ? team.getName() : "";
-            case "team_color"    -> team != null ? team.getColor() : "";
-            case "team_prefix"   -> team != null ? team.getPrefix() : "";
-            case "team_size"     -> team != null ? String.valueOf(team.getMembers().size()) : "0";
-            case "team_alive"    -> team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
-            case "player_color"  -> {
+            case "team_weight" -> team != null ? String.valueOf(team.getWeight()) : "0";
+            case "team_name" -> team != null ? team.getName() : "";
+            case "team_display_name" -> team != null ? team.getDisplayName() : "";
+            case "team_color" -> team != null ? team.getColor() : "";
+            case "team_prefix" -> team != null ? team.getPrefix() : "";
+            case "team_size" -> team != null ? String.valueOf(team.getMembers().size()) : "0";
+            case "team_alive" -> team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
+            case "team_leader" -> team != null ? Bukkit.getOfflinePlayer(team.getLeader()).getName() : "";
+            case "player_color" -> {
                 if (profile.getStatus().equals(ProfileStatus.SPECTATING)) {
                     yield TextUtil.translate("&7");
                 } else if (team != null) {
