@@ -2,7 +2,7 @@ package org.miraimc.teamPvP;
 
 import co.aikar.commands.PaperCommandManager;
 import fr.minuskube.inv.InventoryManager;
-import fr.mrmicky.fastboard.FastBoard;
+import fr.mrmicky.fastboard.adventure.FastBoard;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

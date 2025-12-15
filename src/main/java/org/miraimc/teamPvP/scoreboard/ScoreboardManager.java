@@ -1,7 +1,9 @@
 package org.miraimc.teamPvP.scoreboard;
 
-import fr.mrmicky.fastboard.FastBoard;
+import fr.mrmicky.fastboard.adventure.FastBoard;
+import io.github.milkdrinkers.colorparser.paper.ColorParser;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
@@ -9,7 +11,6 @@ import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
-import org.miraimc.teamPvP.util.TextUtil;
 import org.miraimc.teamPvP.util.TimeFormatUtil;
 
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ public class ScoreboardManager {
         Player player = board.getPlayer();
         if (player == null || !player.isOnline() || board.isDeleted()) return;
 
-        board.updateTitle(plugin.getScoreboardFile().getString("scoreboard.title"));
+        String title = plugin.getScoreboardFile().getRawString("scoreboard.title");
+        board.updateTitle(ColorParser.of(title).legacy().papi(player).build());
 
         Game game = plugin.getGame();
         Team team = plugin.getTeamManager().getTeam(player);
@@ -56,13 +58,13 @@ public class ScoreboardManager {
         }
     }
 
-    private List<String> getFormattedLines(List<String> lines, Player player) {
-        List<String> formattedLines = new ArrayList<>();
+    private List<Component> getComponentList(List<String> lines, Player player) {
+        List<Component> componentList = new ArrayList<>();
         Team team = plugin.getTeamManager().getTeam(player);
         String teamName = team != null ? team.getName() : "없음";
         String teamDisplayName = team != null ? team.getDisplayName() : "없음";
-        String teamPrefix = team != null ? team.getPrefix() : "";
-        String teamColor = team != null ? team.getColor() : "";
+        Component teamPrefix = team != null ? ColorParser.of(team.getPrefix()).build() : Component.empty();
+        Component teamColor = team != null ? ColorParser.of(team.getColor()).build() : Component.empty();
         String teamLeaderName = team != null ? plugin.getProfileHandler().getPlayerName(team.getLeader()) : "없음";
         String teamSize = team != null ? String.valueOf(team.getMembers().size()) : "0";
         String teamAlive = team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
@@ -76,23 +78,27 @@ public class ScoreboardManager {
                 line = PlaceholderAPI.setPlaceholders(player, line);
             }
 
-            formattedLines.add(TextUtil.translate(line)
-                    .replace("{team_name}", teamName)
-                    .replace("{team_display_name}", teamDisplayName)
-                    .replace("{team_prefix}", teamPrefix)
-                    .replace("{team_color}", teamColor)
-                    .replace("{team_leader}", teamLeaderName)
-                    .replace("{team_size}", teamSize)
-                    .replace("{team_alive}", teamAlive)
-                    .replace("{game_countdown}", gameCountdown)
-                    .replace("{game_duration}", gameDuration)
+            componentList.add(
+                    ColorParser.of(line)
+                            .with("team_name", teamName)
+                            .with("team_display_name", teamDisplayName)
+                            .with("team_prefix", teamPrefix)
+                            .with("team_color", teamColor)
+                            .with("team_leader", teamLeaderName)
+                            .with("team_size", teamSize)
+                            .with("team_alive", teamAlive)
+                            .with("game_countdown", gameCountdown)
+                            .with("game_duration", gameDuration)
+                            .legacy()
+                            .papi(player)
+                            .build()
             );
         }
-        return formattedLines;
+        return componentList;
     }
 
     private void renderScoreboard(FastBoard board, String type) {
-        List<String> lines = plugin.getScoreboardFile().getStringList("scoreboard." + type);
-        board.updateLines(getFormattedLines(lines, board.getPlayer()));
+        List<String> lines = plugin.getScoreboardFile().getRawStringList("scoreboard." + type);
+        board.updateLines(getComponentList(lines, board.getPlayer()));
     }
 }
