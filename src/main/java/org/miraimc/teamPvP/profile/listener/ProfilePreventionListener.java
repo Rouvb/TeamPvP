@@ -99,7 +99,6 @@ public class ProfilePreventionListener implements Listener {
             }
             player.teleport(lobbyLocation);
         }
-
     }
 
     @EventHandler
