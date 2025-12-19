@@ -84,9 +84,11 @@ public class ProfilePreventionListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
+        Player player = e.getPlayer();
+        if (player.getWorld() != plugin.getGame().getLobbyLocation().getWorld()) return;
+
         Location location = e.getTo();
         if (location.getY() < 0) {
-            Player player = e.getPlayer();
             if (player.getVehicle() != null) {
                 Entity pearl = player.getVehicle();
                 if (pearl != null) {
