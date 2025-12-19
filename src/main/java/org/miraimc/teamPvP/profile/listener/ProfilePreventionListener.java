@@ -85,7 +85,8 @@ public class ProfilePreventionListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
-        if (player.getWorld() != plugin.getGame().getLobbyLocation().getWorld()) return;
+        Location lobbyLocation = plugin.getGame().getLobbyLocation();
+        if (player.getWorld() != lobbyLocation.getWorld()) return;
 
         Location location = e.getTo();
         if (location.getY() < 0) {
@@ -96,8 +97,6 @@ public class ProfilePreventionListener implements Listener {
                     pearl.remove();
                 }
             }
-
-            Location lobbyLocation = plugin.getGame().getLobbyLocation();
             player.teleport(lobbyLocation);
         }
 
