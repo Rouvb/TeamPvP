@@ -6,6 +6,7 @@ import fr.mrmicky.fastboard.adventure.FastBoard;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.miraimc.teamPvP.command.ServerSlotCommand;
 import org.miraimc.teamPvP.command.TeamPvPCommand;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameHandler;
@@ -134,6 +135,7 @@ public final class TeamPvP extends JavaPlugin {
         commandManager.registerCommand(new TeamPvPCommand(this));
         commandManager.registerCommand(new TeamCommand(this));
         commandManager.registerCommand(new TeamAdminCommand(this));
+        commandManager.registerCommand(new ServerSlotCommand());
     }
 
     private void registerPlaceholder() {
