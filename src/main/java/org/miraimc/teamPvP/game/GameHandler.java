@@ -17,6 +17,7 @@ import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;
 import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.team.Team;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -354,6 +355,11 @@ public class GameHandler {
                 Component.text(Lang.GAME_END_SUBTITLE.getMessage()
                         .replace("{team_color}", teamColor)
                         .replace("{team_display_name}", teamDisplayName)
+                ),
+                Title.Times.times(
+                        Duration.ofMillis(Title.DEFAULT_TIMES.fadeIn().toMillis()),
+                        Duration.ofSeconds(5),
+                        Duration.ofMillis(Title.DEFAULT_TIMES.fadeOut().toMillis())
                 )
         );
 
