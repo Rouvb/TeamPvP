@@ -11,13 +11,13 @@ public class Profile {
 
     private UUID uuid;
     private ProfileStatus status;
-    private ChatChannel chatChannel;
+    private ProfileChatStatus profileChatStatus;
     private boolean buildMode;
 
     public Profile(UUID uuid, ProfileStatus status) {
         this.uuid = uuid;
         this.status = status;
-        this.chatChannel = ChatChannel.GLOBAL;
+        this.profileChatStatus = ProfileChatStatus.GLOBAL;
         this.buildMode = false;
     }
 }

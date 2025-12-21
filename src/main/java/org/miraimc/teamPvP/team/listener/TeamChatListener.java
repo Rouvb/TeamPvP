@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
-import org.miraimc.teamPvP.profile.ChatChannel;
+import org.miraimc.teamPvP.profile.ProfileChatStatus;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
 
@@ -24,10 +24,10 @@ public class TeamChatListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfile(player);
 
-        if (profile.getChatChannel().equals(ChatChannel.TEAM)) {
+        if (profile.getProfileChatStatus().equals(ProfileChatStatus.TEAM)) {
             Team team = plugin.getTeamManager().getTeam(player);
             if (team == null) {
-                profile.setChatChannel(ChatChannel.GLOBAL);
+                profile.setProfileChatStatus(ProfileChatStatus.GLOBAL);
                 player.sendMessage(Lang.TEAM_CHAT_TOGGLE_CHANNEL.getMessage()
                         .replace("{channel}", "전체 채널"));
                 event.setCancelled(true);

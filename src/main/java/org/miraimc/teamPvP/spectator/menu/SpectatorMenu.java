@@ -1,4 +1,4 @@
-package org.miraimc.teamPvP.spectator;
+package org.miraimc.teamPvP.spectator.menu;
 
 import fr.minuskube.inv.ClickableItem;
 import fr.minuskube.inv.SmartInventory;

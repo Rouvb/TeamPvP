@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.GameStatus;
-import org.miraimc.teamPvP.profile.ChatChannel;
+import org.miraimc.teamPvP.profile.ProfileChatStatus;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.TextUtil;
@@ -147,19 +147,19 @@ public class TeamCommand extends BaseCommand {
         Team team = plugin.getTeamManager().getTeam(sender);
         Profile profile = plugin.getProfileManager().getProfile(sender);
         if (team == null) {
-            profile.setChatChannel(ChatChannel.GLOBAL);
+            profile.setProfileChatStatus(ProfileChatStatus.GLOBAL);
             sender.sendMessage(Lang.TEAM_ERROR_NO_TEAM.getMessage());
             return;
         }
 
-        if (profile.getChatChannel() == ChatChannel.GLOBAL) {
-            profile.setChatChannel(ChatChannel.TEAM);
+        if (profile.getProfileChatStatus() == ProfileChatStatus.GLOBAL) {
+            profile.setProfileChatStatus(ProfileChatStatus.TEAM);
             sender.sendMessage(Lang.TEAM_CHAT_TOGGLE_CHANNEL.getMessage()
                     .replace("{channel}", Lang.TEAM_CHAT_CHANNEL_TEAM.getMessage()));
             return;
         }
-        if (profile.getChatChannel() == ChatChannel.TEAM) {
-            profile.setChatChannel(ChatChannel.GLOBAL);
+        if (profile.getProfileChatStatus() == ProfileChatStatus.TEAM) {
+            profile.setProfileChatStatus(ProfileChatStatus.GLOBAL);
             sender.sendMessage(Lang.TEAM_CHAT_TOGGLE_CHANNEL.getMessage()
                     .replace("{channel}", Lang.TEAM_CHAT_CHANNEL_GLOBAL.getMessage()));
         }

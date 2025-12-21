@@ -1,5 +1,5 @@
 package org.miraimc.teamPvP.profile;
 
-public enum ChatChannel {
+public enum ProfileChatStatus {
     GLOBAL, TEAM
 }

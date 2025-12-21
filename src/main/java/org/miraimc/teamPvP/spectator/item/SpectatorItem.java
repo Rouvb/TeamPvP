@@ -1,4 +1,4 @@
-package org.miraimc.teamPvP.spectator;
+package org.miraimc.teamPvP.spectator.item;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

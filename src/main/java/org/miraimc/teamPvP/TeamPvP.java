@@ -26,7 +26,7 @@ import org.miraimc.teamPvP.profile.listener.WorldPreventionListener;
 import org.miraimc.teamPvP.rtp.RTPListener;
 import org.miraimc.teamPvP.scoreboard.ScoreboardManager;
 import org.miraimc.teamPvP.spectator.SpectatorHandler;
-import org.miraimc.teamPvP.spectator.SpectatorListener;
+import org.miraimc.teamPvP.spectator.listener.SpectatorListener;
 import org.miraimc.teamPvP.team.TeamHandler;
 import org.miraimc.teamPvP.team.TeamManager;
 import org.miraimc.teamPvP.team.command.TeamAdminCommand;

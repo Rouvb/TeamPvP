@@ -9,6 +9,7 @@ import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;
+import org.miraimc.teamPvP.spectator.item.SpectatorItem;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.VisibilityUtil;
 
