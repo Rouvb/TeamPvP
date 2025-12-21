@@ -46,7 +46,7 @@ public class ScoreboardManager {
             case LOBBY:
                 return team == null ? "lobby" : "lobby_team";
             case STARTING:
-                return "starting";
+                return team == null ? "starting" : "starting_team";
             case PLAYING:
             case DEATH_MATCH:
                 if (profile.getStatus() == ProfileStatus.SPECTATING) {
@@ -91,7 +91,7 @@ public class ScoreboardManager {
                             .with("team_alive", teamAlive)
                             .with("game_countdown", gameCountdown)
                             .with("game_duration", gameDuration)
-                            .with("border_size", getBorderSize(player))
+                            .with("border_size", getAbsBorderSize(player))
                             .legacy()
                             .papi(player)
                             .build()
@@ -105,9 +105,9 @@ public class ScoreboardManager {
         board.updateLines(getComponentList(lines, board.getPlayer()));
     }
 
-    private String getBorderSize(Player player) {
+    private String getAbsBorderSize(Player player) {
         World world = player.getWorld();
         WorldBorder border = world.getWorldBorder();
-        return String.format("%,d", border.getSize());
+        return String.format("%,d", (int) (border.getSize() / 2));
     }
 }
