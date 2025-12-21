@@ -63,12 +63,12 @@ public class TeamPvPCommand extends BaseCommand {
 
     @Subcommand("end|stop|종료|중지")
     @CommandPermission("teampvp.host")
-    public void onEnd(Player sender, @Optional Team team) {
+    public void onEnd(Player sender, @Optional String team) {
         if (team == null) {
             plugin.getGameManager().endGame(null);
         }
 
-        plugin.getGameManager().endGame(team);
+        plugin.getGameManager().endGame(plugin.getTeamManager().getTeam(team));
     }
 
     @Subcommand("reload")
