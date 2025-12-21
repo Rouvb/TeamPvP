@@ -15,26 +15,31 @@ public class SafeLocationFinder {
     private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
 
     public static void findSafeLocationAsync(World world, int range, Consumer<Location> callback) {
-        tryFindSafeLocation(world, range, callback, 5000, true); // 5초 시간 초과 + 1회 재시도 허용
+        tryFindSafeLocation(world, range, callback, 5000, true);
     }
 
-    private static void tryFindSafeLocation(World world, int range, Consumer<Location> callback, long timeoutMs, boolean allowRetry) {
+    private static void tryFindSafeLocation(World world, int baseRange, Consumer<Location> callback, long timeoutMs, boolean allowRetry) {
         THREAD_POOL.submit(() -> {
             long startTime = System.currentTimeMillis();
 
             for (int attempts = 0; attempts < 1000; attempts++) {
                 if (System.currentTimeMillis() - startTime > timeoutMs) {
                     if (allowRetry) {
-                        // 재시도 (1회만)
-                        tryFindSafeLocation(world, range, callback, timeoutMs, false);
+                        tryFindSafeLocation(world, baseRange, callback, timeoutMs, false);
                     } else {
                         Bukkit.getScheduler().runTask(TeamPvP.getInstance(), () -> callback.accept(null));
                     }
                     return;
                 }
 
-                int x = random.nextInt(range * 2) - range;
-                int z = random.nextInt(range * 2) - range;
+                WorldBorder border = world.getWorldBorder();
+                double maxRadius = border.getSize() / 2.0;
+                int adjustedRange = (int) Math.floor(maxRadius * 0.9);
+
+                int effectiveRange = Math.min(baseRange, adjustedRange);
+
+                int x = random.nextInt(effectiveRange * 2) - effectiveRange;
+                int z = random.nextInt(effectiveRange * 2) - effectiveRange;
 
 
                 if (isEmptyChunk(world, x, z)) continue;
@@ -44,7 +49,6 @@ public class SafeLocationFinder {
 
                 Location loc = new Location(world, x + 0.5, y, z + 0.5);
 
-                WorldBorder border = world.getWorldBorder();
                 if (!border.isInside(loc)) continue;
 
                 if (isSafe(loc)) {
@@ -55,7 +59,7 @@ public class SafeLocationFinder {
 
 
             if (allowRetry) {
-                tryFindSafeLocation(world, range, callback, timeoutMs, false);
+                tryFindSafeLocation(world, baseRange, callback, timeoutMs, false);
             } else {
                 Bukkit.getScheduler().runTask(TeamPvP.getInstance(), () -> callback.accept(null));
             }

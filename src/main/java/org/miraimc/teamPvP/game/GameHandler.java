@@ -266,9 +266,12 @@ public class GameHandler {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (isLeader) {
                 // 리더는 랜덤 위치로
-                List<Location> rtpLocations = RTPManager.getLocations();
-                Location location = rtpLocations.remove(0);
-                victim.teleportAsync(location);
+                Game game = plugin.getGame();
+                RTPManager.teleportPlayer(
+                        victim,
+                        game.getGameLocation().getWorld().getName(),
+                        plugin.getConfigFile().getInt("rtp.range")
+                );
                 Title title = Title.title(
                         Component.text(Lang.GAME_DEATH_LEADER_NATURAL_TITLE.getMessage()
                                 .replace("{team_prefix}", team.getPrefix())
