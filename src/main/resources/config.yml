@@ -1,7 +1,9 @@
 game:
   countdown_time: 10
   death_match_time: 3600
-  border_size: 2000
+  world_border:
+    default: 2000
+    death_match: 10
   invincibility_time: 300
   locations:
     lobby: ""

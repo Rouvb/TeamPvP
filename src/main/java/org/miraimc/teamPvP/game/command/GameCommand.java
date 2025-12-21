@@ -70,7 +70,7 @@ public class GameCommand extends BaseCommand {
     @Subcommand("setbodersize")
     public void onSetBorder(Player sender, int size) {
         plugin.getGame().setBorderSize(size);
-        plugin.getConfigFile().set("game.border_size", size);
+        plugin.getConfigFile().set("game.world_border.default", size);
         sender.sendMessage(TextUtil.translate("&aSuccessfully set border &e" + size + "&a!"));
     }
 

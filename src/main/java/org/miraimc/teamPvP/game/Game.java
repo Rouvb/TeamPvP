@@ -25,6 +25,6 @@ public class Game {
         this.duration = 0;
         this.countdownTime = plugin.getConfigFile().getInt("game.countdown_time");
         this.invincibilityTime = plugin.getConfigFile().getInt("game.invincibility_time");
-        this.borderSize = plugin.getConfigFile().getInt("game.border_size");
+        this.borderSize = plugin.getConfigFile().getInt("game.world_border.default");
     }
 }
