@@ -1,9 +1,7 @@
 package org.miraimc.teamPvP.game;
 
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.miraimc.teamPvP.TeamPvP;
@@ -78,6 +76,8 @@ public class GameManager {
             return;
         }
 
+        shrinkWorldBorder();
+
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         for (Player player : onlinePlayers) {
             plugin.getGameHandler().handleStartPlayer(player);
@@ -116,6 +116,16 @@ public class GameManager {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Bukkit.dispatchCommand(plugin.getServer().getConsoleSender(), "stop");
         }, 20L * 15);
+    }
+
+    private void shrinkWorldBorder() {
+        Game game = plugin.getGame();
+        for (World world : Bukkit.getWorlds()) {
+            if (world.equals(game.getLobbyLocation().getWorld())) continue;
+            WorldBorder worldBorder = world.getWorldBorder();
+            worldBorder.setCenter(0, 0);
+            worldBorder.setSize(10, game.getDeathMatchTime());
+        }
     }
 
     /**
