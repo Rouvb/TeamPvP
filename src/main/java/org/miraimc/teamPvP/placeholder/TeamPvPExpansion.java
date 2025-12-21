@@ -38,28 +38,39 @@ public class TeamPvPExpansion extends PlaceholderExpansion {
         Profile profile = plugin.getProfileManager().getProfile(player);
         if (profile == null) return "";
 
-        Team team = plugin.getTeamManager().getTeam(player);
+        Team playerTeam = plugin.getTeamManager().getTeam(player);
+
+        if (params.toLowerCase().startsWith("team_size_")) {
+            String teamName = params.toLowerCase().replace("team_size_", "");
+            return getTeamSize(teamName);
+        }
 
         return switch (params.toLowerCase()) {
             case "player_status" -> profile.getStatus().toString();
-            case "team_weight" -> team != null ? String.valueOf(team.getWeight()) : "0";
-            case "team_name" -> team != null ? team.getName() : "";
-            case "team_display_name" -> team != null ? team.getDisplayName() : "";
-            case "team_color" -> team != null ? team.getColor() : "";
-            case "team_prefix" -> team != null ? team.getPrefix() : "";
-            case "team_size" -> team != null ? String.valueOf(team.getMembers().size()) : "0";
-            case "team_alive" -> team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
-            case "team_leader" -> team != null ? Bukkit.getOfflinePlayer(team.getLeader()).getName() : "";
+            case "team_weight" -> playerTeam != null ? String.valueOf(playerTeam.getWeight()) : "0";
+            case "team_name" -> playerTeam != null ? playerTeam.getName() : "";
+            case "team_display_name" -> playerTeam != null ? playerTeam.getDisplayName() : "";
+            case "team_color" -> playerTeam != null ? playerTeam.getColor() : "";
+            case "team_prefix" -> playerTeam != null ? playerTeam.getPrefix() : "";
+            case "team_size" -> playerTeam != null ? String.valueOf(playerTeam.getMembers().size()) : "0";
+            case "team_alive" -> playerTeam != null ? String.valueOf(playerTeam.getAliveMembers().size()) : "0";
+            case "team_leader" -> playerTeam != null ? Bukkit.getOfflinePlayer(playerTeam.getLeader()).getName() : "";
             case "player_color" -> {
                 if (profile.getStatus().equals(ProfileStatus.SPECTATING)) {
                     yield TextUtil.translate("&7");
-                } else if (team != null) {
-                    yield team.getColor();
+                } else if (playerTeam != null) {
+                    yield playerTeam.getColor();
                 } else {
                     yield "";
                 }
             }
             default -> "";
         };
+    }
+
+    private String getTeamSize(String teamName) {
+        Team team = plugin.getTeamManager().getTeam(teamName);
+        if (team == null) return "";
+        return String.valueOf(team.getAliveMembers().size());
     }
 }
