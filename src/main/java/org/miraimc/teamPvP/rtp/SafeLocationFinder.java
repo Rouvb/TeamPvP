@@ -43,6 +43,10 @@ public class SafeLocationFinder {
                 if (y == -1) continue;
 
                 Location loc = new Location(world, x + 0.5, y, z + 0.5);
+
+                WorldBorder border = world.getWorldBorder();
+                if (!border.isInside(loc)) continue;
+
                 if (isSafe(loc)) {
                     Bukkit.getScheduler().runTask(TeamPvP.getInstance(), () -> callback.accept(loc));
                     return;
