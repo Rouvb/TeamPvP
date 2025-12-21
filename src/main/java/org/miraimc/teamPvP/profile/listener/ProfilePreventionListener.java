@@ -13,10 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.miraimc.teamPvP.TeamPvP;
@@ -34,6 +31,14 @@ public class ProfilePreventionListener implements Listener {
     private boolean canBypass(Player player) {
         Profile profile = plugin.getProfileManager().getProfile(player);
         return profile.isBuildMode() || profile.getStatus() == ProfileStatus.PLAYING;
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if (canBypass(player)) {
+            player.setHealth(0);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
