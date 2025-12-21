@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
-import org.miraimc.teamPvP.spectator.menu.SpectatorMenu;
 import org.miraimc.teamPvP.spectator.item.SpectatorItem;
+import org.miraimc.teamPvP.spectator.menu.SpectatorMenu;
 import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.List;

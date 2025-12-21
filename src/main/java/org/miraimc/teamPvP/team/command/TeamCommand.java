@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.GameStatus;
-import org.miraimc.teamPvP.profile.ProfileChatStatus;
 import org.miraimc.teamPvP.profile.Profile;
+import org.miraimc.teamPvP.profile.ProfileChatStatus;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.TextUtil;
 

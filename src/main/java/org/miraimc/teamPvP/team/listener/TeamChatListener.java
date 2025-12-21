@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
-import org.miraimc.teamPvP.profile.ProfileChatStatus;
 import org.miraimc.teamPvP.profile.Profile;
+import org.miraimc.teamPvP.profile.ProfileChatStatus;
 import org.miraimc.teamPvP.team.Team;
 
 public class TeamChatListener implements Listener {
