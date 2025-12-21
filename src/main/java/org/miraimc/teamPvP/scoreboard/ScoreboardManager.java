@@ -4,6 +4,8 @@ import fr.mrmicky.fastboard.adventure.FastBoard;
 import io.github.milkdrinkers.colorparser.paper.ColorParser;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
@@ -89,6 +91,7 @@ public class ScoreboardManager {
                             .with("team_alive", teamAlive)
                             .with("game_countdown", gameCountdown)
                             .with("game_duration", gameDuration)
+                            .with("border_size", getBorderSize(player))
                             .legacy()
                             .papi(player)
                             .build()
@@ -100,5 +103,11 @@ public class ScoreboardManager {
     private void renderScoreboard(FastBoard board, String type) {
         List<String> lines = plugin.getScoreboardFile().getRawStringList("scoreboard." + type);
         board.updateLines(getComponentList(lines, board.getPlayer()));
+    }
+
+    private String getBorderSize(Player player) {
+        World world = player.getWorld();
+        WorldBorder border = world.getWorldBorder();
+        return String.format("%,d", border.getSize());
     }
 }
