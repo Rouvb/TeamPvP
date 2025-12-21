@@ -1,5 +1,6 @@
 package org.miraimc.teamPvP.profile.listener;
 
+import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -153,6 +154,14 @@ public class ProfilePreventionListener implements Listener {
     @EventHandler
     public void onVehicleEnter(VehicleEnterEvent event) {
         if (!(event.getEntered() instanceof Player player)) return;
+        if (!canBypass(player)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPickupExp(PlayerPickupExperienceEvent event) {
+        Player player = event.getPlayer();
         if (!canBypass(player)) {
             event.setCancelled(true);
         }
