@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.miraimc.teamPvP.TeamPvP;
 
@@ -48,5 +49,10 @@ public class WorldPreventionListener implements Listener {
         if (isPreventionWorld(event.getLocation().getWorld())) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onPlayerPortal(PlayerPortalEvent event) {
+        event.setCancelled(true);
     }
 }
