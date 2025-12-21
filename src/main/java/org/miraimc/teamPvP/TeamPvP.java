@@ -19,7 +19,7 @@ import org.miraimc.teamPvP.listener.ServerListener;
 import org.miraimc.teamPvP.placeholder.TeamPvPExpansion;
 import org.miraimc.teamPvP.profile.ProfileHandler;
 import org.miraimc.teamPvP.profile.ProfileManager;
-import org.miraimc.teamPvP.profile.listener.LobbyListener;
+import org.miraimc.teamPvP.lobby.listener.LobbyListener;
 import org.miraimc.teamPvP.profile.listener.ProfileListener;
 import org.miraimc.teamPvP.profile.listener.ProfilePreventionListener;
 import org.miraimc.teamPvP.profile.listener.WorldPreventionListener;
