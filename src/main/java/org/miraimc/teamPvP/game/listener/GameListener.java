@@ -41,17 +41,9 @@ public class GameListener implements Listener {
 
         if (team == null) {
             GameStatus status = plugin.getGame().getGameStatus();
-            switch (status) {
-                case PLAYING:
-                    plugin.getSpectatorHandler().handleSpectator(player);
-                    teleportToHighestBlock(player, plugin.getGame().getGameLocation());
-                    break;
-                case DEATH_MATCH:
-                    plugin.getSpectatorHandler().handleSpectator(player);
-                    teleportToLocation(player, plugin.getGame().getDeathMatchLocation());
-                    break;
-                default:
-                    break;
+            if (status == GameStatus.PLAYING || status == GameStatus.DEATH_MATCH) {
+                plugin.getSpectatorHandler().handleSpectator(player);
+                teleportToHighestBlock(player, plugin.getGame().getGameLocation());
             }
         }
     }
@@ -115,10 +107,8 @@ public class GameListener implements Listener {
 
         // 데스매치 상태면 데스매치 위치로
         if (status == GameStatus.DEATH_MATCH) {
-            Location deathMatchLoc = team.getDeathMatchLocation();
-            if (deathMatchLoc != null) {
-                event.setRespawnLocation(deathMatchLoc);
-            }
+            Location deathMatchLoc = player.getLocation().add(0, 3, 0);
+            event.setRespawnLocation(deathMatchLoc);
             return;
         }
 

@@ -101,7 +101,6 @@ public class GameManager {
         game.setGameStatus(GameStatus.DEATH_MATCH);
         Bukkit.getPluginManager().callEvent(new GameDeathMatchEvent(game));
         plugin.getGameHandler().sendDeathMatchAlert();
-        plugin.getGameHandler().teleportAllToDeathMatch();
     }
 
     public void endGame(@Nullable Team winnerTeam) {
@@ -132,7 +131,6 @@ public class GameManager {
         switch (locationType) {
             case "lobby" -> plugin.getGame().setLobbyLocation(location);
             case "game" -> plugin.getGame().setGameLocation(location);
-            case "death_match" -> plugin.getGame().setDeathMatchLocation(location);
             default -> plugin.getLogger().warning("Unknown location type: " + locationType);
         }
     }
