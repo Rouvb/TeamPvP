@@ -27,7 +27,7 @@ public class TeamPvPCommand extends BaseCommand {
     }
 
     @Subcommand("start|시작")
-    @CommandPermission("teampvp.start")
+    @CommandPermission("teampvp.host")
     public void onStart(Player sender) {
         ChunkyAPI chunky = plugin.getChunky();
         if (chunky != null && chunky.isRunning("world")) {
@@ -62,9 +62,13 @@ public class TeamPvPCommand extends BaseCommand {
     }
 
     @Subcommand("end|stop|종료|중지")
-    @CommandPermission("teampvp.end")
-    public void onEnd(Player sender) {
-        plugin.getGameManager().endGame(null);
+    @CommandPermission("teampvp.host")
+    public void onEnd(Player sender, @Optional Team team) {
+        if (team == null) {
+            plugin.getGameManager().endGame(null);
+        }
+
+        plugin.getGameManager().endGame(team);
     }
 
     @Subcommand("reload")
