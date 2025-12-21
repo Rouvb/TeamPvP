@@ -17,6 +17,8 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
@@ -132,6 +134,22 @@ public class ProfilePreventionListener implements Listener {
             if (!canBypass(player)) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onVehicleDamage(VehicleDamageEvent event) {
+        if (!(event.getAttacker() instanceof Player player)) return;
+        if (!canBypass(player)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onVehicleEnter(VehicleEnterEvent event) {
+        if (!(event.getEntered() instanceof Player player)) return;
+        if (!canBypass(player)) {
+            event.setCancelled(true);
         }
     }
 }
