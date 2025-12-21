@@ -1,5 +1,6 @@
 package org.miraimc.teamPvP.game.listener;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,11 +45,17 @@ public class GameCountdownListener implements Listener {
         Player player = event.getPlayer();
         if (!isInCountdown(player)) return;
 
-        if (event.getFrom().getX() != event.getTo().getX() ||
-                event.getFrom().getY() != event.getTo().getY() ||
-                event.getFrom().getZ() != event.getTo().getZ()) {
+        Location from = event.getFrom();
+        Location to = event.getTo();
 
-            event.setTo(event.getFrom().setDirection(event.getTo().getDirection()));
+        if (from.getX() != to.getX()
+                || from.getZ() != to.getZ()) {
+
+            Location fixed = from.clone();
+            fixed.setYaw(to.getYaw());
+            fixed.setPitch(to.getPitch());
+
+            event.setTo(fixed);
         }
     }
 

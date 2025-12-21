@@ -3,7 +3,6 @@ package org.miraimc.teamPvP.profile.listener;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.profile.ProfileStatus;
@@ -19,7 +18,7 @@ public class LobbyListener implements Listener {
     }
 
     @EventHandler()
-    public void onPlayerJoin(ProfileAddEvent event) {
+    public void onProfileAdd(ProfileAddEvent event) {
         if (event.getProfile().getStatus() == ProfileStatus.WAITING) {
             Player player = event.getPlayer();
 

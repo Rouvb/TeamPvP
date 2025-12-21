@@ -124,6 +124,8 @@ public class GameManager {
             if (world.equals(game.getLobbyLocation().getWorld())) continue;
             WorldBorder worldBorder = world.getWorldBorder();
             worldBorder.setCenter(0, 0);
+            worldBorder.setDamageAmount(1.0);
+            worldBorder.setDamageBuffer(0.0);
             worldBorder.setSize(plugin.getConfigFile().getInt("game.world_border.death_match"), game.getDeathMatchTime());
         }
     }

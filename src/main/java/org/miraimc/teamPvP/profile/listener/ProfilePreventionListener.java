@@ -98,13 +98,6 @@ public class ProfilePreventionListener implements Listener {
 
         Location location = event.getTo();
         if (location.getY() < 0) {
-            if (player.getVehicle() != null) {
-                Entity pearl = player.getVehicle();
-                if (pearl != null) {
-                    player.eject();
-                    pearl.remove();
-                }
-            }
             player.teleport(lobbyLocation);
         }
     }
