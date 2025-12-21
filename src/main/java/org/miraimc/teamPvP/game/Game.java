@@ -10,7 +10,7 @@ import org.miraimc.teamPvP.TeamPvP;
 public class Game {
 
     private final TeamPvP plugin;
-    private org.miraimc.teamPvP.game.GameStatus gameStatus;
+    private GameStatus gameStatus;
     private int duration;
     private int countdownTime;
     private int deathMatchTime;
@@ -19,11 +19,12 @@ public class Game {
     private Location lobbyLocation;
     private Location gameLocation;
 
-    public Game(TeamPvP plugin, org.miraimc.teamPvP.game.GameStatus gameStatus) {
+    public Game(TeamPvP plugin, GameStatus gameStatus) {
         this.plugin = plugin;
         this.gameStatus = gameStatus;
         this.duration = 0;
         this.countdownTime = plugin.getConfigFile().getInt("game.countdown_time");
+        this.deathMatchTime = plugin.getConfigFile().getInt("game.death_match_time");
         this.invincibilityTime = plugin.getConfigFile().getInt("game.invincibility_time");
         this.borderSize = plugin.getConfigFile().getInt("game.world_border.default");
     }
