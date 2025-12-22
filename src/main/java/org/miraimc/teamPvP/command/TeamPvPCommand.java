@@ -29,6 +29,12 @@ public class TeamPvPCommand extends BaseCommand {
     @Subcommand("start|시작")
     @CommandPermission("teampvp.host")
     public void onStart(Player sender) {
+        Team team = plugin.getTeamManager().getWinnerTeam();
+        if (team != null) {
+            sender.sendMessage(Lang.GAME_ERROR_START_CONDITION.getMessage());
+            return;
+        }
+
         ChunkyAPI chunky = plugin.getChunky();
         if (chunky != null && chunky.isRunning("world")) {
             chunky.onGenerationProgress(event -> {
@@ -49,12 +55,6 @@ public class TeamPvPCommand extends BaseCommand {
             });
 
             sender.sendMessage(Lang.GAME_ERROR_WORLD_GENERATING_GENERATING.getMessage());
-            return;
-        }
-
-        Team team = plugin.getTeamManager().getWinnerTeam();
-        if (team != null) {
-            sender.sendMessage(Lang.GAME_ERROR_START_CONDITION.getMessage());
             return;
         }
 
