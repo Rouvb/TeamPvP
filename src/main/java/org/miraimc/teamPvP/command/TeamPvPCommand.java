@@ -128,7 +128,7 @@ public class TeamPvPCommand extends BaseCommand {
             sender.sendMessage(" ");
             sender.sendMessage(TextUtil.translate("&b&lGame Info:"));
             sender.sendMessage(TextUtil.translate("&f Status: &b" + game.getGameStatus().name()));
-            sender.sendMessage(TextUtil.translate("&f Duration: &b" + game.getDuration()));
+            sender.sendMessage(TextUtil.translate("&f Duration: &b" + game.getGameTime()));
             sender.sendMessage(TextUtil.translate("&f Invincibility Time: &b" + gameSettings.getInvincibilityTime()));
             sender.sendMessage(TextUtil.translate("&f Countdown Time: &b" + gameSettings.getCountdownTime()));
             sender.sendMessage(TextUtil.translate("&f Death Match Time: &b" + gameSettings.getDeathMatchTime()));

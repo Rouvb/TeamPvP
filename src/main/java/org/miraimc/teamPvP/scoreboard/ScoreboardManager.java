@@ -75,7 +75,7 @@ public class ScoreboardManager {
         Game game = plugin.getGame();
         GameSettings gameSettings = plugin.getGameSettings();
         String gameCountdown = String.valueOf(gameSettings.getCountdownTime());
-        String gameDuration = TimeFormatUtil.formatSeconds(game.getDuration());
+        String gameDuration = TimeFormatUtil.formatSeconds(game.getGameTime());
 
         for (String line : lines) {
             if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {

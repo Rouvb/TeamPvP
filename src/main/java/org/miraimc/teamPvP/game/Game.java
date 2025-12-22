@@ -11,13 +11,13 @@ public class Game {
 
     private final TeamPvP plugin;
     private GameStatus gameStatus;
-    private int duration;
+    private int gameTime;
     private Location lobbyLocation;
     private Location gameLocation;
 
     public Game(TeamPvP plugin, GameStatus gameStatus) {
         this.plugin = plugin;
         this.gameStatus = gameStatus;
-        this.duration = 0;
+        this.gameTime = 0;
     }
 }

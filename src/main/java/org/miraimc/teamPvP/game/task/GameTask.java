@@ -43,10 +43,10 @@ public class GameTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        game.setDuration(game.getDuration() + 1);
+        game.setGameTime(game.getGameTime() + 1);
 
-        int remainingInvincibility = gameSettings.getInvincibilityTime() - game.getDuration();
-        int remainingDeathMatch = gameSettings.getDeathMatchTime() - game.getDuration();
+        int remainingInvincibility = gameSettings.getInvincibilityTime() - game.getGameTime();
+        int remainingDeathMatch = gameSettings.getDeathMatchTime() - game.getGameTime();
 
         if (ALERT_TIMES.contains(remainingInvincibility)) {
             manager.messageAll(Lang.GAME_INVINCIBILITY.getMessage()
@@ -62,6 +62,11 @@ public class GameTask extends BukkitRunnable {
 
         if (remainingDeathMatch <= 0) {
             manager.startDeathMatch();
+        }
+
+        if (gameSettings.getMaxGameTime() <= game.getGameTime()) {
+            manager.endGame(null);
+            cancel();
         }
     }
 

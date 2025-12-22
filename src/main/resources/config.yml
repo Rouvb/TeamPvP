@@ -1,6 +1,7 @@
 game:
   countdown_time: 10
   death_match_time: 3600
+  max_game_time: 10800
   world_border:
     default: 2000
     death_match: 10

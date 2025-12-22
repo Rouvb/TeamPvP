@@ -166,7 +166,7 @@ public class GameListener implements Listener {
 
         Game game = plugin.getGame();
         GameSettings gameSettings = plugin.getGameSettings();
-        if (game.getDuration() <= gameSettings.getInvincibilityTime()) {
+        if (game.getGameTime() <= gameSettings.getInvincibilityTime()) {
             event.setCancelled(true);
             return;
         }
@@ -185,7 +185,7 @@ public class GameListener implements Listener {
 
         Game game = plugin.getGame();
         GameSettings gameSettings = plugin.getGameSettings();
-        if (game.getDuration() <= gameSettings.getInvincibilityTime()) {
+        if (game.getGameTime() <= gameSettings.getInvincibilityTime()) {
             event.setCancelled(true);
         }
     }
