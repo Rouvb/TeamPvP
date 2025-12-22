@@ -14,6 +14,7 @@ public class Game {
     private int gameTime;
     private Location lobbyLocation;
     private Location gameLocation;
+    private Location deathMatchLocation;
 
     public Game(TeamPvP plugin, GameStatus gameStatus) {
         this.plugin = plugin;

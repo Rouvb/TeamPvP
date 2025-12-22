@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
@@ -15,6 +16,7 @@ import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameSettings;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
+import org.miraimc.teamPvP.util.LocationUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 import org.popcraft.chunky.api.ChunkyAPI;
 
@@ -113,9 +115,9 @@ public class TeamPvPCommand extends BaseCommand {
 
         sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
         sender.sendMessage(TextUtil.translate("&b&lLocations:"));
-        sender.sendMessage(TextUtil.translate("&f Lobby: &b" + plugin.getConfigFile().getString("game.locations.lobby")));
-        sender.sendMessage(TextUtil.translate("&f Game: &b" + plugin.getConfigFile().getString("game.locations.game")));
-        sender.sendMessage(TextUtil.translate("&f Death Match: &b" + plugin.getConfigFile().getString("game.locations.death_match")));
+        sender.sendMessage(TextUtil.translate("&f Lobby: &b" + LocationUtil.serializeLocation(plugin.getGame().getLobbyLocation())));
+        sender.sendMessage(TextUtil.translate("&f Game: &b" + LocationUtil.serializeLocation(plugin.getGame().getGameLocation())));
+        sender.sendMessage(TextUtil.translate("&f Death Match: &b" + LocationUtil.serializeLocation(plugin.getGame().getDeathMatchLocation())));
 
         if (profile != null) {
             sender.sendMessage(" ");

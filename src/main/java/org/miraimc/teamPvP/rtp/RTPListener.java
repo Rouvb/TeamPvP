@@ -27,7 +27,7 @@ public class RTPListener implements Listener {
             Bukkit.getLogger().warning("World " + worldName + " not found");
             return;
         }
-        int range = plugin.getConfigFile().getInt("rtp.range");
+        int range = plugin.getGameSettings().getRtpRange();
 
         SafeLocationFinder.findSafeLocationAsync(world, range, loc -> {
             if (loc == null) {

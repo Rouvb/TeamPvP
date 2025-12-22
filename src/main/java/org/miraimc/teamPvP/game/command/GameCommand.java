@@ -47,7 +47,7 @@ public class GameCommand extends BaseCommand {
     @Subcommand("setlocation")
     public void onSetLocation(Player sender, String locationType) {
         Location location = sender.getLocation();
-        String path = "game.locations." + locationType;
+        String path = "locations." + locationType;
         Game game = plugin.getGame();
 
         switch (locationType.toLowerCase()) {
@@ -70,7 +70,7 @@ public class GameCommand extends BaseCommand {
     @Subcommand("setbodersize")
     public void onSetBorder(Player sender, int size) {
         plugin.getGameSettings().setDefaultBorderSize(size);
-        plugin.getConfigFile().set("game.world_border.default", size);
+        plugin.getConfigFile().set("game.border", size);
         sender.sendMessage(TextUtil.translate("&aSuccessfully set border &e" + size + "&a!"));
     }
 
@@ -84,7 +84,7 @@ public class GameCommand extends BaseCommand {
     @Subcommand("setdeathmatchtime")
     public void onSetDeathMatchTime(Player sender, int deathmatchTime) {
         plugin.getGameSettings().setDeathMatchTime(deathmatchTime);
-        plugin.getConfigFile().set("game.death_match_time", deathmatchTime);
+        plugin.getConfigFile().set("death_match.start_time", deathmatchTime);
         sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
     }
 

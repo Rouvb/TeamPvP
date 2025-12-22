@@ -54,7 +54,7 @@ public class ServerListener implements Listener {
     private void preGenerateChunks() {
         if (!Bukkit.getPluginManager().isPluginEnabled("Chunky")) return;
         ChunkyAPI chunky = plugin.getChunky();
-        int rtpRange = plugin.getConfigFile().getInt("rtp.range");
+        int rtpRange = plugin.getGameSettings().getRtpRange();
         chunky.startTask("world", "square", 0, 0, rtpRange, rtpRange, "concentric");
         chunky.onGenerationComplete(event -> plugin.getLogger().info("Chunk generation completed."));
     }

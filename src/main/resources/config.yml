@@ -1,15 +1,15 @@
 game:
   countdown_time: 10
-  death_match_time: 3600
   max_game_time: 10800
-  world_border:
-    default: 2000
-    death_match: 10
   invincibility_time: 300
-  locations:
-    lobby: ""
-    game: ""
-    death_match: ""
+  border: 2000
+death_match:
+  start_time: 3600
+  arena_enabled: false
+  border: 10
+locations:
+  lobby: "@w;lobby:@x;0.5:@y;69.0:@z;0.5:@p;0.0:@ya;0.0"
+  game: "@w;world:@x;-532.5:@y;72.0:@z;501.5:@p;0.0:@ya;0.0"
+  death_match: "@w;death_match:@x;0.5:@y;69.0:@z;0.5:@p;0.0:@ya;0.0"
 rtp:
-  max_tries: 500
   range: 500

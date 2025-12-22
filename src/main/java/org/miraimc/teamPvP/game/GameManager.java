@@ -137,13 +137,14 @@ public class GameManager {
      */
     public void setLocation(String locationType) {
         Location location = LocationUtil.deserializeLocation(
-                plugin.getConfigFile().getString("game.locations." + locationType)
+                plugin.getConfigFile().getString("locations." + locationType)
         );
         if (location == null) return;
 
         switch (locationType) {
             case "lobby" -> plugin.getGame().setLobbyLocation(location);
             case "game" -> plugin.getGame().setGameLocation(location);
+            case "death_match" -> plugin.getGame().setDeathMatchLocation(location);
             default -> plugin.getLogger().warning("Unknown location type: " + locationType);
         }
     }

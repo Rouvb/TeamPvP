@@ -270,7 +270,7 @@ public class GameHandler {
                 RTPManager.teleportPlayer(
                         victim,
                         game.getGameLocation().getWorld().getName(),
-                        plugin.getConfigFile().getInt("rtp.range")
+                        plugin.getGameSettings().getRtpRange()
                 );
                 Title title = Title.title(
                         Component.text(Lang.GAME_DEATH_LEADER_NATURAL_TITLE.getMessage()
