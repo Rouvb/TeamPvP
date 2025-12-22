@@ -101,6 +101,9 @@ public class GameManager {
         game.setGameStatus(GameStatus.DEATH_MATCH);
         Bukkit.getPluginManager().callEvent(new GameDeathMatchEvent(game));
         plugin.getGameHandler().sendDeathMatchAlert();
+        if (plugin.getGameSettings().isDeathMatchArenaEnabled()) {
+            plugin.getGameHandler().teleportAllToDeathMatch();
+        }
     }
 
     public void endGame(@Nullable Team winnerTeam) {

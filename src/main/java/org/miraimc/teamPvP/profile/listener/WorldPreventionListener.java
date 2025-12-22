@@ -20,7 +20,8 @@ public class WorldPreventionListener implements Listener {
 
     private boolean isPreventionWorld(World world) {
         World lobbyWorld = plugin.getGame().getLobbyLocation().getWorld();
-        return world != null && (world.equals(lobbyWorld));
+        World deathMatchWorld = plugin.getGame().getDeathMatchLocation().getWorld();
+        return world != null && (world.equals(lobbyWorld) || world.equals(deathMatchWorld));
     }
 
     @EventHandler

@@ -134,6 +134,9 @@ public class TeamPvPCommand extends BaseCommand {
             sender.sendMessage(TextUtil.translate("&f Invincibility Time: &b" + gameSettings.getInvincibilityTime()));
             sender.sendMessage(TextUtil.translate("&f Countdown Time: &b" + gameSettings.getCountdownTime()));
             sender.sendMessage(TextUtil.translate("&f Death Match Time: &b" + gameSettings.getDeathMatchTime()));
+            sender.sendMessage(TextUtil.translate("&f Death Match Arena Enabled: &b" + gameSettings.isDeathMatchArenaEnabled()));
+            sender.sendMessage(TextUtil.translate("&f Default Border: &b" + gameSettings.getDefaultBorderSize()));
+            sender.sendMessage(TextUtil.translate("&f Death Match Border: &b" + gameSettings.getDeathMatchBorderSize()));
         }
 
         if (team != null) {

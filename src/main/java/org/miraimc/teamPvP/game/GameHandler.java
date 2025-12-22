@@ -325,6 +325,29 @@ public class GameHandler {
         manager.TitleAll(title);
     }
 
+
+    public void teleportAllToDeathMatch() {
+        List<Team> teams = plugin.getTeamManager().getTeams();
+        for (Team team : teams) {
+            if (team.getLeader() == null || team.getDeathMatchLocation() == null) continue;
+            Set<UUID> membersId = team.getMembers();
+            for (UUID uuid : membersId) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player == null || !player.isOnline()) continue;
+                player.teleport(team.getDeathMatchLocation());
+            }
+        }
+
+        List<Player> spectators = plugin.getSpectatorHandler().getSpectators();
+        for (Player spectator : spectators) {
+            if (spectator == null || !spectator.isOnline()) continue;
+            Location deathMatchLocation = plugin.getGame().getDeathMatchLocation();
+            if (deathMatchLocation == null) continue;
+            spectator.teleport(deathMatchLocation);
+        }
+    }
+
+
     public void handleEndGame(Team winnerTeam) {
         String teamColor = winnerTeam != null ? winnerTeam.getColor() : "";
         String teamDisplayName = winnerTeam != null ? winnerTeam.getDisplayName() : Lang.NONE.getMessage();

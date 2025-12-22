@@ -59,6 +59,10 @@ public class GameCommand extends BaseCommand {
                 plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
                 game.setGameLocation(location);
             }
+            case "death_match" -> {
+                plugin.getConfigFile().set(path, LocationUtil.serializeLocation(location));
+                game.setDeathMatchLocation(location);
+            }
             default -> {
                 sender.sendMessage(TextUtil.translate("&cInvalid location type!"));
                 return;

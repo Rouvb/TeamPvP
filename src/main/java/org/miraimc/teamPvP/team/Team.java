@@ -2,7 +2,9 @@ package org.miraimc.teamPvP.team;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Location;
 import org.miraimc.teamPvP.TeamPvP;
+import org.miraimc.teamPvP.util.LocationUtil;
 import org.miraimc.teamPvP.util.TextUtil;
 
 import java.util.HashSet;
@@ -21,6 +23,7 @@ public class Team {
     private String color;
     private UUID leader;
     private int weight;
+    private Location deathMatchLocation;
     private Set<UUID> members = new HashSet<>();
     private Set<UUID> aliveMembers = new HashSet<>();
 
@@ -32,6 +35,8 @@ public class Team {
         this.color = TextUtil.translate(color);
         this.leader = null;
         this.weight = weight;
+        this.deathMatchLocation = LocationUtil.deserializeLocation(
+                plugin.getTeamsFile().getString("teams." + name + ".death_match_location"));
     }
 
     public void ensureLeader(UUID candidate) {
