@@ -14,7 +14,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
-import org.miraimc.teamPvP.game.GameSettings;
+import org.miraimc.teamPvP.game.setting.GameSettings;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.profile.event.ProfileAddEvent;
 import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;

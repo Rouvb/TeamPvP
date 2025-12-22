@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameManager;
-import org.miraimc.teamPvP.game.GameSettings;
+import org.miraimc.teamPvP.game.setting.GameSettings;
 
 import java.util.Set;
 

@@ -1,4 +1,4 @@
-package org.miraimc.teamPvP.lobby.menu.button;
+package org.miraimc.teamPvP.game.setting.menu.button;
 
 import fr.minuskube.inv.ClickableItem;
 import org.bukkit.event.inventory.InventoryClickEvent;

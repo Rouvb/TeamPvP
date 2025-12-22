@@ -12,6 +12,7 @@ import org.miraimc.teamPvP.game.*;
 import org.miraimc.teamPvP.game.command.GameCommand;
 import org.miraimc.teamPvP.game.listener.GameCountdownListener;
 import org.miraimc.teamPvP.game.listener.GameListener;
+import org.miraimc.teamPvP.game.setting.GameSettings;
 import org.miraimc.teamPvP.listener.ServerListener;
 import org.miraimc.teamPvP.placeholder.TeamPvPExpansion;
 import org.miraimc.teamPvP.profile.ProfileHandler;

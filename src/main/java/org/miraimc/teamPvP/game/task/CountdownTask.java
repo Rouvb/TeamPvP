@@ -5,9 +5,8 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.miraimc.teamPvP.config.Lang;
-import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameManager;
-import org.miraimc.teamPvP.game.GameSettings;
+import org.miraimc.teamPvP.game.setting.GameSettings;
 
 public class CountdownTask extends BukkitRunnable {
 

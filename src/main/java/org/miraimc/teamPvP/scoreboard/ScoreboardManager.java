@@ -9,7 +9,7 @@ import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
-import org.miraimc.teamPvP.game.GameSettings;
+import org.miraimc.teamPvP.game.setting.GameSettings;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;

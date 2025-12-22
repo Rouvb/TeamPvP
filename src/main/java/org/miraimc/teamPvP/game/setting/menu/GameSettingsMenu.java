@@ -1,11 +1,13 @@
-package org.miraimc.teamPvP.lobby.menu;
+package org.miraimc.teamPvP.game.setting.menu;
 
 import fr.minuskube.inv.SmartInventory;
 import fr.minuskube.inv.content.InventoryContents;
 import fr.minuskube.inv.content.InventoryProvider;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
-import org.miraimc.teamPvP.lobby.menu.button.border.DefaultBorderSizeButton;
+import org.miraimc.teamPvP.game.setting.menu.button.border.DefaultBorderSizeButton;
+import org.miraimc.teamPvP.game.setting.menu.button.deathmatch.DeathMatchBorderSizeButton;
+import org.miraimc.teamPvP.game.setting.menu.button.deathmatch.DeathMatchTimeButton;
 
 public class GameSettingsMenu implements InventoryProvider {
 
@@ -28,7 +30,9 @@ public class GameSettingsMenu implements InventoryProvider {
 
     @Override
     public void init(Player player, InventoryContents contents) {
-        contents.set(1, 3, new DefaultBorderSizeButton(plugin).toClickableItem());
+        contents.set(1, 1, new DefaultBorderSizeButton(plugin).toClickableItem());
+        contents.set(1, 2, new DeathMatchBorderSizeButton(plugin).toClickableItem());
+        contents.set(1, 3, new DeathMatchTimeButton(plugin).toClickableItem());
     }
 
     @Override

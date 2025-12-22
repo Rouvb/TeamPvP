@@ -9,6 +9,7 @@ import org.miraimc.teamPvP.game.event.GameCountdownEvent;
 import org.miraimc.teamPvP.game.event.GameDeathMatchEvent;
 import org.miraimc.teamPvP.game.event.GameEndEvent;
 import org.miraimc.teamPvP.game.event.GameStartEvent;
+import org.miraimc.teamPvP.game.setting.GameSettings;
 import org.miraimc.teamPvP.game.task.CountdownTask;
 import org.miraimc.teamPvP.game.task.GameTask;
 import org.miraimc.teamPvP.team.Team;

@@ -1,4 +1,4 @@
-package org.miraimc.teamPvP.lobby.menu.button.border;
+package org.miraimc.teamPvP.game.setting.menu.button.border;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.miraimc.teamPvP.TeamPvP;
-import org.miraimc.teamPvP.lobby.menu.GameSettingsMenu;
+import org.miraimc.teamPvP.game.setting.menu.GameSettingsMenu;
 import org.miraimc.teamPvP.util.TextUtil;
 
 public class DefaultBorderSizePrompt extends StringPrompt {
@@ -37,8 +37,8 @@ public class DefaultBorderSizePrompt extends StringPrompt {
         Player player = (Player) context.getForWhom();
 
         try {
-            double borderSize = Double.parseDouble(input);
-            double minBorderSize = Math.max(borderSize, plugin.getGameSettings().getRtpRange());
+            int borderSize = Integer.parseInt(input);
+            int minBorderSize = Math.max(borderSize, plugin.getGameSettings().getRtpRange());
             plugin.getGameSettings().setDefaultBorderSize(minBorderSize);
 
             Bukkit.getScheduler().runTask(plugin, () -> {
