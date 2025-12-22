@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.Game;
+import org.miraimc.teamPvP.game.GameSettings;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.team.Team;
 import org.miraimc.teamPvP.util.TextUtil;
@@ -107,6 +108,7 @@ public class TeamPvPCommand extends BaseCommand {
 
         Profile profile = plugin.getProfileManager().getProfile(targetPlayer);
         Game game = plugin.getGame();
+        GameSettings gameSettings = plugin.getGameSettings();
         Team team = plugin.getTeamManager().getTeam(targetPlayer);
 
         sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
@@ -127,9 +129,9 @@ public class TeamPvPCommand extends BaseCommand {
             sender.sendMessage(TextUtil.translate("&b&lGame Info:"));
             sender.sendMessage(TextUtil.translate("&f Status: &b" + game.getGameStatus().name()));
             sender.sendMessage(TextUtil.translate("&f Duration: &b" + game.getDuration()));
-            sender.sendMessage(TextUtil.translate("&f Invincibility Time: &b" + game.getInvincibilityTime()));
-            sender.sendMessage(TextUtil.translate("&f Countdown Time: &b" + game.getCountdownTime()));
-            sender.sendMessage(TextUtil.translate("&f Death Match Time: &b" + game.getDeathMatchTime()));
+            sender.sendMessage(TextUtil.translate("&f Invincibility Time: &b" + gameSettings.getInvincibilityTime()));
+            sender.sendMessage(TextUtil.translate("&f Countdown Time: &b" + gameSettings.getCountdownTime()));
+            sender.sendMessage(TextUtil.translate("&f Death Match Time: &b" + gameSettings.getDeathMatchTime()));
         }
 
         if (team != null) {

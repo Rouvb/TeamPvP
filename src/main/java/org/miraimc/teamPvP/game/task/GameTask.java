@@ -5,12 +5,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameManager;
+import org.miraimc.teamPvP.game.GameSettings;
 
 import java.util.Set;
 
 public class GameTask extends BukkitRunnable {
 
     private final Game game;
+    private final GameSettings gameSettings;
     private final GameManager manager;
 
     private static final Set<Integer> ALERT_TIMES = Set.of(
@@ -33,8 +35,9 @@ public class GameTask extends BukkitRunnable {
             1
     );
 
-    public GameTask(Game game, GameManager manager) {
+    public GameTask(Game game, GameSettings gameSettings, GameManager manager) {
         this.game = game;
+        this.gameSettings = gameSettings;
         this.manager = manager;
     }
 
@@ -42,8 +45,8 @@ public class GameTask extends BukkitRunnable {
     public void run() {
         game.setDuration(game.getDuration() + 1);
 
-        int remainingInvincibility = game.getInvincibilityTime() - game.getDuration();
-        int remainingDeathMatch = game.getDeathMatchTime() - game.getDuration();
+        int remainingInvincibility = gameSettings.getInvincibilityTime() - game.getDuration();
+        int remainingDeathMatch = gameSettings.getDeathMatchTime() - game.getDuration();
 
         if (ALERT_TIMES.contains(remainingInvincibility)) {
             manager.messageAll(Lang.GAME_INVINCIBILITY.getMessage()

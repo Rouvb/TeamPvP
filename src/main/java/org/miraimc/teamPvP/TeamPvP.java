@@ -8,10 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.miraimc.teamPvP.command.ServerSlotCommand;
 import org.miraimc.teamPvP.command.TeamPvPCommand;
-import org.miraimc.teamPvP.game.Game;
-import org.miraimc.teamPvP.game.GameHandler;
-import org.miraimc.teamPvP.game.GameManager;
-import org.miraimc.teamPvP.game.GameStatus;
+import org.miraimc.teamPvP.game.*;
 import org.miraimc.teamPvP.game.command.GameCommand;
 import org.miraimc.teamPvP.game.listener.GameCountdownListener;
 import org.miraimc.teamPvP.game.listener.GameListener;
@@ -48,6 +45,7 @@ public final class TeamPvP extends JavaPlugin {
     private BasicConfigFile configFile, teamsFile, scoreboardFile, langFile;
     private WorldManager worldManager;
     private Game game;
+    private GameSettings gameSettings;
     private ProfileManager profileManager;
     private ProfileHandler profileHandler;
     private TeamManager teamManager;
@@ -101,6 +99,7 @@ public final class TeamPvP extends JavaPlugin {
     private void loadManagers() {
         getLogger().info("Loading Managers...");
         game = new Game(this, GameStatus.LOBBY);
+        gameSettings = new GameSettings(this);
         profileManager = new ProfileManager();
         profileHandler = new ProfileHandler(this);
         teamManager = new TeamManager(this);

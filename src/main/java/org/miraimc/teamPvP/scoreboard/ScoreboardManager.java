@@ -9,6 +9,7 @@ import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
+import org.miraimc.teamPvP.game.GameSettings;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
@@ -72,7 +73,8 @@ public class ScoreboardManager {
         String teamAlive = team != null ? String.valueOf(team.getAliveMembers().size()) : "0";
 
         Game game = plugin.getGame();
-        String gameCountdown = String.valueOf(game.getCountdownTime());
+        GameSettings gameSettings = plugin.getGameSettings();
+        String gameCountdown = String.valueOf(gameSettings.getCountdownTime());
         String gameDuration = TimeFormatUtil.formatSeconds(game.getDuration());
 
         for (String line : lines) {

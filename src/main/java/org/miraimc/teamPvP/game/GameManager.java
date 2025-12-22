@@ -44,7 +44,7 @@ public class GameManager {
         plugin.getGameHandler().teleportAllToGameWorld()
                 .thenRun(() -> Bukkit.getScheduler().runTask(plugin, () -> {
                     cancelCountdown();
-                    countdownTask = new CountdownTask(this, plugin.getGame())
+                    countdownTask = new CountdownTask(this, plugin.getGameSettings())
                             .runTaskTimer(plugin, 0L, 20L);
                     plugin.getLogger().info("All players teleported! Starting countdown...");
                 }))
@@ -84,7 +84,7 @@ public class GameManager {
         }
 
         cancelGameTask();
-        gameTask = new GameTask(plugin.getGame(), this)
+        gameTask = new GameTask(plugin.getGame(), plugin.getGameSettings(), this)
                 .runTaskTimer(plugin, 0L, 20L);
     }
 
@@ -120,13 +120,14 @@ public class GameManager {
 
     private void shrinkWorldBorder() {
         Game game = plugin.getGame();
+        GameSettings gameSettings = plugin.getGameSettings();
         for (World world : Bukkit.getWorlds()) {
             if (world.equals(game.getLobbyLocation().getWorld())) continue;
             WorldBorder worldBorder = world.getWorldBorder();
             worldBorder.setCenter(0, 0);
             worldBorder.setDamageAmount(0.2);
             worldBorder.setDamageBuffer(0.0);
-            worldBorder.setSize(plugin.getConfigFile().getInt("game.world_border.death_match"), game.getDeathMatchTime());
+            worldBorder.setSize(gameSettings.getDeathMatchBorderSize(), gameSettings.getDeathMatchTime());
         }
     }
 

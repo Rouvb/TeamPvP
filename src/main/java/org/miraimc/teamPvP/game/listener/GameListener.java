@@ -14,6 +14,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.game.Game;
+import org.miraimc.teamPvP.game.GameSettings;
 import org.miraimc.teamPvP.game.GameStatus;
 import org.miraimc.teamPvP.profile.event.ProfileAddEvent;
 import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;
@@ -164,7 +165,8 @@ public class GameListener implements Listener {
         }
 
         Game game = plugin.getGame();
-        if (game.getDuration() <= game.getInvincibilityTime()) {
+        GameSettings gameSettings = plugin.getGameSettings();
+        if (game.getDuration() <= gameSettings.getInvincibilityTime()) {
             event.setCancelled(true);
             return;
         }
@@ -182,7 +184,8 @@ public class GameListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         Game game = plugin.getGame();
-        if (game.getDuration() <= game.getInvincibilityTime()) {
+        GameSettings gameSettings = plugin.getGameSettings();
+        if (game.getDuration() <= gameSettings.getInvincibilityTime()) {
             event.setCancelled(true);
         }
     }

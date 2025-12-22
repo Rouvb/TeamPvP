@@ -86,7 +86,7 @@ public class WorldManager {
                     worldName.equalsIgnoreCase("world_the_end")) {
                 WorldBorder border = world.getWorldBorder();
                 border.setCenter(0, 0);
-                border.setSize(plugin.getGame().getBorderSize());
+                border.setSize(plugin.getGameSettings().getDefaultBorderSize());
             }
         }
     }

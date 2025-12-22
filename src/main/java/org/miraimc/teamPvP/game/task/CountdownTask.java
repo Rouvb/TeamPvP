@@ -7,37 +7,38 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.Game;
 import org.miraimc.teamPvP.game.GameManager;
+import org.miraimc.teamPvP.game.GameSettings;
 
 public class CountdownTask extends BukkitRunnable {
 
     private final GameManager manager;
-    private final Game game;
+    private final GameSettings gameSettings;
 
-    public CountdownTask(GameManager manager, Game game) {
+    public CountdownTask(GameManager manager, GameSettings gameSettings) {
         this.manager = manager;
-        this.game = game;
+        this.gameSettings = gameSettings;
     }
 
     @Override
     public void run() {
-        if (game.getCountdownTime() == 0) {
+        if (gameSettings.getCountdownTime() == 0) {
             manager.soundAll(Sound.ENTITY_FIREWORK_ROCKET_BLAST);
             manager.startGame();
             cancel();
-        } else if (game.getCountdownTime() % 5 == 0 || game.getCountdownTime() <= 5) {
+        } else if (gameSettings.getCountdownTime() % 5 == 0 || gameSettings.getCountdownTime() <= 5) {
             manager.soundAll(Sound.BLOCK_NOTE_BLOCK_PLING);
             manager.messageAll(Lang.GAME_STATUS_COUNTDOWN_MESSAGE.getMessage()
-                    .replace("{time}", String.valueOf(game.getCountdownTime())));
+                    .replace("{time}", String.valueOf(gameSettings.getCountdownTime())));
             Title title = Title.title(
                     Component.text(Lang.GAME_STATUS_COUNTDOWN_TITLE.getMessage()
-                            .replace("{time}", String.valueOf(game.getCountdownTime()))
+                            .replace("{time}", String.valueOf(gameSettings.getCountdownTime()))
                     ),
                     Component.text(Lang.GAME_STATUS_COUNTDOWN_SUBTITLE.getMessage()
-                            .replace("{time}", String.valueOf(game.getCountdownTime()))
+                            .replace("{time}", String.valueOf(gameSettings.getCountdownTime()))
                     )
             );
             manager.TitleAll(title);
         }
-        game.setCountdownTime(game.getCountdownTime() - 1);
+        gameSettings.setCountdownTime(gameSettings.getCountdownTime() - 1);
     }
 }

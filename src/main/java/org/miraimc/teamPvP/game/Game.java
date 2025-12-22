@@ -12,10 +12,6 @@ public class Game {
     private final TeamPvP plugin;
     private GameStatus gameStatus;
     private int duration;
-    private int countdownTime;
-    private int deathMatchTime;
-    private int invincibilityTime;
-    private int borderSize;
     private Location lobbyLocation;
     private Location gameLocation;
 
@@ -23,9 +19,5 @@ public class Game {
         this.plugin = plugin;
         this.gameStatus = gameStatus;
         this.duration = 0;
-        this.countdownTime = plugin.getConfigFile().getInt("game.countdown_time");
-        this.deathMatchTime = plugin.getConfigFile().getInt("game.death_match_time");
-        this.invincibilityTime = plugin.getConfigFile().getInt("game.invincibility_time");
-        this.borderSize = plugin.getConfigFile().getInt("game.world_border.default");
     }
 }

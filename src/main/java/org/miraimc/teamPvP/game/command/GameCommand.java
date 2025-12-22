@@ -69,21 +69,21 @@ public class GameCommand extends BaseCommand {
 
     @Subcommand("setbodersize")
     public void onSetBorder(Player sender, int size) {
-        plugin.getGame().setBorderSize(size);
+        plugin.getGameSettings().setDefaultBorderSize(size);
         plugin.getConfigFile().set("game.world_border.default", size);
         sender.sendMessage(TextUtil.translate("&aSuccessfully set border &e" + size + "&a!"));
     }
 
     @Subcommand("setcountdown")
     public void onSetCountdown(Player sender, int countdown) {
-        plugin.getGame().setCountdownTime(countdown);
+        plugin.getGameSettings().setCountdownTime(countdown);
         plugin.getConfigFile().set("game.countdown_time", countdown);
         sender.sendMessage(TextUtil.translate("&aSuccessfully set countdown &e" + countdown + "&a!"));
     }
 
     @Subcommand("setdeathmatchtime")
     public void onSetDeathMatchTime(Player sender, int deathmatchTime) {
-        plugin.getGame().setDeathMatchTime(deathmatchTime);
+        plugin.getGameSettings().setDeathMatchTime(deathmatchTime);
         plugin.getConfigFile().set("game.death_match_time", deathmatchTime);
         sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
     }
