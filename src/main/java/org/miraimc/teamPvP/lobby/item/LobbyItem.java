@@ -14,10 +14,16 @@ import java.util.List;
 public class LobbyItem {
 
     public static final ItemStack TEAM_SELECTOR = new ItemBuilder(Material.COMPASS)
-            .displayName(TextUtil.translate("&b&l팀 뽑기"))
-            .build();
+            .displayName(TextUtil.translate("&b&l팀 뽑기")).build();
 
-    public static final ItemStack GAME_INFO_BOOK = new ItemBuilder(getGameInfoBook()).clearLore().build();
+    public static final ItemStack GAME_INFO_BOOK = new ItemBuilder(getGameInfoBook())
+            .clearLore().build();
+
+    public static final ItemStack GAME_SETTINGS = new ItemBuilder(Material.REPEATER)
+            .displayName(TextUtil.translate("&b&l게임 설정")).build();
+
+    public static final ItemStack GAME_START = new ItemBuilder(Material.CLOCK)
+            .displayName(TextUtil.translate("&b&l게임 시작")).build();
 
     private static ItemStack getGameInfoBook() {
         ItemStack book = new ItemBuilder(Material.WRITTEN_BOOK)

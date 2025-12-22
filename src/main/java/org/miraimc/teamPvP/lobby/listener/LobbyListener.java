@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.lobby.item.LobbyItem;
+import org.miraimc.teamPvP.lobby.menu.GameSettingsMenu;
 import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.profile.event.ProfileAddEvent;
@@ -24,8 +25,15 @@ public class LobbyListener implements Listener {
     }
 
     private void giveLobbyItems(Player player) {
-        player.getInventory().setItem(3, LobbyItem.TEAM_SELECTOR);
-        player.getInventory().setItem(5, LobbyItem.GAME_INFO_BOOK);
+        if (player.hasPermission("teampvp.host")) {
+            player.getInventory().setItem(0, LobbyItem.TEAM_SELECTOR);
+            player.getInventory().setItem(1, LobbyItem.GAME_INFO_BOOK);
+            player.getInventory().setItem(7, LobbyItem.GAME_SETTINGS);
+            player.getInventory().setItem(8, LobbyItem.GAME_START);
+        } else {
+            player.getInventory().setItem(3, LobbyItem.TEAM_SELECTOR);
+            player.getInventory().setItem(5, LobbyItem.GAME_INFO_BOOK);
+        }
     }
 
     @EventHandler()
@@ -65,6 +73,10 @@ public class LobbyListener implements Listener {
                 Bukkit.getServer().dispatchCommand(player, "team join");
             } else if (clickedItem.isSimilar(LobbyItem.GAME_INFO_BOOK)) {
                 player.openBook(LobbyItem.GAME_INFO_BOOK);
+            } else if (clickedItem.isSimilar(LobbyItem.GAME_SETTINGS)) {
+                GameSettingsMenu.open(player);
+            } else if (clickedItem.isSimilar(LobbyItem.GAME_START)) {
+                Bukkit.getServer().dispatchCommand(player, "teampvp start");
             }
         }
     }
