@@ -60,17 +60,4 @@ public class SpectatorListener implements Listener {
             event.setCancelled(true);
         }
     }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfile(player);
-        if (profile.getStatus() == ProfileStatus.SPECTATING) {
-            String message = event.getMessage();
-            Bukkit.getOnlinePlayers().stream()
-                            .filter(p -> plugin.getProfileManager().getProfile(p).getStatus() == ProfileStatus.SPECTATING)
-                            .forEach(p -> p.sendMessage(TextUtil.translate("&7[관전자] " + player.getName() + ": " + message)));
-            event.setCancelled(true);
-        }
-    }
 }

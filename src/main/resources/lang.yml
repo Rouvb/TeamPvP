@@ -84,9 +84,12 @@ team:
     leave: "&c팀에서 나갔습니다."
     member_joined: "{team_prefix}{player} &f님이 팀에 참가했습니다."
     member_left: "{team_prefix}{player} &f님이 팀에서 나갔습니다."
+profile:
   chat:
     channel:
       global: "전체 채널"
       team: "팀 채널"
+      spectator: "관전자 채널"
     toggle_channel: "&f채팅 채널이 &b{channel} &f으로 변경했습니다."
-    message_format: "&b&l[Team] {team_color}{player}&7: &f{message}"
+    team_chat: "&b&l[Team] {team_color}{player}&7: &f{message}"
+    spectator_chat: "&7[관전자] <player>&7: <message>"

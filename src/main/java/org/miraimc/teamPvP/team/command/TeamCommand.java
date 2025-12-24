@@ -154,14 +154,14 @@ public class TeamCommand extends BaseCommand {
 
         if (profile.getProfileChatStatus() == ProfileChatStatus.GLOBAL) {
             profile.setProfileChatStatus(ProfileChatStatus.TEAM);
-            sender.sendMessage(Lang.TEAM_CHAT_TOGGLE_CHANNEL.getMessage()
-                    .replace("{channel}", Lang.TEAM_CHAT_CHANNEL_TEAM.getMessage()));
+            sender.sendMessage(Lang.PROFILE_CHAT_TOGGLE_CHANNEL.getMessage()
+                    .replace("{channel}", Lang.PROFILE_CHAT_CHANNEL_TEAM.getMessage()));
             return;
         }
         if (profile.getProfileChatStatus() == ProfileChatStatus.TEAM) {
             profile.setProfileChatStatus(ProfileChatStatus.GLOBAL);
-            sender.sendMessage(Lang.TEAM_CHAT_TOGGLE_CHANNEL.getMessage()
-                    .replace("{channel}", Lang.TEAM_CHAT_CHANNEL_GLOBAL.getMessage()));
+            sender.sendMessage(Lang.PROFILE_CHAT_TOGGLE_CHANNEL.getMessage()
+                    .replace("{channel}", Lang.PROFILE_CHAT_CHANNEL_GLOBAL.getMessage()));
         }
     }
 }

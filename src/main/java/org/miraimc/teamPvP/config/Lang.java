@@ -77,11 +77,12 @@ public enum Lang {
     TEAM_STATUS_MEMBER_JOINED("team.status.member_joined"),
     TEAM_STATUS_MEMBER_LEFT("team.status.member_left"),
 
-    // ===== Team Chat =====
-    TEAM_CHAT_CHANNEL_GLOBAL("team.chat.channel.global"),
-    TEAM_CHAT_CHANNEL_TEAM("team.chat.channel.team"),
-    TEAM_CHAT_TOGGLE_CHANNEL("team.chat.toggle_channel"),
-    TEAM_CHAT_MESSAGE_FORMAT("team.chat.message_format");
+    // ===== Profile Chat =====
+    PROFILE_CHAT_CHANNEL_GLOBAL("profile.chat.channel.global"),
+    PROFILE_CHAT_CHANNEL_TEAM("profile.chat.channel.team"),
+    PROFILE_CHAT_TOGGLE_CHANNEL("profile.chat.toggle_channel"),
+    PROFILE_CHAT_TEAM_CHAT("profile.chat.team_chat"),
+    PROFILE_CHAT_SPECTATOR_CHAT("profile.chat.spectator_chat");
 
     private final String path;
 

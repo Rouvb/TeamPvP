@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.profile.Profile;
+import org.miraimc.teamPvP.profile.ProfileChatStatus;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;
 import org.miraimc.teamPvP.spectator.item.SpectatorItem;
@@ -40,6 +41,7 @@ public class SpectatorHandler {
         Profile profile = plugin.getProfileManager().getProfile(player);
         if (profile != null) {
             profile.setStatus(ProfileStatus.SPECTATING);
+            profile.setProfileChatStatus(ProfileChatStatus.SPECTATOR);
             Bukkit.getPluginManager().callEvent(new ProfileStatusEvent(profile));
         }
 
