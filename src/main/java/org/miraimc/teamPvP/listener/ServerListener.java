@@ -48,6 +48,10 @@ public class ServerListener implements Listener {
             if (!player.hasPermission("teampvp.admin")) {
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "게임이 진행 중일 때는 접속할 수 없습니다.");
             }
+        } else {
+            if (plugin.getChunky().isRunning("world")) {
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "월드가 생성 중입니다.");
+            }
         }
     }
 
