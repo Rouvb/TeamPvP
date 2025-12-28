@@ -103,6 +103,10 @@
             <id>codemc</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>refine-public</id>
+            <url>https://maven.refinedev.xyz/public-repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -169,6 +173,14 @@
             <groupId>io.github.milkdrinkers</groupId>
             <artifactId>colorparser-paper</artifactId>
             <version>4.1.0</version>
+        </dependency>
+
+        <!-- Phoenix API -->
+        <dependency>
+            <groupId>xyz.refinedev.phoenix</groupId>
+            <artifactId>pxAPI</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

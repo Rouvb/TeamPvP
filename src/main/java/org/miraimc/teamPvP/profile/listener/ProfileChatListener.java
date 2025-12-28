@@ -12,6 +12,7 @@ import org.miraimc.teamPvP.profile.Profile;
 import org.miraimc.teamPvP.profile.ProfileChatStatus;
 import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.team.Team;
+import xyz.refinedev.phoenix.Phoenix;
 
 public class ProfileChatListener implements Listener {
 
@@ -21,10 +22,24 @@ public class ProfileChatListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         Profile profile = plugin.getProfileManager().getProfile(player);
+
+        if (plugin.getServer().getPluginManager().isPluginEnabled("Phoenix")) {
+            Phoenix phoenix = Phoenix.getInstance();
+            if (phoenix.getProfileHandler().getProfile(player.getUniqueId()).isMuted()) {
+                player.sendMessage(ColorParser.of("&cYou are currently muted.").build());
+                event.setCancelled(true);
+                return;
+            }
+
+            if (phoenix.getFilterHandler().isFiltered(event.getMessage())) {
+                event.setCancelled(true);
+                return;
+            }
+        }
 
         if (profile.getProfileChatStatus() == ProfileChatStatus.TEAM) {
             Team team = plugin.getTeamManager().getTeam(player);
