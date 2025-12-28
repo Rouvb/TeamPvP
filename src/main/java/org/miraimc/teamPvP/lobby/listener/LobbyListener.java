@@ -28,7 +28,7 @@ public class LobbyListener implements Listener {
         if (player.hasPermission("teampvp.host")) {
             player.getInventory().setItem(0, LobbyItem.TEAM_SELECTOR);
             player.getInventory().setItem(1, LobbyItem.GAME_INFO_BOOK);
-//            player.getInventory().setItem(7, LobbyItem.GAME_SETTINGS);
+            player.getInventory().setItem(7, LobbyItem.GAME_SETTINGS);
             player.getInventory().setItem(8, LobbyItem.GAME_START);
         } else {
             player.getInventory().setItem(3, LobbyItem.TEAM_SELECTOR);
