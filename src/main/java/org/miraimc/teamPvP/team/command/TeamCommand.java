@@ -97,7 +97,7 @@ public class TeamCommand extends BaseCommand {
             return;
         }
 
-        team.getMembers().remove(sender.getUniqueId());
+        plugin.getTeamManager().removeMember(team, sender);
     }
 
     @Subcommand("info|정보")
