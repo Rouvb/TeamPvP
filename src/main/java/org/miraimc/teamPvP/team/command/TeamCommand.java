@@ -110,12 +110,12 @@ public class TeamCommand extends BaseCommand {
 
         String leaderName = plugin.getProfileHandler().getPlayerName(team.getLeader());
 
-        sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
-        sender.sendMessage(TextUtil.translate(TextUtil.translate("&b&l팀 정보:")));
-        sender.sendMessage(TextUtil.translate(TextUtil.translate("&f 팀: " + team.getPrefix() + team.getDisplayName())));
-        sender.sendMessage(TextUtil.translate(TextUtil.translate("&f 리더: " + team.getColor() + leaderName)));
-        sender.sendMessage(TextUtil.translate(TextUtil.translate("&f 멤버 (" + team.getMembers().size() + "): " + plugin.getTeamHandler().parseTeamMembers(team))));
-        sender.sendMessage(TextUtil.translate(TextUtil.LONG_LINE));
+        sender.sendMessage(TextUtil.LONG_LINE);
+        sender.sendMessage(TextUtil.translate("&b&l팀 정보:"));
+        sender.sendMessage(TextUtil.translate("&f 팀: " + team.getPrefix() + team.getDisplayName()));
+        sender.sendMessage(TextUtil.translate("&f 리더: " + team.getColor() + leaderName));
+        sender.sendMessage(TextUtil.translate("&f 멤버 (" + team.getMembers().size() + "): " + plugin.getTeamHandler().parseTeamMembers(team)));
+        sender.sendMessage(TextUtil.LONG_LINE);
     }
 
     @Subcommand("leader|리더")
