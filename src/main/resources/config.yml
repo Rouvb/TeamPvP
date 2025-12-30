@@ -3,6 +3,10 @@ game:
   max_game_time: 10800
   invincibility_time: 300
   border: 2000
+  action_bar:
+    leader_location:
+      enabled: true
+      message: "<team_prefix><team_leader> &7- (<leader_coords>)"
 death_match:
   start_time: 3600
   arena_enabled: false

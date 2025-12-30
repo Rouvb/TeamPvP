@@ -1,6 +1,7 @@
 package org.miraimc.teamPvP.team;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -133,6 +134,15 @@ public class TeamManager {
             Player member = Bukkit.getPlayer(memberId);
             if (member != null && member.isOnline()) {
                 member.sendMessage(TextUtil.translate(message));
+            }
+        });
+    }
+
+    public void sendActionBar(Team team, Component message) {
+        team.getMembers().forEach(memberId -> {
+            Player member = Bukkit.getPlayer(memberId);
+            if (member != null && member.isOnline()) {
+                member.sendActionBar(message);
             }
         });
     }

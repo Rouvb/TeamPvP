@@ -85,7 +85,7 @@ public class GameManager {
         }
 
         cancelGameTask();
-        gameTask = new GameTask(plugin.getGame(), plugin.getGameSettings(), this)
+        gameTask = new GameTask(plugin)
                 .runTaskTimer(plugin, 0L, 20L);
     }
 
