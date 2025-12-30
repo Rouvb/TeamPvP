@@ -1,13 +1,13 @@
 package org.miraimc.teamPvP.team.command;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
+import io.github.milkdrinkers.colorparser.paper.ColorParser;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.miraimc.teamPvP.TeamPvP;
 import org.miraimc.teamPvP.config.Lang;
 import org.miraimc.teamPvP.game.GameStatus;
@@ -140,6 +140,23 @@ public class TeamCommand extends BaseCommand {
                     .replace("{player}", target.getPlayer().getName())
             );
         }
+    }
+
+    @Subcommand("forceleader")
+    public void onForceLeader(Player sender, @Optional OnlinePlayer target) {
+        if (target == null) {
+            target = (OnlinePlayer) sender;
+        }
+
+        Team team = plugin.getTeamManager().getTeam(target.getPlayer());
+        if (team == null) {
+            sender.sendMessage(Lang.TEAM_ERROR_NO_TEAM.getMessage());
+            return;
+        }
+
+        team.setLeader(sender.getUniqueId());
+        sender.sendMessage(ColorParser.of("&e<player> &a님을 리더로 강제 위임했습니다.")
+                .with("player", target.getPlayer().name()).legacy().build());
     }
 
     @Subcommand("chat|채팅")
