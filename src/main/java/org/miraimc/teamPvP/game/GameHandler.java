@@ -16,6 +16,7 @@ import org.miraimc.teamPvP.profile.ProfileStatus;
 import org.miraimc.teamPvP.profile.event.ProfileStatusEvent;
 import org.miraimc.teamPvP.rtp.RTPManager;
 import org.miraimc.teamPvP.team.Team;
+import org.miraimc.teamPvP.util.ItemBuilder;
 
 import java.time.Duration;
 import java.util.*;
@@ -75,6 +76,13 @@ public class GameHandler {
                 Component.text(Lang.GAME_STATUS_STARTED_SUBTITLE.getMessage())
         );
         plugin.getGameManager().TitleAll(title);
+    }
+
+    public void handleGiveStaterKit(Player player) {
+        Profile profile = plugin.getProfileManager().getProfile(player);
+        if (profile.getStatus() == ProfileStatus.PLAYING) {
+            player.getInventory().addItem(new ItemBuilder(Material.COOKED_BEEF).amount(32).build());
+        }
     }
 
     public CompletableFuture<Void> teleportAllToGameWorld() {

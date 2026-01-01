@@ -84,6 +84,12 @@ public class GameManager {
             plugin.getGameHandler().handleStartPlayer(player);
         }
 
+        if (plugin.getGameSettings().isStarterKitEnabled()) {
+            for (Player player : onlinePlayers) {
+                plugin.getGameHandler().handleGiveStaterKit(player);
+            }
+        }
+
         cancelGameTask();
         gameTask = new GameTask(plugin)
                 .runTaskTimer(plugin, 0L, 20L);

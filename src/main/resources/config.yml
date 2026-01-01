@@ -7,6 +7,8 @@ game:
     leader_location:
       enabled: true
       message: "<team_prefix><team_leader> &7- (<leader_coords>)"
+  starter_kit:
+    enabled: true
 death_match:
   start_time: 3600
   arena_enabled: false

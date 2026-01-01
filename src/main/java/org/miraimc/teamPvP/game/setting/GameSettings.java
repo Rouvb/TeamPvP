@@ -20,6 +20,7 @@ public class GameSettings {
     private int defaultBorderSize;
     private int deathMatchBorderSize;
     private int rtpRange;
+    private boolean starterKitEnabled;
 
     public GameSettings(TeamPvP plugin) {
         this.plugin = plugin;
@@ -31,6 +32,7 @@ public class GameSettings {
         this.defaultBorderSize = plugin.getConfigFile().getInt("game.border");
         this.deathMatchBorderSize = plugin.getConfigFile().getInt("death_match.border");
         this.rtpRange = plugin.getConfigFile().getInt("rtp.range");
+        this.starterKitEnabled = plugin.getConfigFile().getBoolean("game.starter_kit.enabled");
     }
 
     public void setDefaultBorderSize(int defaultBorderSize) {
