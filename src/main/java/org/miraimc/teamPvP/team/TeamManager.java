@@ -139,7 +139,7 @@ public class TeamManager {
     }
 
     public void sendActionBar(Team team, Component message) {
-        team.getMembers().forEach(memberId -> {
+        team.getAliveMembers().forEach(memberId -> {
             Player member = Bukkit.getPlayer(memberId);
             if (member != null && member.isOnline()) {
                 member.sendActionBar(message);

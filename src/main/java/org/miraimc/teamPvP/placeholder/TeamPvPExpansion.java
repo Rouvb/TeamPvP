@@ -2,6 +2,7 @@ package org.miraimc.teamPvP.placeholder;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.miraimc.teamPvP.TeamPvP;
@@ -55,6 +56,8 @@ public class TeamPvPExpansion extends PlaceholderExpansion {
             case "team_size" -> playerTeam != null ? String.valueOf(playerTeam.getMembers().size()) : "0";
             case "team_alive" -> playerTeam != null ? String.valueOf(playerTeam.getAliveMembers().size()) : "0";
             case "team_leader" -> playerTeam != null ? Bukkit.getOfflinePlayer(playerTeam.getLeader()).getName() : "";
+            case "team_leader_location" -> playerTeam != null ?
+                    getFormattedPlayerCoords(Bukkit.getPlayer(playerTeam.getLeader())) : "";
             case "player_color" -> {
                 if (profile.getStatus().equals(ProfileStatus.SPECTATING)) {
                     yield TextUtil.translate("&7");
@@ -72,5 +75,14 @@ public class TeamPvPExpansion extends PlaceholderExpansion {
         Team team = plugin.getTeamManager().getTeam(teamName);
         if (team == null) return "";
         return String.valueOf(team.getAliveMembers().size());
+    }
+
+    private String getFormattedPlayerCoords(Player player) {
+        if (player == null || !player.isOnline()) return "";
+        Location location = player.getLocation();
+        int x = location.getBlockX();
+        int y = location.getBlockY();
+        int z = location.getBlockZ();
+        return (x + ", " + y + ", " + z);
     }
 }
