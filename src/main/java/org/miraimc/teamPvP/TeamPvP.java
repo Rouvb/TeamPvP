@@ -80,6 +80,9 @@ public final class TeamPvP extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Disabling TeamPvP...");
+        boards.values().forEach(FastBoard::delete);
+        boards.clear();
+        profileManager.shutdown();
     }
 
     private void loadFiles() {

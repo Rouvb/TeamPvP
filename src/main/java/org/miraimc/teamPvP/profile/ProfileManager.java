@@ -30,4 +30,8 @@ public class ProfileManager {
             Bukkit.getPluginManager().callEvent(new ProfileRemoveEvent(player, profile));
         }
     }
+
+    public void shutdown() {
+        profiles.clear();
+    }
 }
