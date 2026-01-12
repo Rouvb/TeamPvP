@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import io.github.milkdrinkers.colorparser.paper.ColorParser;
+import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -149,16 +150,18 @@ public class TeamCommand extends BaseCommand {
             target = (OnlinePlayer) sender;
         }
 
-        Team senderTeam = plugin.getTeamManager().getTeam(sender);
         Team targetTeam = plugin.getTeamManager().getTeam(target.getPlayer());
-        if (targetTeam == null || !targetTeam.equals(senderTeam)) {
+        if (targetTeam == null) {
             sender.sendMessage(Lang.TEAM_ERROR_NO_TEAM.getMessage());
             return;
         }
 
-        targetTeam.setLeader(sender.getUniqueId());
-        sender.sendMessage(ColorParser.of("&e<player> &a님을 리더로 강제 위임했습니다.")
-                .with("player", target.getPlayer().name()).legacy().build());
+        targetTeam.setLeader(target.getPlayer().getUniqueId());
+        String message = "<team_prefix> <player> &f님을 리더로 강제 위임했습니다."
+                .replace("<team_prefix>", targetTeam.getPrefix())
+                .replace("<player>", target.getPlayer().getName());
+        sender.sendMessage(message);
+        plugin.getTeamManager().sendMessage(targetTeam, message);
     }
 
     @Subcommand("chat|채팅")
