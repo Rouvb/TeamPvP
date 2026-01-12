@@ -68,7 +68,7 @@ public class TeamCommand extends BaseCommand {
     }
 
     @Subcommand("forcejoin|강제참가")
-    @CommandPermission("teampvp.team.forcejoin")
+    @CommandPermission("teampvp.host")
     public void onForceJoin(Player sender, String teamName) {
         if (plugin.getGame().getGameStatus() != GameStatus.LOBBY) {
             sender.sendMessage(Lang.TEAM_ERROR_UNABLE_ACCESS.getMessage());
@@ -143,18 +143,20 @@ public class TeamCommand extends BaseCommand {
     }
 
     @Subcommand("forceleader")
+    @CommandPermission("teampvp.host")
     public void onForceLeader(Player sender, @Optional OnlinePlayer target) {
         if (target == null) {
             target = (OnlinePlayer) sender;
         }
 
-        Team team = plugin.getTeamManager().getTeam(target.getPlayer());
-        if (team == null) {
+        Team senderTeam = plugin.getTeamManager().getTeam(sender);
+        Team targetTeam = plugin.getTeamManager().getTeam(target.getPlayer());
+        if (targetTeam == null || !targetTeam.equals(senderTeam)) {
             sender.sendMessage(Lang.TEAM_ERROR_NO_TEAM.getMessage());
             return;
         }
 
-        team.setLeader(sender.getUniqueId());
+        targetTeam.setLeader(sender.getUniqueId());
         sender.sendMessage(ColorParser.of("&e<player> &a님을 리더로 강제 위임했습니다.")
                 .with("player", target.getPlayer().name()).legacy().build());
     }
