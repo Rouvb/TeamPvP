@@ -160,7 +160,7 @@ public class TeamCommand extends BaseCommand {
         String message = "<team_prefix> <player> &f님을 리더로 강제 위임했습니다."
                 .replace("<team_prefix>", targetTeam.getPrefix())
                 .replace("<player>", target.getPlayer().getName());
-        sender.sendMessage(message);
+        sender.sendMessage(TextUtil.translate(message));
         plugin.getTeamManager().sendMessage(targetTeam, message);
     }
 
